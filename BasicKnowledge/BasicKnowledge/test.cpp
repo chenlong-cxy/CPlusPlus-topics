@@ -241,16 +241,162 @@
 //	return 0;
 //}
 
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int a = 10;
+//	int& b = a;//给变量a去了一个别名，叫b
+//	cout << "a = " << a << endl;//a打印结果为10
+//	cout << "b = " << b << endl;//b打印结果也是10
+//	b = 20;//改变b也就是改变了a
+//	cout << "a = " << a << endl;//a打印结果为20
+//	cout << "b = " << b << endl;//b打印结果也是为20
+//	return 0;
+//}
+
+//int a = 10;
+//int& b = a;//引用在定义时必须初始化
+//
+//int& b;
+//b = a;
+
+//int a = 10;
+//int& b = a;
+//int& c = a;
+//int& d = a;
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int a = 10;
+//	int& b = a;
+//	int c = 20;
+//	b = c;
+//	cout << a << endl;
+//	cout << b << endl;
+//	cout << c << endl;
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	const int a = 10;
+//	//int& ra = a;    //该语句编译时会出错，a为常量
+//	const int& ra = a;
+//	//int& b = 10;    //该语句编译时会出错，10为常量
+//	const int& b = 10;
+//	return 0;
+//}
+
+////交换函数
+//void Swap(int& a, int& b)
+//{
+//	int tmp = a;
+//	a = b;
+//	b = tmp;
+//}
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int a = 10;
+//	int b = 20;
+//	cout << "a = " << a << " " << "b = " << b << endl;
+//	Swap(a, b);
+//	cout << "a = " << a << " " << "b = " << b << endl;
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//int& Add(int a, int b)
+//{
+//	static int c = a + b;
+//	return c;
+//}
+//int main()
+//{
+//	int& a = Add(1, 2);
+//	cout << a << endl;
+//	Add(10, 20);
+//	cout << a << endl;
+//	return 0;
+//}
+
+
+//#include <time.h>
+//#include <iostream>
+//using namespace std;
+//struct A{ int a[10000]; };
+//void TestFunc1(A a){}
+//void TestFunc2(A& a){}
+//void TestRefAndValue()
+//{
+//	A a;
+//	// 以值作为函数参数
+//	size_t begin1 = clock();
+//	for (size_t i = 0; i < 1000000; ++i)
+//		TestFunc1(a);
+//	size_t end1 = clock();
+//	// 以引用作为函数参数
+//	size_t begin2 = clock();
+//	for (size_t i = 0; i < 1000000; ++i)
+//		TestFunc2(a);
+//	size_t end2 = clock();
+//	// 分别计算两个函数运行结束后的时间
+//	cout << "TestFunc1(A)-time:" << end1 - begin1 << endl;
+//	cout << "TestFunc2(A&)-time:" << end2 - begin2 << endl;
+//}
+//int main()
+//{
+//	TestRefAndValue();
+//	return 0;
+//}
+
+//int main()
+//{
+//	int a = 10;
+//	//在语法上，这里给a这块空间取了一个别名，没有新开空间
+//	int& ra = a;
+//	ra = 20;
+//
+//	//在语法上，这里定义了一个pa指针，开辟了4个字节（32位机器）的空间，用于存储a的地址
+//	int* pa = &a;
+//	*pa = 20;
+//	return 0;
+//}
+
+
+//int Add(int a, int b)
+//{
+//	return a + b;
+//}
+//int main()
+//{
+//	int ret = Add(1, 2);
+//
+//	return 0;
+//}
+
 #include <iostream>
 using namespace std;
+double Fun()
+{
+	return 3.14;
+}
 int main()
 {
 	int a = 10;
-	int& b = a;//给变量a去了一个别名，叫b
-	cout << "a = " << a << endl;//a打印结果为10
-	cout << "b = " << b << endl;//b打印结果也是10
-	b = 20;//改变b也就是改变了a
-	cout << "a = " << a << endl;//a打印结果为20
-	cout << "b = " << b << endl;//b打印结果也是为20
+	auto b = a;
+	auto c = 'A';
+	auto d = Fun();
+	//打印变量b,c,d的类型
+	cout << typeid(b).name() << endl;//打印int
+	cout << typeid(c).name() << endl;//打印char
+	cout << typeid(d).name() << endl;//打印double
 	return 0;
 }
