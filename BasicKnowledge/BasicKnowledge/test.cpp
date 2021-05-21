@@ -37,30 +37,30 @@
 //	return 0;
 //}
 
-#include <iostream>
-//命名空间的普通定义
-namespace N1 //N1为命名空间的名称
-{
-	//在命名空间中，既可以定义变量，也可以定义函数
-	int a;
-	int Add(int x, int y)
-	{
-		return x + y;
-	}
-}
+//#include <iostream>
+////命名空间的普通定义
+//namespace N1 //N1为命名空间的名称
+//{
+//	//在命名空间中，既可以定义变量，也可以定义函数
+//	int a;
+//	int Add(int x, int y)
+//	{
+//		return x + y;
+//	}
+//}
 
 
-//命名空间的嵌套定义
-namespace N1 //定义一个名为N1的命名空间
-{
-	int a;
-	int b;
-	namespace N2 //嵌套定义另一个名为N2的命名空间
-	{
-		int c;
-		int d;
-	}
-}
+////命名空间的嵌套定义
+//namespace N1 //定义一个名为N1的命名空间
+//{
+//	int a;
+//	int b;
+//	namespace N2 //嵌套定义另一个名为N2的命名空间
+//	{
+//		int c;
+//		int d;
+//	}
+//}
 //int main()
 //{
 //	N1::a = 20;
@@ -68,3 +68,55 @@ namespace N1 //定义一个名为N1的命名空间
 //	std::cout << N1::a << std::endl << N1::N2::a << std::endl;
 //	return 0;
 //}
+
+//命名空间的使用
+//加命名空间名称及作用域限定符
+//#include <stdio.h>
+//namespace N
+//{
+//	int a;
+//	double b;
+//}
+//int main()
+//{
+//	N::a = 10;//将命名空间中的成员a赋值为10
+//	printf("%d\n", N::a);//打印命名空间中的成员a
+//	return 0;
+//}
+
+//使用using将命名空间中的成员引入
+//#include <stdio.h>
+//namespace N
+//{
+//	int a;
+//	double b;
+//}
+//using N::a;//将命名空间中的成员a引入
+//int main()
+//{
+//	a = 10;//将命名空间中的成员a赋值为10
+//	printf("%d\n", a);//打印命名空间中的成员a
+//	return 0;
+//}
+
+////使用using namespace 命名空间名称引入
+//#include <stdio.h>
+//namespace N
+//{
+//	int a;
+//	double b;
+//}
+//using namespace N;//将命名空间N的所有成员引入
+//int main()
+//{
+//	a = 10;//将命名空间中的成员a赋值为10
+//	printf("%d\n", a);//打印命名空间中的成员a
+//	return 0;
+//}
+
+#include <iostream>
+int main()
+{
+	std::cout << "hello world!!!" << std::endl;
+	return 0;
+}
