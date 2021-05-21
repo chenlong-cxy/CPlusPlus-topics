@@ -114,9 +114,143 @@
 //	return 0;
 //}
 
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	cout << "hello world!" << endl;
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int i = 10;
+//	double d = 3.14;
+//	char arr[] = "是不是很方便？";
+//	cout << i << endl;//打印整型i
+//	cout << d << endl;//打印浮点型d
+//	cout << arr << endl;//打印字符串arr
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int i;
+//	double d;
+//	char arr[20];
+//	cin >> i;//读取一个整型
+//	cin >> d;//读取一个浮点型
+//	cin >> arr;//读取一个字符串
+//	cout << i << endl;//打印整型i
+//	cout << d << endl;//打印浮点型d
+//	cout << arr << endl;//打印字符串arr
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//void Print(int a = 0)
+//{
+//	cout << a << endl;
+//}
+//int main()
+//{
+//	Print();//没有指定实参，使用参数的默认值（打印0）
+//	Print(10);//指定了实参，使用指定的实参（打印10）
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//void Print(int a = 10, int b = 20, int c = 30)
+//{
+//	cout << a << endl;
+//	cout << b << endl;
+//	cout << c << endl;
+//}
+//int main()
+//{
+//	Print();
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//int x = 20;
+//void Print(int a, int b, int c = x)
+//{
+//	cout << a << endl;
+//	cout << b << endl;
+//	cout << c << endl;
+//}
+//int main()
+//{
+//	x = 20;
+//	Print(10, 20);
+//	x = 10;
+//	Print(10, 20);
+//	return 0;
+//}
+
+////test.h
+//#include "test.h"
+//#include <iostream>
+//using namespace std;
+////test.c
+//void Print(int a, int b, int c = 30)
+//{
+//	cout << a << endl;
+//	cout << b << endl;
+//	cout << c << endl;
+//}
+//int main()
+//{
+//	Print(10, 20);
+//	return 0;
+//}
+
+//int x = 30;//全局变量
+//void Print(int a, int b, int c = x)
+//{
+//	cout << a << endl;
+//	cout << b << endl;
+//	cout << c << endl;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//int Add(int x, int y)
+//{
+//	return x + y;
+//}
+//
+//double Add(double x, double y)
+//{
+//	return x + y;
+//}
+//
+//int main()
+//{
+//	cout << Add(1, 2) << endl;//打印1+2的结果
+//	cout << Add(1.1, 2.2) << endl;//打印1.1+2.2的结果
+//	return 0;
+//}
+
 #include <iostream>
+using namespace std;
 int main()
 {
-	std::cout << "hello world!!!" << std::endl;
+	int a = 10;
+	int& b = a;//给变量a去了一个别名，叫b
+	cout << "a = " << a << endl;//a打印结果为10
+	cout << "b = " << b << endl;//b打印结果也是10
+	b = 20;//改变b也就是改变了a
+	cout << "a = " << a << endl;//a打印结果为20
+	cout << "b = " << b << endl;//b打印结果也是为20
 	return 0;
 }
