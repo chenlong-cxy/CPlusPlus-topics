@@ -382,21 +382,139 @@
 //	return 0;
 //}
 
+//#include <iostream>
+//using namespace std;
+//double Fun()
+//{
+//	return 3.14;
+//}
+//int main()
+//{
+//	int a = 10;
+//	auto b = a;
+//	auto c = 'A';
+//	auto d = Fun();
+//	//打印变量b,c,d的类型
+//	cout << typeid(b).name() << endl;//打印int
+//	cout << typeid(c).name() << endl;//打印char
+//	cout << typeid(d).name() << endl;//打印double
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int a = 10;
+//	auto b = &a;   //自动推导出b的类型为int*
+//	auto* c = &a;  //自动推导出c的类型为int*
+//	auto d = a;    //自动推导出d的类型为int
+//	auto& e = a;   //自动推导出e的类型为int
+//	//打印变量b,c,d的类型
+//	cout << typeid(b).name() << endl;//打印结果为int*
+//	cout << typeid(c).name() << endl;//打印结果为int*
+//	cout << typeid(d).name() << endl;//打印结果为int
+//	cout << typeid(e).name() << endl;//打印结果为int
+//	return 0;
+//}
+
+
+//int main()
+//{
+//	auto a = 1, b = 2; //正确
+//	auto c = 3, d = 4.0; //编译器报错：“auto”必须始终推导为同一类型
+//	return 0;
+//}
+
+
+//void TestAuto(auto x)
+//{}
+
+
+//int main()
+//{
+//	int a[] = { 1, 2, 3 };
+//	auto b[] = { 4, 5, 6 };//error
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//	//将数组元素值全部乘以2
+//	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+//	{
+//		arr[i] *= 2;
+//	}
+//	//打印数组中的所有元素
+//	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+//	{
+//		cout << arr[i] << " ";
+//	}
+//	cout << endl;
+//	//将数组元素值全部乘以2
+//	for (auto& e : arr)
+//	{
+//		e *= 2;
+//	}
+//	//打印数组中的所有元素
+//	for (auto e : arr)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//	return 0;
+//}
+
+//#include <stdio.h>
+//NULL
+//#define NULL    ((void *)0)
+
+//#include <iostream>
+//NULL
+//#define NULL    0
+//nullptr
+//#include <stddef.h>
+//int* p1 = NULL;
+//int* p2 = 0;
+
+//#include <iostream>
+//using namespace std;
+//void Fun(int p)
+//{
+//	cout << "Fun(int)" << endl;
+//}
+//void Fun(int* p)
+//{
+//	cout << "Fun(int*)" << endl;
+//}
+//int main()
+//{
+//	Fun(0);           //打印结果为 Fun(int)
+//	Fun(NULL);        //打印结果为 Fun(int)
+//	Fun((int*)NULL);  //打印结果为 Fun(int*)
+//	Fun(nullptr);
+//	return 0;
+//}
+
+
 #include <iostream>
 using namespace std;
-double Fun()
+void Fun(int a, double b)
 {
-	return 3.14;
+	cout << "a" << endl;
+}
+void Fun(double a, int b)
+{
+	cout << "b" << endl;
 }
 int main()
 {
-	int a = 10;
-	auto b = a;
-	auto c = 'A';
-	auto d = Fun();
-	//打印变量b,c,d的类型
-	cout << typeid(b).name() << endl;//打印int
-	cout << typeid(c).name() << endl;//打印char
-	cout << typeid(d).name() << endl;//打印double
+	Fun(1, 1.1);
+	Fun(1.1, 1);
 	return 0;
 }
