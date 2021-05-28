@@ -501,7 +501,6 @@
 //	return 0;
 //}
 
-
 #include <iostream>
 using namespace std;
 void Fun(int a, double b)
