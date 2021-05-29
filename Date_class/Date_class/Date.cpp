@@ -1,5 +1,8 @@
 #include "Date.h"
 
+// 1.inline
+// 2.static
+// 3.&&
 inline int GetMonthDay(int year, int month)
 {
 	// 数组存储平年每个月的天数
@@ -14,6 +17,7 @@ inline int GetMonthDay(int year, int month)
 }
 
 // 构造函数
+// 当函数声明和定义分开时，在声明时注明缺省参数，定义时不标出缺省参数
 Date::Date(int year, int month, int day)
 {
 	// 检查日期的合法性
@@ -33,28 +37,35 @@ Date::Date(int year, int month, int day)
 	}
 }
 // 打印函数
-void Date::Print()
+void Date::Print() const
 {
 	cout << _year << "年" << _month << "月" << _day << "日" << endl;
 }
 // 日期+=天数
 Date& Date::operator+=(int day)
 {
-	_day += day;
-	while (_day > GetMonthDay(_year, _month))
+	if (day<0)
 	{
-		_day -= GetMonthDay(_year, _month);
-		_month++;
-		if (_month > 12)
+		*this -= -day;
+	}
+	else
+	{
+		_day += day;
+		while (_day > GetMonthDay(_year, _month))
 		{
-			_year++;
-			_month = 1;
+			_day -= GetMonthDay(_year, _month);
+			_month++;
+			if (_month > 12)
+			{
+				_year++;
+				_month = 1;
+			}
 		}
 	}
 	return *this;
 }
 // 日期+天数
-Date Date::operator+(int day)
+Date Date::operator+(int day) const
 {
 	//Date tmp = *this;
 	Date tmp(*this);
@@ -66,21 +77,28 @@ Date Date::operator+(int day)
 // 日期-=天数
 Date& Date::operator-=(int day)
 {
-	_day -= day;
-	while (_day <= 0)
+	if (day < 0)
 	{
-		_month--;
-		if (_month == 0)
+		*this += -day;
+	}
+	else
+	{
+		_day -= day;
+		while (_day <= 0)
 		{
-			_year--;
-			_month = 12;
+			_month--;
+			if (_month == 0)
+			{
+				_year--;
+				_month = 12;
+			}
+			_day += GetMonthDay(_year, _month);
 		}
-		_day += GetMonthDay(_year, _month);
 	}
 	return *this;
 }
 // 日期-天数
-Date Date::operator-(int day)
+Date Date::operator-(int day) const
 {
 	//Date tmp = *this;
 	Date tmp(*this);
@@ -119,7 +137,7 @@ Date Date::operator--(int)
 	return tmp;
 }
 // 日期的大小关系比较
-bool Date::operator>(const Date& d)
+bool Date::operator>(const Date& d) const
 {
 	if (_year > d._year)
 	{
@@ -141,30 +159,30 @@ bool Date::operator>(const Date& d)
 	}
 	return false;
 }
-bool Date::operator>=(const Date& d)
+bool Date::operator>=(const Date& d) const
 {
 	return *this > d || *this == d;
 }
-bool Date::operator<(const Date& d)
+bool Date::operator<(const Date& d) const
 {
 	return !(*this >= d);
 }
-bool Date::operator<=(const Date& d)
+bool Date::operator<=(const Date& d) const
 {
 	return !(*this > d);
 }
-bool Date::operator==(const Date& d)
+bool Date::operator==(const Date& d) const
 {
 	return _year == d._year
 		&&_month == d._month
 		&&_day == d._day;
 }
-bool Date::operator!=(const Date& d)
+bool Date::operator!=(const Date& d) const
 {
 	return !(*this == d);
 }
 // 日期-日期
-int Date::operator-(const Date& d)
+int Date::operator-(const Date& d) const
 {
 	Date max = *this;
 	Date min = d;
