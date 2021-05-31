@@ -144,6 +144,10 @@ public:
 	{
 		cout << _year << "年" << _month << "月" << _day << "日" << endl;
 	}
+	void Test()
+	{
+		_year += 1;
+	}
 private:
 	int _year;
 	int _month;
@@ -151,9 +155,13 @@ private:
 };
 int main()
 {
-	Date d1(2021, 5, 30);
+	Date d1(2021, 5, 31);
 	Date d2(d1); // 用已存在的对象d1创建对象d2
 	d1.Print();
 	d2.Print();
+	d1.Test();
+	d1.Print();
+	d2.Print();
+	/*Date d(d1);*/
 	return 0;
 }
