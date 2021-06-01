@@ -199,6 +199,110 @@
 //d1 == d2;
 //IsSame(d1, d2);
 
+//#include <iostream>
+//using namespace std;
+//class Date
+//{
+//public:
+//	Date(int year = 0, int month = 1, int day = 1)
+//	{
+//		_year = year;
+//		_month = month;
+//		_day = day;
+//	}
+//	void Print()
+//	{
+//		cout << _year << "年" << _month << "月" << _day << "日" << endl;
+//	}
+////	bool operator==(const Date& d)
+////	{
+////		return _year == d._year
+////			&&_month == d._month
+////			&&_day == d._day;
+////	}
+////private:
+//	int _year;
+//	int _month;
+//	int _day;
+//};
+//bool operator==(const Date& d1, const Date& d2)
+//{
+//	return d1._year == d2._year
+//		&&d1._month == d2._month
+//		&&d1._day == d2._day;
+//}
+//
+//int main()
+//{
+//	Date d1(2021, 5, 31);
+//	Date d2(2021, 5, 14);
+//	d1.Print();
+//	d2.Print();
+//	cout << (d1 == d2) << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//class Date
+//{
+//public:
+//	Date(int year = 0, int month = 1, int day = 1)// 构造函数
+//	{
+//		_year = year;
+//		_month = month;
+//		_day = day;
+//	}
+//	Date(const Date& d)// 拷贝构造函数
+//	{
+//		_year = d._year;
+//		_month = d._month;
+//		_day = d._day;
+//	}
+//	Date& operator=(const Date& d)// 赋值运算符重载函数
+//	{
+//		if (this != &d)
+//		{
+//			_year = d._year;
+//			_month = d._month;
+//			_day = d._day;
+//		}
+//		return *this;
+//	}
+//	void Print()
+//	{
+//		cout << _year << "年" << _month << "月" << _day << "日" << endl;
+//	}
+//private:
+//	int _year;
+//	int _month;
+//	int _day;
+//};
+//int main()
+//{
+//	//Date d1(2021, 6, 1);
+//	//d1.Print();
+//	//Date d2;
+//	//Date d3;
+//	//d3 = d2 = d1;
+//	//d1.Print();
+//	//d2.Print();
+//	//d3.Print();
+//
+//	//Date d2 = d1;
+//	//d1.Print();
+//	//d2.Print();
+//
+//	//d1 = d1;
+//
+//	Date d1(2021, 6, 1);
+//	Date d2(d1);// 调用拷贝构造函数
+//	Date d3 = d1;// 那这个调用什么函数呢？拷贝构造函数还是赋值运算符重载函数？
+//	return 0;
+//}
+
+
 #include <iostream>
 using namespace std;
 class Date
@@ -210,34 +314,34 @@ public:
 		_month = month;
 		_day = day;
 	}
-	void Print()
+	void Fun(Date& d)const
+	{
+		d._year = 34;
+	}
+	void Print()const
 	{
 		cout << _year << "年" << _month << "月" << _day << "日" << endl;
 	}
-//	bool operator==(const Date& d)
-//	{
-//		return _year == d._year
-//			&&_month == d._month
-//			&&_day == d._day;
-//	}
-//private:
+	Date* operator&()// 取地址操作符重载
+	{
+		return this;
+	}
+	const Date* operator&()const// const取地址操作符重载
+	{
+		return this;
+	}
+private:
 	int _year;
 	int _month;
 	int _day;
 };
-bool operator==(const Date& d1, const Date& d2)
-{
-	return d1._year == d2._year
-		&&d1._month == d2._month
-		&&d1._day == d2._day;
-}
-
 int main()
 {
-	Date d1(2021, 5, 31);
-	Date d2(2021, 5, 14);
+	Date d1(2021, 6, 1);
+	d1.Print();
+	Date d2;
+	d2.Fun(d1);
 	d1.Print();
 	d2.Print();
-	cout << (d1 == d2) << endl;
 	return 0;
 }
