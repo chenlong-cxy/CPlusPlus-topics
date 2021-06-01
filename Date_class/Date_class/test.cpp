@@ -35,8 +35,18 @@ void Test3()
 	cout << (d2 - d1) << endl;
 	cout << (d4 - d3) << endl;
 }
+void Test4()
+{
+	Date d1(2021, 6, 1);
+	Date d2;
+	d2 = d1++;
+	d2.Print();
+	d1--;
+	d2 = ++d1;
+	d2.Print();
+}
 int main()
 {
-	Test3();
+	Test4();
 	return 0;
 }

@@ -3,6 +3,7 @@
 // 1.inline
 // 2.static
 // 3.&&
+// 获取某年某月的天数
 inline int GetMonthDay(int year, int month)
 {
 	// 数组存储平年每个月的天数
@@ -46,11 +47,13 @@ Date& Date::operator+=(int day)
 {
 	if (day<0)
 	{
+		// 复用operator-=
 		*this -= -day;
 	}
 	else
 	{
 		_day += day;
+		// 日期不合法，通过不断调整，直到最后日期合法为止
 		while (_day > GetMonthDay(_year, _month))
 		{
 			_day -= GetMonthDay(_year, _month);
@@ -68,7 +71,7 @@ Date& Date::operator+=(int day)
 Date Date::operator+(int day) const
 {
 	//Date tmp = *this;
-	Date tmp(*this);
+	Date tmp(*this);// 拷贝构造tmp，用于返回
 	// 复用operator+=
 	tmp += day;
 
@@ -79,11 +82,13 @@ Date& Date::operator-=(int day)
 {
 	if (day < 0)
 	{
+		// 复用operator+=
 		*this += -day;
 	}
 	else
 	{
 		_day -= day;
+		// 日期不合法，通过不断调整，直到最后日期合法为止
 		while (_day <= 0)
 		{
 			_month--;
@@ -101,7 +106,7 @@ Date& Date::operator-=(int day)
 Date Date::operator-(int day) const
 {
 	//Date tmp = *this;
-	Date tmp(*this);
+	Date tmp(*this);// 拷贝构造tmp，用于返回
 	// 复用operator-=
 	tmp -= day;
 
@@ -118,7 +123,7 @@ Date& Date::operator++()
 // int参数不需要给实参，因为没用，其作用是为了跟前置++构成函数重载
 Date Date::operator++(int)
 {
-	Date tmp(*this);
+	Date tmp(*this);// 拷贝构造tmp，用于返回
 	// 复用operator+=
 	*this += 1;
 	return tmp;
@@ -126,13 +131,15 @@ Date Date::operator++(int)
 // 前置--
 Date& Date::operator--()
 {
+	// 复用operator-=
 	*this -= 1;
 	return *this;
 }
 // 后置--
 Date Date::operator--(int)
 {
-	Date tmp(*this);
+	Date tmp(*this);// 拷贝构造tmp，用于返回
+	// 复用operator-=
 	*this -= 1;
 	return tmp;
 }
@@ -184,20 +191,21 @@ bool Date::operator!=(const Date& d) const
 // 日期-日期
 int Date::operator-(const Date& d) const
 {
-	Date max = *this;
-	Date min = d;
-	int flag = 1;
+	Date max = *this;// 假设第一个日期较大
+	Date min = d;// 假设第二个日期较小
+	int flag = 1;// 此时结果应该为正值
 	if (*this < d)
 	{
+		// 假设错误，更正
 		max = d;
 		min = *this;
-		flag = -1;
+		flag = -1;// 此时结果应该为负值
 	}
-	int n = 0;
+	int n = 0;// 记录所加的总天数
 	while (min != max)
 	{
-		min++;
-		n++;
+		min++;// 较小的日期++
+		n++;// 总天数++
 	}
 	return n*flag;
 }
