@@ -391,28 +391,274 @@
 //}
 
 
+//#include <iostream>
+//using namespace std;
+//int i = 0;
+//class Test
+//{
+//public:
+//	Test()
+//		:_b(i++)
+//		,_a(i++)
+//	{}
+//	void Print()
+//	{
+//		cout << "_a:" << _a << endl;
+//		cout << "_b:" << _b << endl;
+//	}
+//private:
+//	int _a;
+//	int _b;
+//};
+//int main()
+//{
+//	Test test;
+//	test.Print(); //打印结果test._a为0，test._b为1
+//	return 0;
+//}
+
+
+//// 使用初始化列表
+//int a = 10
+//// 在构造函数体内初始化
+//int a;
+//a = 10;
+
+
+//class Time
+//{
+//public:
+//	Time(int hour = 0)
+//	{
+//		_hour = hour;
+//	}
+//private:
+//	int _hour;
+//};
+//class Test
+//{
+//public:
+//	// 使用初始化列表
+//	Test(int hour)
+//		:_t(12)
+//	{}
+//	// 在构造函数体内初始化（不使用初始化列表）
+//	Test(int hour)
+//	{
+//		Time t(hour);
+//		_t = t;
+//	}
+//private:
+//	Time _t;
+//};
+//int main()
+//{
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//class Date
+//{
+//public:
+//	Date(int year = 0) //单个参数的构造函数
+//		:_year(year)
+//	{}
+//	void Print()
+//	{
+//		cout << _year << endl;
+//	}
+//private:
+//	int _year;
+//};
+//int main()
+//{
+//	Date d1 = 2021; //支持该操作
+//	d1.Print();
+//	return 0;
+//}
+//
+//Date d1 = 2021;
+//Date tmp(2021); //先构造
+//Date d1(tmp); //再拷贝构造
+//
+//int a = 10;
+//double b = a; //隐式类型转换
+
+//#include <iostream>
+//using namespace std;
+//class Test
+//{
+//public:
+//
+//private:
+//	static int _n;
+//};
+//int main()
+//{
+//	cout << sizeof(Test) << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//class Test
+//{
+//public:
+//	static int GetN()
+//	{
+//		return _n;
+//	}
+//private:
+////public:
+//	static int _n;
+//};
+//// 静态成员变量的定义初始化
+//int Test::_n = 0;
+//int main()
+//{
+//	//Test test;
+//	//cout << test._n << endl; //通过类对象突破类域进行访问
+//	//cout << Test::_n << endl; //通过类名突破类域进行访问
+//	//cout << Test()._n << endl; //通过匿名对象突破类域进行访问
+//
+//	Test test;
+//	cout << test.GetN() << endl; //通过对象调用成员函数进行访问
+//	cout << Test().GetN() << endl; //通过匿名对象调用成员函数进行访问
+//	cout << Test::GetN() << endl; //通过类名调用静态成员函数进行访问
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//class Test
+//{
+//public:
+//	static void Fun()
+//	{
+//		cout << _a << endl; //error
+//		cout << _n << endl; //correct
+//	}
+//private:
+//	int _a;
+//	static int _n;
+//};
+//// 静态成员变量的定义初始化
+//int Test::_n = 0;
+//int main()
+//{
+//
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//class Date
+//{
+//public:
+//	void print()
+//	{
+//		cout << _year << "年" << _month << "月" << _day << "日" << endl;
+//	}
+//private:
+//	int _year = 0;
+//	int _month = 1;
+//	int _day = 1;
+//};
+//int main()
+//{
+//	Date d1;
+//	d1.print();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//class A
+//{
+//public:
+//	void Print()
+//	{
+//		cout << _a << endl;
+//		cout << _p << endl;
+//	}
+//private:
+//	// 非静态成员变量，可以在成员声明时给缺省值。
+//	int _a = 10;
+//	int* _p = (int*)malloc(4);
+//	static int _n;
+//};
+//int A::_n = 10;
+//int main()
+//{
+//	A a;
+//	a.Print();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//class A //外部类
+//{
+//public:
+//	class B //内部类
+//	{
+//	private:
+//		int _b;
+//	};
+//private:
+//	int _a;
+//};
+//int main()
+//{
+//	cout << sizeof(A) << endl; //外部类的大小
+//	cout << sizeof(A::B) << endl;
+//	return 0;
+//}
+
 #include <iostream>
 using namespace std;
-int i = 0;
-class Test
+class Date
 {
+	friend ostream& operator<<(ostream& out, const Date& d);
+	friend istream& operator>>(istream& in, Date& d);
 public:
-	Test()
-		:_b(i++)
-		,_a(i++)
-	{}
+	Date(int year = 0, int month = 1, int day = 1)
+	{
+		_year = year;
+		_month = month;
+		_day = day;
+	}
 	void Print()
 	{
-		cout << "_a:" << _a << endl;
-		cout << "_b:" << _b << endl;
+		cout << _year << "年" << _month << "月" << _day << "日" << endl;
 	}
 private:
-	int _a;
-	int _b;
+	int _year;
+	int _month;
+	int _day;
 };
+ostream& operator<<(ostream& out, const Date& d)
+{
+	out << d._year << "年" << d._month << "月" << d._day << "日" << endl;
+	return out;
+}
+
+istream& operator>>(istream& in, Date& d)
+{
+	in >> d._year >> "年" >> d._month >> "月" >> d._day >> "日";
+	return in;
+}
 int main()
 {
-	Test test;
-	test.Print(); //打印结果test._a为0，test._b为1
+	Date d1;
+	cin >> d1;
+	cout << d1 << endl;
 	return 0;
 }
