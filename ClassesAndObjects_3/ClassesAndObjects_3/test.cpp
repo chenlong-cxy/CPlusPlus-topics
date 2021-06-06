@@ -622,43 +622,75 @@
 //	return 0;
 //}
 
+
+// cout是ostream类的一个全局对象
+// cin是istream类的一个全局对象
+//#include <iostream>
+//using namespace std;
+//class Date
+//{
+//	// 友元函数的声明
+//	friend ostream& operator<<(ostream& out, const Date& d);
+//	friend istream& operator>>(istream& in, Date& d);
+//public:
+//	Date(int year = 0, int month = 1, int day = 1)
+//	{
+//		_year = year;
+//		_month = month;
+//		_day = day;
+//	}
+//private:
+//	int _year;
+//	int _month;
+//	int _day;
+//};
+//// <<运算符重载
+//ostream& operator<<(ostream& out, const Date& d)
+//{
+//	out << d._year << "-" << d._month << "-" << d._day<< endl;
+//	return out;
+//}
+//// >>运算符重载
+//istream& operator>>(istream& in, Date& d)
+//{
+//	in >> d._year >> d._month >> d._day;
+//	return in;
+//}
+//int main()
+//{
+//	Date d1;
+//	cin >> d1;
+//	cout << d1 << endl;
+//	return 0;
+//}
+
+
 #include <iostream>
 using namespace std;
-class Date
+class A
 {
-	friend ostream& operator<<(ostream& out, const Date& d);
-	friend istream& operator>>(istream& in, Date& d);
+	// 声明B是A的友元类
+	friend class B;
 public:
-	Date(int year = 0, int month = 1, int day = 1)
-	{
-		_year = year;
-		_month = month;
-		_day = day;
-	}
-	void Print()
-	{
-		cout << _year << "年" << _month << "月" << _day << "日" << endl;
-	}
+	A(int n = 0)
+		:_n(n)
+	{}
 private:
-	int _year;
-	int _month;
-	int _day;
+	int _n;
 };
-ostream& operator<<(ostream& out, const Date& d)
+class B
 {
-	out << d._year << "年" << d._month << "月" << d._day << "日" << endl;
-	return out;
-}
-
-istream& operator>>(istream& in, Date& d)
-{
-	in >> d._year >> "年" >> d._month >> "月" >> d._day >> "日";
-	return in;
-}
+public:
+	void Test(A& a)
+	{
+		// B类可以直接访问A类中的私有成员变量
+		cout << a._n << endl;
+	}
+};
 int main()
 {
-	Date d1;
-	cin >> d1;
-	cout << d1 << endl;
+	A a;
+	B b;
+	b.Test(a);
 	return 0;
 }
