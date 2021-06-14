@@ -374,20 +374,449 @@
 //}
 
 
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	cout << s << endl; //CSDN
+//	cout << s.size() << endl; //4
+//	cout << s.capacity() << endl; //15
+//
+//	//resize(n)
+//	s.resize(20);
+//	cout << s << endl; //CSDN
+//	cout << s.size() << endl; //20
+//	cout << s.capacity() << endl; //31
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s1("CSDN");
+//	//resize(n)n大于对象当前的size时，将size扩大到n，扩大的字符默认为'\0'
+//	s1.resize(20);
+//	cout << s1 << endl; //CSDN
+//	cout << s1.size() << endl; //20
+//	cout << s1.capacity() << endl; //31
+//
+//	string s2("CSDN");
+//	//resize(n, char)n大于对象当前的size时，将size扩大到n，扩大的字符为char
+//	s2.resize(20, 'x');
+//	cout << s2 << endl; //CSDNxxxxxxxxxxxxxxxx
+//	cout << s2.size() << endl; //20
+//	cout << s2.capacity() << endl; //31
+//
+//	string s3("CSDN");
+//	//resize(n)n小于对象当前的size时，将size缩小到n
+//	s3.resize(2);
+//	cout << s3 << endl; //CS
+//	cout << s3.size() << endl; //2
+//	cout << s3.capacity() << endl; //15
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	cout << s << endl; //CSDN
+//	cout << s.size() << endl; //4
+//	cout << s.capacity() << endl; //15
+//
+//	//reverse(n)当n大于对象当前的capacity时，将当前对象的capacity扩大为n或大于n
+//	s.reserve(20); 
+//	cout << s << endl; //CDSN
+//	cout << s.size() << endl; //4
+//	cout << s.capacity() << endl; //31
+//
+//	//reverse(n)当n小于对象当前的capacity时，什么也不做
+//	s.reserve(2);
+//	cout << s << endl; //CDSN
+//	cout << s.size() << endl; //4
+//	cout << s.capacity() << endl; //31
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	cout << s << endl;
+//	//clear()删除对象的内容，该对象将变为空字符串
+//	s.clear();
+//	cout << s << endl; //空字符串
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	cout << s.empty() << endl; //0
+//
+//	//clear()删除对象的内容，该对象将变为空字符串
+//	s.clear();
+//	cout << s.empty() << endl; //1
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	//[]+下标访问对象元素
+//	for (size_t i = 0; i < s.size(); i++)
+//	{
+//		cout << s[i];
+//	}
+//	cout << endl;
+//
+//	//[]+下标修改对象元素内容
+//	for (size_t i = 0; i < s.size(); i++)
+//	{
+//		s[i] = 'x';
+//	}
+//	cout << s << endl; //xxxx
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	for (size_t i = 0; i < s.size(); i++)
+//	{
+//		//at(pos)访问pos位置的元素
+//		cout << s.at(i);
+//	}
+//	cout << endl;
+//
+//	for (size_t i = 0; i < s.size(); i++)
+//	{
+//		//at(pos)访问pos位置的元素，并对其进行修改
+//		s.at(i) = 'x';
+//	}
+//	cout << s << endl; //xxxx
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	//使用范围for访问对象元素
+//	for (auto e : s)
+//	{
+//		cout << e;
+//	}
+//	cout << endl; //CSDN
+//
+//	//使用范围for访问对象元素，并对其进行修改
+//	for (auto& e : s)
+//	{
+//		e = 'x';
+//	}
+//	cout << s << endl; //xxxx
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("CSDN");
+//	
+//	//使用迭代器访问对象元素
+//	string::iterator it1 = s.begin();
+//	while (it1 != s.end())
+//	{
+//		cout << *it1;
+//		it1++;
+//	}
+//	cout << endl; //CSDN
+//
+//	//使用迭代器访问对象元素，并对其进行修改
+//	string::iterator it2 = s.begin();
+//	while (it2 != s.end())
+//	{
+//		*it2 += 1;
+//		it2++;
+//	}
+//	cout << s << endl; //DTEO
+//
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s1;
+//	string s2("CSDN");
+//
+//	//支持string类的赋值
+//	s1 = s2;
+//	cout << s1 << endl; //CSDN
+//
+//	//支持字符串的赋值
+//	s1 = "hello";
+//	cout << s1 << endl;  //hello
+//
+//	//支持字符的赋值
+//	s1 = 'x';
+//	cout << s1 << endl; //x
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s1;
+//	string s2("hello");
+//
+//	//支持string类的复合赋值
+//	s1 += s2;
+//	cout << s1 << endl; //hello
+//
+//	//支持字符串的复合赋值
+//	s1 += " CSDN";
+//	cout << s1 << endl; //hello CSDN
+//
+//	//支持字符的复合赋值
+//	s1 += '!';
+//	cout << s1 << endl; //hello CSDN!
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s;
+//	string s1("super");
+//	string s2("man");
+//	char str[] = "woman";
+//	char ch = '!';
+//
+//	//string类 + string类
+//	s = s1 + s2;
+//	cout << s << endl; //superman
+//
+//	//string类 + 字符串
+//	s = s1 + str;
+//	cout << s << endl; //superwoman
+//
+//	//字符串 + string类
+//	s = str + s1;
+//	cout << s << endl; //womansuper
+//
+//	//string类 + 字符
+//	s = s1 + ch;
+//	cout << s << endl; //super!
+//	
+//	//字符 + string类
+//	s = ch + s1;
+//	cout << s << endl; //!super
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s;
+//	cin >> s; //输入
+//	cout << s << endl; //输出
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s1("abcd");
+//	string s2("abde");
+//	cout << (s1 > s2) << endl; //0
+//	cout << (s1 < s2) << endl; //1
+//	cout << (s1 == s2) << endl; //0
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("hello string");
+//
+//	//正向迭代器
+//	string::iterator it = s.begin();
+//	while (it != s.end())
+//	{
+//		cout << *it;
+//		it++;
+//	}
+//	cout << endl; //hello string
+//
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("hello string");
+//
+//	//反向迭代器
+//	string::reverse_iterator rit = s.rbegin();
+//	while (rit != s.rend())
+//	{
+//		cout << *rit;
+//		rit++;
+//	}
+//	cout << endl; //gnirts olleh
+//
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("hello world ");
+//	const char* str1 = s.data();
+//	const char* str2 = s.c_str();
+//
+//	cout << str1 << endl;
+//	cout << str2 << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	//方式一
+//	string s1("hello world");
+//
+//	char str[] = "hello world";
+//	//方式二
+//	string s2(str);
+//
+//	cout << s1 << endl; //hello world
+//	cout << s2 << endl; //hello world
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("abcdef");
+//	char str[20];
+//
+//	//copy(str, n, pos)复制pos位置开始的n个字符到str字符串
+//	size_t length = s.copy(str, 4, 2);
+//	//copy函数不会在复制内容的末尾附加'\0'，需要手动加
+//	str[length] = '\0';
+//	cout << str << endl; //dcef
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s1("abcdef");
+//	string s2;
+//
+//	//substr(pos, n)提取pos位置开始的n个字符序列作为返回值
+//	s2 = s1.substr(2, 4);
+//	cout << s2 << endl; //cdef
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s;
+//	cin >> s; //输入：hello CSDN
+//	cout << s << endl; //输出：hello
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s;
+//	//getline(cin, string)将读取到的字符串存储到string中
+//	getline(cin, s); //输入：hello CSDN
+//	cout << s << endl; //输出：hello CSDN
+//	return 0;
+//}
+
+
 #include <iostream>
 #include <string>
 using namespace std;
 int main()
 {
-	string s("CSDN");
-	cout << s << endl; //CSDN
-	cout << s.size() << endl; //4
-	cout << s.capacity() << endl; //15
-
-	//resize(n)
-	s.resize(20);
-	cout << s << endl; //CSDN
-	cout << s.size() << endl; //20
-	cout << s.capacity() << endl; //31
+	string s;
+	getline(cin, s, 'D'); //输入：hello CSDN
+	cout << s << endl; //输出：hello CS
 	return 0;
 }
