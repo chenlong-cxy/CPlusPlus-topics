@@ -148,16 +148,136 @@
 //}
 
 
-#define _CRT_SECURE_NO_WARNINGS 1
-#include <stdio.h>
+//#define _CRT_SECURE_NO_WARNINGS 1
+//#include <stdio.h>
+//int main()
+//{
+//	int arr[10];
+//	while (scanf("%d", &arr[1])!=EOF)
+//		;
+//	for (int i = 0; i < 10; i++)
+//	{
+//		printf("%d\n", arr[i]);
+//	}
+//	return 0;
+//}
+
+
+////日期差值
+//#include <iostream>
+//using namespace std;
+////判断是否为闰年
+//bool IsLeapYear(int year)
+//{
+//	return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+//}
+//int main()
+//{
+//	int date1, date2; //存储两个日期
+//	int year1, year2, month1, month2, day1, day2; //存储两个日期的年、月、日
+//	int ret = 0; //存储两个日期的差值
+//	int dayArray[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; //dayArray[i]代表i月的天数（平年）
+//	while (cin >> date1 >> date2) //多组测试数据
+//	{
+//		//确保第一个日期比第二个日期小
+//		if (date1 > date2)
+//		{
+//			int tmp = date1;
+//			date1 = date2;
+//			date2 = tmp;
+//		}
+//		//根据两个日期得到其年、月、日
+//		year1 = date1 / 10000, year2 = date2 / 10000;
+//		day1 = date1 % 100, day2 = date2 % 100;
+//		month1 = date1 % 10000 / 100, month2 = date2 % 10000 / 100;
+//		//计算年相差的天数
+//		for (int year = year1; year < year2; year++)
+//		{
+//			if (IsLeapYear(year))
+//				ret += 366;
+//			else
+//				ret += 365;
+//		}
+//		//计算月相差的天数
+//		for (int month = month1; month < month2; month++)
+//		{
+//			ret += dayArray[month];
+//			if (month == 2 && IsLeapYear(year2))
+//				ret += 1;
+//		}
+//		//计算日相差的天数
+//		for (int day = day1; day < day2; day++)
+//		{
+//			ret++;
+//		}
+//		ret++; //结果为闭区间[date1, date2]，所以需要再加1
+//		cout << ret << endl;
+//	}
+//	return 0;
+//}
+
+
+////打印日期
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int year, day;
+//	int dayArray[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; //dayArray[i]代表i月的天数（平年）
+//	while (cin >> year >> day) //多组测试数据
+//	{
+//		int month = 1; //month从1月开始
+//		if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) //判断该年是否为闰年
+//			dayArray[2] += 1; //闰年2月为29天
+//		//使日期合法
+//		while (day > dayArray[month])
+//		{
+//			day -= dayArray[month];
+//			month++;
+//		}
+//		//cout<<year<<"-"<<month<<"-"<<day<<endl;
+//		printf("%d-%02d-%02d\n", year, month, day); //按格式输出
+//	}
+//	return 0;
+//}
+
+
+//日期累加
+#include <iostream>
+using namespace std;
+//判断是否为闰年
+bool IsLeapYear(int year)
+{
+	return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+}
 int main()
 {
-	int arr[10];
-	while (scanf("%d", &arr[1])!=EOF)
-		;
-	for (int i = 0; i < 10; i++)
+	int m, year, month, day, n;
+	int dayArray[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; //dayArray[i]代表i月的天数（平年）
+	cin >> m; //读取样例个数
+	for (int i = 0; i < m; i++)
 	{
-		printf("%d\n", arr[i]);
+		cin >> year >> month >> day >> n; //读取年、月、日和需要累加的天数
+		if (IsLeapYear(year))
+			dayArray[2] = 29; //闰年2月设置为29天
+		day += n; //先将需要累加的天数加到“日”上
+		//使日期合法
+		while (day > dayArray[month])
+		{
+			day -= dayArray[month];
+			month++;
+			if (month == 13) //“年”需要进位
+			{
+				year++;
+				month = 1;
+				//判断新的一年是否为闰年
+				if (IsLeapYear(year))
+					dayArray[2] = 29; //闰年2月设置为29天
+				else
+					dayArray[2] = 28; //平年2月设置为28天
+			}
+		}
+		printf("%d-%02d-%02d\n", year, month, day); //按格式输出
 	}
 	return 0;
 }
