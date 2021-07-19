@@ -331,3 +331,142 @@ using namespace std;
 //}
 
 
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	cout << isdigit('1') << endl;
+//	cout << isdigit('a') << endl;
+//	return 0;
+//}
+
+
+//把字符串转换为整数
+//class Solution {
+//public:
+//	int StrToInt(string str) {
+//		int start = 0;
+//		int end = str.size() - 1;
+//		int ret = 0;
+//		int i = 1;
+//		while (start < end)
+//		{
+//			if (str[end] < '0' || str[end] > '9')
+//			{
+//				return 0;
+//			}
+//			ret += i*(str[end] - '0');
+//			i *= 10;
+//			end--;
+//		}
+//		if (str[end] >= '0' && str[end] <= '9')
+//			return ret + i*(str[end] - '0');
+//		if (str[end] == '+')
+//			return ret;
+//		if (str[end] == '-')
+//			return -ret;
+//		return 0;
+//	}
+//};
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	string s("Let's take LeetCode contest");
+//	size_t i = 0;
+//	size_t found = s.find(' ');
+//	while (found != std::string::npos)
+//	{
+//		cout << found << endl;
+//		i = found + 1;
+//		found = s.find(' ', i);
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//void myReverse(string& s, size_t start, size_t end)
+//{
+//	while (start < end)
+//	{
+//		char tmp = s[start];
+//		s[start] = s[end];
+//		s[end] = tmp;
+//		start++;
+//		end--;
+//	}
+//}
+//int main()
+//{
+//	string s("Let's take LeetCode contest");
+//	size_t start = 0;
+//	size_t end = s.find(' ');
+//	while (end != std::string::npos)
+//	{
+//		myReverse(s, start, end-1);
+//		start = end + 1;
+//		end = s.find(' ', start);
+//	}
+//	end = s.size();
+//	myReverse(s, start, end-1);
+//	cout << s << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main()
+//{
+//	int k = 2;
+//	string s("abcdefg");
+//	size_t start = 0;
+//	size_t end = s.size() - 1;
+//	int flag = 0;
+//	while (start < end)
+//	{
+//		if (flag % 2 == 0)
+//		{
+//			size_t left = start, right = start + k - 1;
+//			if (right > end)
+//				right = end;
+//			while (left < right)
+//			{
+//				char tmp = s[left];
+//				s[left] = s[right];
+//				s[right] = tmp;
+//				left++;
+//				right--;
+//			}
+//		}
+//		start += k;
+//		flag++;
+//	}
+//	cout << s << endl;
+//	return 0;
+//}
+
+
+class Solution {
+public:
+	string reverseStr(string s, int k) {
+		int sz = s.size();
+		for (int start = 0; start < sz; start += 2 * k)
+		{
+			int left = start;
+			int right = start + k - 1;
+			if (right >= sz)
+				right = sz - 1;
+			while (left < right)
+				swap(s[left++], s[right--]);
+		}
+		return s;
+	}
+}
