@@ -20,6 +20,27 @@ int main()
 	//cl::test_string4();
 	//test();
 	//cl::test_string5();
-	cl::test_string6();
+	//cl::test_string6();
+	//string s1("hello");
+	//string s2("byebye");
+	//cout << s1 << endl;
+	//cout << s1.size() << endl;
+	//cout << s1.capacity() << endl;
+	//cout << s2 << endl;
+	//cout << s2.size() << endl;
+	//cout << s2.capacity() << endl;
+	//s1.swap(s2);
+	//cout << s1 << endl;
+	//cout << s1.size() << endl;
+	//cout << s1.capacity() << endl;
+	//cout << s2 << endl;
+	//cout << s2.size() << endl;
+	//cout << s2.capacity() << endl;
+	//cl::test_string7();
+	//string s("");
+	//cout << s.empty() << endl;
+	//string s1;
+	//cout << s.empty() << endl;
+	cl::test_string8();
 	return 0;
 }
