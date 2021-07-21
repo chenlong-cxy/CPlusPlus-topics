@@ -167,17 +167,17 @@ namespace cl
 		//	}
 		//	return *this; //返回左值（支持连续赋值）
 		//}
-		//可读可写
+		//[]运算符重载（可读可写）
 		char& operator[](size_t i)
 		{
-			assert(i < _size);
-			return _str[i];
+			assert(i < _size); //检测下标的合法性
+			return _str[i]; //返回对应字符
 		}
-		//只读
+		//[]运算符重载（只读）
 		const char& operator[](size_t i)const
 		{
-			assert(i < _size);
-			return _str[i];
+			assert(i < _size); //检测下标的合法性
+			return _str[i]; //返回对应字符
 		}
 
 		iterator begin()
@@ -266,7 +266,7 @@ namespace cl
 			append(str); //尾插字符串
 			return *this; //返回左值（支持连续+=）
 		}
-
+		//>运算符重载
 		bool operator>(const string& s)const
 		{
 			//size_t i = 0;
@@ -284,22 +284,27 @@ namespace cl
 			else
 				return false;
 		}
+		//>=运算符重载
 		bool operator>=(const string& s)const
 		{
 			return (*this > s) || (*this == s);
 		}
+		//<运算符重载
 		bool operator<(const string& s)const
 		{
 			return !(*this >= s);
 		}
+		//<=运算符重载
 		bool operator<=(const string& s)const
 		{
 			return !(*this > s);
 		}
+		//==运算符重载
 		bool operator==(const string& s)const
 		{
 			return !strcmp(_str, s._str);
 		}
+		//!=运算符重载
 		bool operator!=(const string& s)const
 		{
 			return !(*this == s);
