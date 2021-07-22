@@ -81,8 +81,12 @@ namespace cl
 {
 	class string
 	{
+		//声明<<和>>运算符重载函数为string类的友元函数
+		//friend istream& operator>>(istream& cin, string& s);
+		//friend ostream& operator<<(ostream& cout, const string& s);
 	public:
 		typedef char* iterator;
+		typedef const char* const_iterator;
 		//构造函数
 		string(const char* str = "")
 		{
@@ -188,6 +192,14 @@ namespace cl
 		{
 			return _str + _size; //返回字符串中最后一个字符的后一个字符的地址
 		}
+		const_iterator begin()const
+		{
+			return _str; //返回字符串中第一个字符的const地址
+		}
+		const_iterator end()const
+		{
+			return _str + _size; //返回字符串中最后一个字符的后一个字符的const地址
+		}
 		//大小
 		size_t size()const
 		{
@@ -201,24 +213,35 @@ namespace cl
 		//判空
 		bool empty()
 		{
-			return !strcmp(_str, "");
+			return strcmp(_str, "") == 0;
 		}
 		//清空字符串
 		void clear()
 		{
-			_str = ""; //将字符串置空
+			_size = 0; //size置空
+			_str[_size] = '\0'; //字符串后面放上'\0'
 		}
-		//待定
+		//改变大小
 		void resize(size_t n, char ch = '\0')
 		{
-			reserve(n); //若n大于对象当前容量，则需调用reserve函数进行增容
-			//
-			for (size_t i = _size; i < n; i++)
+			if (n <= _size) //n小于当前size
 			{
-				_str[i] = ch;
+				_size = n; //将size调整为n
+				_str[_size] = '\0'; //在size个字符后放上'\0'
 			}
-			_size = n;
-			_str[n] = '\0';
+			else //n大于当前的size
+			{
+				if (n > _capacity) //判断是否需要扩容
+				{
+					reserve(n); //扩容
+				}
+				for (size_t i = _size; i < n; i++) //将size扩大到n，扩大的字符为ch
+				{
+					_str[i] = ch;
+				}
+				_size = n; //size更新
+				_str[_size] = '\0'; //字符串后面放上'\0'
+			}
 		}
 		//改变容量，大小不变
 		void reserve(size_t n)
@@ -226,7 +249,7 @@ namespace cl
 			if (n > _capacity) //当n大于对象当前容量时才需执行操作
 			{
 				char* tmp = new char[n + 1]; //多开一个空间用于存放'\0'
-				strcpy(tmp, _str); //将对象原本的C字符串拷贝过来
+				strncpy(tmp, _str, _size + 1); //将对象原本的C字符串拷贝过来（包括'\0'）
 				delete[] _str; //释放对象原本的空间
 				_str = tmp; //将新开辟的空间交给_str
 				_capacity = n; //容量跟着改变
@@ -235,24 +258,28 @@ namespace cl
 		//尾插字符
 		void push_back(char ch)
 		{
-			if (_size == _capacity) //判断是否需要增容
-			{
-				reserve(2 * _capacity); //将容量扩大为原来的两倍
-			}
-			_str[_size] = ch; //将字符尾插到字符串
-			_str[_size + 1] = '\0'; //字符串后面放上'\0'
-			_size++; //字符串的大小加一
+			//if (_size == _capacity) //判断是否需要增容
+			//{
+			//	reserve(_capacity == 0 ? 4 : _capacity * 2); //将容量扩大为原来的两倍
+			//}
+			//_str[_size] = ch; //将字符尾插到字符串
+			//_str[_size + 1] = '\0'; //字符串后面放上'\0'
+			//_size++; //字符串的大小加一
+
+			insert(_size, ch); //在字符串末尾插入字符ch
 		}
 		//尾插字符串
 		void append(const char* str)
 		{
-			size_t len = _size + strlen(str); //尾插str后字符串的大小（不包括'\0'）
-			if (len > _capacity) //判断是否需要增容
-			{
-				reserve(len); //增容
-			}
-			strcpy(_str + _size, str); //将str尾插到字符串后面
-			_size = len; //字符串大小改变
+			//size_t len = _size + strlen(str); //尾插str后字符串的大小（不包括'\0'）
+			//if (len > _capacity) //判断是否需要增容
+			//{
+			//	reserve(len); //增容
+			//}
+			//strcpy(_str + _size, str); //将str尾插到字符串后面
+			//_size = len; //字符串大小改变
+
+			insert(_size, str); //在字符串末尾插入字符串str
 		}
 		//+=运算符重载
 		string& operator+=(char ch)
@@ -266,23 +293,137 @@ namespace cl
 			append(str); //尾插字符串
 			return *this; //返回左值（支持连续+=）
 		}
+		//在pos位置插入字符
+		string& insert(size_t pos, char ch)
+		{
+			assert(pos <= _size); //检测下标的合法性
+			if (_size == _capacity) //判断是否需要增容
+			{
+				reserve(_capacity == 0 ? 4 : _capacity * 2); //将容量扩大为原来的两倍
+			}
+			char* end = _str + _size;
+			//将pos位置及其之后的字符向后挪动一位
+			while (end >= _str + pos)
+			{
+				*(end + 1) = *(end);
+				end--;
+			}
+			_str[pos] = ch; //pos位置放上指定字符
+			_size++; //size更新
+			return *this;
+		}
+		//在pos位置插入字符串
+		string& insert(size_t pos, const char* str)
+		{
+			assert(pos <= _size); //检测下标的合法性
+			size_t len = strlen(str); //计算需要插入的字符串的长度（不含'\0'）
+			if (len + _size > _capacity) //判断是否需要增容
+			{
+				reserve(len + _size); //增容
+			}
+			char* end = _str + _size;
+			//将pos位置及其之后的字符向后挪动len位
+			while (end >= _str + pos)
+			{
+				*(end + len) = *(end);
+				end--;
+			}
+			strncpy(_str + pos, str, len); //pos位置开始放上指定字符串
+			_size += len; //size更新
+			return *this;
+		}
+		//删除pos位置开始的len个字符
+		string& erase(size_t pos, size_t len = npos)
+		{
+			assert(pos < _size); //检测下标的合法性
+			size_t n = _size - pos; //pos位置及其后面的有效字符总数
+			if (len >= n) //说明pos位置及其后面的字符都被删除
+			{
+				_size = pos; //size更新
+				_str[_size] = '\0'; //字符串后面放上'\0'
+			}
+			else //说明pos位置及其后方的有效字符需要保留一部分
+			{
+				strcpy(_str + pos, _str + pos + len); //用需要保留的有效字符覆盖需要删除的有效字符
+				_size -= len; //size更新
+			}
+			return *this;
+		}
+		//正向查找第一个匹配的字符
+		size_t find(char ch, size_t pos = 0)
+		{
+			assert(pos < _size); //检测下标的合法性
+			for (size_t i = pos; i < _size; i++) //从pos位置开始向后寻找目标字符
+			{
+				if (_str[i] == ch)
+				{
+					return i; //找到目标字符，返回其下标
+				}
+			}
+			return npos; //没有找到目标字符，返回npos
+		}
+		//正向查找第一个匹配的字符串
+		size_t find(const char* str, size_t pos = 0)
+		{
+			assert(pos < _size); //检测下标的合法性
+			const char* ret = strstr(_str + pos, str); //调用strstr进行查找
+			if (ret) //ret不为空指针，说明找到了
+			{
+				return ret - _str; //返回字符串第一个字符的下标
+			}
+			else //没有找到
+			{
+				return npos; //返回npos
+			}
+		}
+		//反向查找第一个匹配的字符
+		size_t rfind(char ch, size_t pos = npos)
+		{
+			string tmp(*this); //拷贝构造对象tmp
+			reverse(tmp.begin(), tmp.end()); //调用reverse逆置对象tmp的C字符串
+			if (pos >= _size) //所给pos大于字符串有效长度
+			{
+				pos = _size - 1; //重新设置pos为字符串最后一个字符的下标
+			}
+			pos = _size - 1 - pos; //将pos改为镜像对称后的位置
+			size_t ret = tmp.find(ch, pos); //复用find函数
+			if (ret != npos)
+				return _size - 1 - ret; //找到了，返回ret镜像对称后的位置
+			else
+				return npos; //没找到，返回npos
+		}
+		//反向查找第一个匹配的字符串
+		size_t rfind(const char* str, size_t pos = npos)
+		{
+			string tmp(*this); //拷贝构造对象tmp
+			reverse(tmp.begin(), tmp.end()); //调用reverse逆置对象tmp的C字符串
+			size_t len = strlen(str); //待查找的字符串的长度
+			char* arr = new char[len + 1]; //开辟arr字符串（用于拷贝str字符串）
+			strcpy(arr, str); //拷贝str给arr
+			size_t left = 0, right = len - 1; //设置左右指针
+			//逆置字符串arr
+			while (left < right)
+			{
+				::swap(arr[left], arr[right]);
+				left++;
+				right--;
+			}
+			if (pos >= _size) //所给pos大于字符串有效长度
+			{
+				pos = _size - 1; //重新设置pos为字符串最后一个字符的下标
+			}
+			pos = _size - 1 - pos; //将pos改为镜像对称后的位置
+			size_t ret = tmp.find(arr, pos); //复用find函数
+			delete[] arr; //销毁arr指向的空间，避免内存泄漏
+			if (ret != npos)
+				return _size - ret - len; //找到了，返回ret镜像对称后再调整的位置
+			else
+				return npos; //没找到，返回npos
+		}
 		//>运算符重载
 		bool operator>(const string& s)const
 		{
-			//size_t i = 0;
-			//size_t len1 = size(), len2 = s.size();
-			//while (i <= len1||i <= len2)
-			//{
-			//	if (_str[i] > s._str[i])
-			//		return true;
-			//	else if (_str[i] < s._str[i])
-			//		return false;
-			//	i++;
-			//}
-			if (strcmp(_str, s._str) > 0)
-				return true;
-			else
-				return false;
+			return strcmp(_str, s._str) > 0;
 		}
 		//>=运算符重载
 		bool operator>=(const string& s)const
@@ -302,7 +443,7 @@ namespace cl
 		//==运算符重载
 		bool operator==(const string& s)const
 		{
-			return !strcmp(_str, s._str);
+			return strcmp(_str, s._str) == 0;
 		}
 		//!=运算符重载
 		bool operator!=(const string& s)const
@@ -319,7 +460,44 @@ namespace cl
 		char* _str;
 		size_t _size;
 		size_t _capacity;
+		static const size_t npos;
 	};
+	const size_t string::npos = -1;
+	//>>运算符的重载
+	istream& operator>>(istream& in, string& s)
+	{
+		s.clear(); //清空字符串
+		char ch = in.get(); //读取一个字符
+		while (ch != ' '&&ch != '\n') //当读取到的字符不是空格或'\n'的时候继续读取
+		{
+			s += ch; //将读取到的字符尾插到字符串后面
+			ch = in.get(); //继续读取字符
+		}
+		return in; //支持连续输入
+	}
+	//<<运算符的重载
+	ostream& operator<<(ostream& out, const string& s)
+	{
+		//使用范围for遍历字符串并输出
+		for (auto e : s)
+		{
+			cout << e;
+		}
+		return out; //支持连续输出
+	}
+	//读取一行含有空格的字符串
+	istream& getline(istream& in, string& s)
+	{
+		s.clear(); //清空字符串
+		char ch = in.get(); //读取一个字符
+		while (ch != '\n') //当读取到的字符不是'\n'的时候继续读取
+		{
+			s += ch; //将读取到的字符尾插到字符串后面
+			ch = in.get(); //继续读取字符
+		}
+		return in;
+	}
+
 	void test_string1()
 	{
 		string s1("hello world");
@@ -439,6 +617,58 @@ namespace cl
 		cout << s.size() << endl;
 		cout << s.capacity() << endl;
 	}
+	void test_string9()
+	{
+		string s("hello world");
+		s.insert(3, "what");
+		cout << s.c_str() << endl;
+		s.insert(0, "what");
+		cout << s.c_str() << endl;
+		s.insert(3, 'p');
+		cout << s.c_str() << endl;
+		s.insert(0, 'x');
+		cout << s.c_str() << endl;
+		s.erase(4, 3);
+		cout << s.c_str() << endl;
+		s.erase(2);
+		cout << s.c_str() << endl;
+	}
+	void test_string10()
+	{
+		string s("hello world");
+		//cout << s.find('w', 0) << endl;
+		//cout << s.c_str() << endl;
+
+		//cout << s.find('r', 2) << endl;
+		//cout << s.c_str() << endl;
+
+		//cout << s.find(" w", 0) << endl;
+		//cout << s.c_str() << endl;
+
+		//cout << s.find("w ") << endl;
+		//cout << s.c_str() << endl;
+
+		//cout << s.rfind('w', 20) << endl;
+		//cout << s.c_str() << endl;
+
+		//cout << s.rfind('e', 60) << endl;
+		//cout << s.c_str() << endl;
+
+		cout << s.rfind("elo", 0) << endl;
+		cout << s.c_str() << endl;
+
+		cout << s.rfind("rl", 9) << endl;
+		cout << s.c_str() << endl;
+	}
+	void test_string11()
+	{
+		string s("hello world");
+		cout << s << endl;
+		cin >> s;
+		cout << s << endl;
+		getline(cin, s);
+		cout << s << endl;
+	}
 }
 
 //namespace cl
@@ -446,20 +676,24 @@ namespace cl
 //	//模拟实现string类
 //	class string
 //	{
-//		//<<和>>运算符重载函数
+//		//声明<<和>>运算符重载函数为string类的友元函数
 //		friend istream& operator>>(istream& cin, string& s);
 //		friend ostream& operator<<(ostream& cout, const string& s);
 //	public:
 //		typedef char* iterator;
+//		typedef const char* const_iterator;
+//
 //		//默认成员函数
-//		string(const char* str = "");          //构造函数
-//		string(const string& s);               //拷贝构造函数
-//		string& operator=(const string& s);    //赋值运算符重载函数
-//		~string();                             //析构函数
+//		string(const char* str = "");         //构造函数
+//		string(const string& s);              //拷贝构造函数
+//		string& operator=(const string& s);   //赋值运算符重载函数
+//		~string();                            //析构函数
 //
 //		//迭代器相关函数
 //		iterator begin();
 //		iterator end();
+//		const_iterator begin()const;
+//		const_iterator end()const;
 //
 //		//容量和大小相关函数
 //		size_t size();
@@ -470,8 +704,8 @@ namespace cl
 //
 //		//修改字符串相关函数
 //		void push_back(char ch);
-//		string& operator+=(char ch);
 //		void append(const char* str);
+//		string& operator+=(char ch);
 //		string& operator+=(const char* str);
 //		string& insert(size_t pos, char ch);
 //		string& insert(size_t pos, const char* str);
@@ -485,6 +719,8 @@ namespace cl
 //		const char& operator[](size_t i)const;
 //		size_t find(char ch, size_t pos = 0)const;
 //		size_t find(const char* str, size_t pos = 0)const;
+//		size_t rfind(char ch, size_t pos = npos)const;
+//		size_t rfind(const char* str, size_t pos = 0)const;
 //
 //		//关系运算符重载函数
 //		bool operator>(const string& s)const;
@@ -495,8 +731,15 @@ namespace cl
 //		bool operator!=(const string& s)const;
 //
 //	private:
-//		char* _str;
-//		size_t _size;
-//		size_t _capacity;
+//		char* _str;       //存储字符串
+//		size_t _size;     //记录字符串当前的有效长度
+//		size_t _capacity; //记录字符串当前的容量
+//		static const size_t npos; //静态成员变量（整型最大值）
 //	};
+//	const size_t string::npos = -1;
+//
+//	//<<和>>运算符重载函数
+//	istream& operator>>(istream& in, string& s);
+//	ostream& operator<<(ostream& out, const string& s);
+//	istream& getline(istream& in, string& s);
 //}

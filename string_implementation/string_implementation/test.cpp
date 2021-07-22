@@ -41,6 +41,11 @@ int main()
 	//cout << s.empty() << endl;
 	//string s1;
 	//cout << s.empty() << endl;
-	cl::test_string8();
+	//cl::test_string8();
+	//cl::test_string9();
+	//cl::test_string10();
+	//string s("hello world");
+	//cout << s.rfind("rl", 9) << endl;
+	cl::test_string11();
 	return 0;
 }
