@@ -277,19 +277,114 @@
 //}
 
 
+//#include <iostream>
+//#include <vector>
+//using namespace std;
+//
+//int main()
+//{
+//	vector<int> v1(2, 1);
+//	vector<int> v2(2, 2);
+//	cout << (v1 > v2) << endl;
+//	cout << (v1 >= v2) << endl;
+//	cout << (v1 < v2) << endl;
+//	cout << (v1 <= v2) << endl;
+//	cout << (v1 == v2) << endl;
+//	cout << (v1 != v2) << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <algorithm>
+//#include <vector>
+//using namespace std;
+//
+//int main()
+//{
+//	vector<int> v;
+//	v.push_back(1);
+//	v.push_back(2);
+//	v.push_back(3);
+//	v.push_back(4);
+//	v.push_back(5);
+//	for (size_t i = 0; i < v.size(); i++)
+//	{
+//		cout << v[i] << " ";
+//	}
+//	cout << endl;
+//	vector<int>::iterator pos = find(v.begin(), v.end(), 2); //获取值为2的元素的迭代器
+//	v.insert(pos, 10); //在值为2的元素的位置插入10
+//	for (size_t i = 0; i < v.size(); i++)
+//	{
+//		cout << v[i] << " ";
+//	}
+//	cout << endl;
+//	pos = find(v.begin(), v.end(), 2); //重新获取值为2的元素的迭代器
+//	v.erase(pos); //删除元素2
+//	for (size_t i = 0; i < v.size(); i++)
+//	{
+//		cout << v[i] << " ";
+//	}
+//	cout << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <vector>
+//using namespace std;
+//
+//int main()
+//{
+//	vector<int> v;
+//	for (size_t i = 1; i <= 6; i++)
+//	{
+//		v.push_back(i);
+//	}
+//	vector<int>::iterator it = v.begin();
+//	while (it != v.end())
+//	{
+//		if (*it % 2 == 0) //删除容器当中的全部偶数
+//		{
+//			it = v.erase(it); //删除后获取下一个元素的迭代器
+//		}
+//		else
+//		{
+//			it++; //是奇数则it++
+//		}
+//	}
+//	for (size_t i = 0; i < v.size(); i++)
+//	{
+//		cout << v[i] << " ";
+//	}
+//	cout << endl;
+//	return 0;
+//}
+
+
 #include <iostream>
+#include <algorithm>
 #include <vector>
 using namespace std;
-
 int main()
 {
-	vector<int> v1(2, 1);
-	vector<int> v2(2, 2);
-	cout << (v1 > v2) << endl;
-	cout << (v1 >= v2) << endl;
-	cout << (v1 < v2) << endl;
-	cout << (v1 <= v2) << endl;
-	cout << (v1 == v2) << endl;
-	cout << (v1 != v2) << endl;
+	vector<int> v;
+	for (size_t i = 0; i <= 10; i++)
+	{
+		v.push_back(i);
+	}
+	vector<int>::iterator l = v.begin();
+	vector<int>::iterator it = find(v.begin(), v.end(), 5);
+	vector<int>::iterator r = find(v.begin(), v.end(), 8);
+	v.insert(it, 11);
+	//l++;
+	r--;
+	v.erase(r);
+	for (auto e : v)
+	{
+		cout << e << " ";
+	}
+	cout << endl;
 	return 0;
 }
