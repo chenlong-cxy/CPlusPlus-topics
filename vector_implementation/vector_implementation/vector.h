@@ -16,7 +16,27 @@ namespace cl
 			, _finish(nullptr)
 			, _endofstorage(nullptr)
 		{}
-
+		
+		//vector<T>& operator=(const vector<T> v)
+		//{
+		//	swap(tmp);
+		//	return *this;
+		//}
+		vector<T>& operator=(const vector<T>& v)
+		{
+			if (this != &v)
+			{
+				delete[] _start;
+				T* tmp = new T[v.capacity()];
+				for (size_t i = 0; i < size(); i++)
+				{
+					_start[i] = tmp[i];
+				}
+				_finish = _start + v.size();
+				_endofstorage = _start + v.capacity();
+			}
+			return *this;
+		}
 		size_t size()const
 		{
 			return _finish - _start;
