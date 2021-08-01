@@ -1,13 +1,39 @@
-﻿生成启动时间为 2021/7/30 20:44:11。
-     1>项目“D:\code\vector_implementation\vector_implementation\vector_implementation.vcxproj”在节点 2 上(Build 个目标)。
+﻿生成启动时间为 2021/8/1 20:20:03。
+     1>项目“D:\github\CPlusPlus-topics\vector_implementation\vector_implementation\vector_implementation.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt test.cpp
          test.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\code\vector_implementation\Debug\vector_implementation.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\code\vector_implementation\Debug\vector_implementation.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\code\vector_implementation\Debug\vector_implementation.lib" /MACHINE:X86 Debug\test.obj
-         vector_implementation.vcxproj -> D:\code\vector_implementation\Debug\vector_implementation.exe
-     1>已完成生成项目“D:\code\vector_implementation\vector_implementation\vector_implementation.vcxproj”(Build 个目标)的操作。
+     1>d:\github\cplusplus-topics\vector_implementation\vector_implementation\vector.h(64): error C2784: “unknown-type std::operator -(std::move_iterator<_RanIt> &,const std::move_iterator<_RanIt2> &)”: 未能从“std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>”为“std::move_iterator<_RanIt> &”推导 模板 参数
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1969) : 参见“std::operator -”的声明
+                 d:\github\cplusplus-topics\vector_implementation\vector_implementation\vector.h(583): 参见对正在编译的函数 模板 实例化“cl::vector<std::string>::vector<std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>>(InputIterator,InputIterator)”的引用
+                 with
+                 [
+                     InputIterator=std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>
+                 ]
+                 d:\github\cplusplus-topics\vector_implementation\vector_implementation\vector.h(583): 参见对正在编译的函数 模板 实例化“cl::vector<std::string>::vector<std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>>(InputIterator,InputIterator)”的引用
+                 with
+                 [
+                     InputIterator=std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1969) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1969) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1969) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1969) : 参见“std::operator -”的声明
+     1>d:\github\cplusplus-topics\vector_implementation\vector_implementation\vector.h(64): error C2784: “unknown-type std::operator -(const std::reverse_iterator<_RanIt> &,const std::reverse_iterator<_RanIt2> &)”: 未能从“std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>”为“const std::reverse_iterator<_RanIt> &”推导 模板 参数
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1130) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1130) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1130) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1130) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(1130) : 参见“std::operator -”的声明
+     1>d:\github\cplusplus-topics\vector_implementation\vector_implementation\vector.h(64): error C2784: “unknown-type std::operator -(const std::_Revranit<_RanIt,_Base> &,const std::_Revranit<_RanIt2,_Base2> &)”: 未能从“std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>”为“const std::_Revranit<_RanIt,_Base> &”推导 模板 参数
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(937) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(937) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(937) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(937) : 参见“std::operator -”的声明
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\xutility(937) : 参见“std::operator -”的声明
+     1>d:\github\cplusplus-topics\vector_implementation\vector_implementation\vector.h(64): error C2676: 二进制“-”:“std::_List_iterator<std::_List_val<std::_List_simple_types<std::basic_string<char,std::char_traits<char>,std::allocator<char>>>>>”不定义该运算符或到预定义运算符可接收的类型的转换
+     1>已完成生成项目“D:\github\CPlusPlus-topics\vector_implementation\vector_implementation\vector_implementation.vcxproj”(Build 个目标)的操作 - 失败。
 
-生成成功。
+生成失败。
 
-已用时间 00:00:00.70
+已用时间 00:00:00.47

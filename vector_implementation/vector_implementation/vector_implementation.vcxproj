@@ -76,6 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="stl_vector.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
