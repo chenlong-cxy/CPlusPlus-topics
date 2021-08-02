@@ -69,50 +69,53 @@ namespace cl
 			}
 		}
 		//传统写法
-		vector(const vector<T>& v)
-			:_start(nullptr)
-			, _finish(nullptr)
-			, _endofstorage(nullptr)
-		{
-			_start = new T[v.capacity()]; //开辟一块和容器v大小相同的空间
-			for (size_t i = 0; i < v.size(); i++) //将容器v当中的数据一个个拷贝过来
-			{
-				_start[i] = v[i];
-			}
-			_finish = _start + v.size(); //容器有效数据的尾
-			_endofstorage = _start + v.capacity(); //整个容器的尾
-		}
 		//vector(const vector<T>& v)
 		//	:_start(nullptr)
 		//	, _finish(nullptr)
 		//	, _endofstorage(nullptr)
 		//{
-		//	reserve(v.capacity());
-		//	for (auto e : v)
+		//	_start = new T[v.capacity()]; //开辟一块和容器v大小相同的空间
+		//	for (size_t i = 0; i < v.size(); i++) //将容器v当中的数据一个个拷贝过来
+		//	{
+		//		_start[i] = v[i];
+		//	}
+		//	_finish = _start + v.size(); //容器有效数据的尾
+		//	_endofstorage = _start + v.capacity(); //整个容器的尾
+		//}
+		//现代写法
+		//vector(const vector<T>& v)
+		//	:_start(nullptr)
+		//	, _finish(nullptr)
+		//	, _endofstorage(nullptr)
+		//{
+		//	reserve(v.capacity()); //调用reserve函数将容器容量设置为与v相同
+		//	for (auto e : v) //将容器v当中的数据一个个尾插过来
 		//	{
 		//		push_back(e);
 		//	}
 		//}
-		vector<T>& operator=(vector<T> v)
-		{
-			swap(v);
-			return *this;
-		}
+		//传统写法
 		//vector<T>& operator=(const vector<T>& v)
 		//{
-		//	if (this != &v)
+		//	if (this != &v) //防止自己给自己赋值
 		//	{
-		//		delete[] _start;
-		//		_start = new T[v.capacity()];
-		//		for (size_t i = 0; i < v.size(); i++)
+		//		delete[] _start; //释放原来的空间
+		//		_start = new T[v.capacity()]; //开辟一块和容器v大小相同的空间
+		//		for (size_t i = 0; i < v.size(); i++) //将容器v当中的数据一个个拷贝过来
 		//		{
 		//			_start[i] = v[i];
 		//		}
-		//		_finish = _start + v.size();
-		//		_endofstorage = _start + v.capacity();
+		//		_finish = _start + v.size(); //容器有效数据的尾
+		//		_endofstorage = _start + v.capacity(); //整个容器的尾
 		//	}
-		//	return *this;
+		//	return *this; //支持连续赋值
 		//}
+		//现代写法
+		vector<T>& operator=(vector<T> v) //编译器接收右值的时候自动调用其拷贝构造函数
+		{
+			swap(v); //交换这两个对象
+			return *this; //支持连续赋值
+		}
 		~vector()
 		{
 			if (_start)
@@ -588,6 +591,37 @@ namespace cl
 		cout << endl;
 		cout << v.size() << endl;
 		cout << v.capacity() << endl;
+	}
+	void test9()
+	{
+		vector<string> v;
+		v.push_back("hello world");
+		v.push_back("hello world");
+		v.push_back("hello world");
+		v.push_back("hello world");
+		v.push_back("hello world");
+		vector<string> copy(v);
+		for (auto e : v)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+		for (auto e : copy)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+		copy[2] = "hello Linux";
+		for (auto e : v)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+		for (auto e : copy)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
 	}
 }
 
