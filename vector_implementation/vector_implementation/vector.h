@@ -37,8 +37,8 @@ namespace cl
 			, _finish(nullptr)
 			, _endofstorage(nullptr)
 		{
-			reserve(n);
-			for (size_t i = 0; i < n; i++)
+			reserve(n); //调用reserve函数将容器容量设置为n
+			for (size_t i = 0; i < n; i++) //尾插n个值为val的数据到容器当中
 			{
 				push_back(val);
 			}
@@ -48,8 +48,8 @@ namespace cl
 			, _finish(nullptr)
 			, _endofstorage(nullptr)
 		{
-			reserve(n);
-			for (int i = 0; i < n; i++)
+			reserve(n); //调用reserve函数将容器容量设置为n
+			for (int i = 0; i < n; i++) //尾插n个值为val的数据到容器当中
 			{
 				push_back(val);
 			}
@@ -116,141 +116,151 @@ namespace cl
 			swap(v); //交换这两个对象
 			return *this; //支持连续赋值
 		}
+		//析构函数
 		~vector()
 		{
-			if (_start)
+			if (_start) //避免对空指针进行释放
 			{
-				delete[] _start;
+				delete[] _start; //释放容器存储数据的空间
+				_start = nullptr; //_start置空
+				_finish = nullptr; //_finish置空
+				_endofstorage = nullptr; //_endofstorage置空
 			}
-			_finish = nullptr;
-			_endofstorage = nullptr;
 		}
 		size_t size()const
 		{
-			return _finish - _start;
+			return _finish - _start; //返回容器当中有效数据的个数
 		}
 		size_t capacity()const
 		{
-			return _endofstorage - _start;
+			return _endofstorage - _start; //返回当前容器的最大容量
 		}
 		iterator begin()
 		{
-			return _start;
+			return _start; //返回容器的首地址
 		}
 		iterator end()
 		{
-			return _finish;
+			return _finish; //返回容器当中有效数据的下一个数据的地址
 		}
 		const_iterator begin()const
 		{
-			return _start;
+			return _start; //返回容器的首地址
 		}
 		const_iterator end()const
 		{
-			return _finish;
+			return _finish; //返回容器当中有效数据的下一个数据的地址
 		}
 		T& operator[](size_t i)
 		{
-			assert(i < size());
+			assert(i < size()); //检测下标的合法性
 
-			return _start[i];
+			return _start[i]; //返回对应数据
 		}
 		const T& operator[](size_t i)const
 		{
-			assert(i < size());
+			assert(i < size()); //检测下标的合法性
 
-			return _start[i];
+			return _start[i]; //返回对应数据
 		}
 		void reserve(size_t n)
 		{
-			if (n > capacity())
+			if (n > capacity()) //判断是否需要进行操作
 			{
-				size_t sz = size();
-				T* tmp = new T[n];
-				if (_start)
+				size_t sz = size(); //记录当前容器当中有效数据的个数
+				T* tmp = new T[n]; //开辟一块可以容纳n个数据的空间
+				if (_start) //判断是否为空容器
 				{
 					//memmove(tmp, _start, sz*sizeof(T));
-					for (size_t i = 0; i < sz; i++)
+					for (size_t i = 0; i < sz; i++) //将容器当中的数据一个个拷贝到tmp当中
 					{
 						tmp[i] = _start[i];
 					}
-					delete[] _start;
+					delete[] _start; //将容器本身存储数据的空间释放
 				}
-				_start = tmp;
-				_finish = _start + sz;
-				_endofstorage = _start + n;
+				_start = tmp; //将tmp所维护的数据交给_start进行维护
+				_finish = _start + sz; //容器有效数据的尾
+				_endofstorage = _start + n; //整个容器的尾
 			}
 		}
 		void resize(size_t n, const T& val = T())
 		{
-			if (n < size())
+			if (n < size()) //当n小于当前的size时
 			{
-				_finish = _start + n;
+				_finish = _start + n; //将size缩小到n
 			}
-			else
+			else //当n大于当前的size时
 			{
-				if (n > capacity())
+				if (n > capacity()) //判断是否需要增容
 				{
 					reserve(n);
 				}
-				while (_finish < _start + n)
+				while (_finish < _start + n) //将size扩大到n
 				{
 					*_finish = val;
 					_finish++;
 				}
 			}
 		}
+		//尾插数据
 		void push_back(const T& x)
 		{
-			if (_finish == _endofstorage)
+			if (_finish == _endofstorage) //判断是否需要增容
 			{
-				size_t newcapacity = capacity() == 0 ? 4 : 2 * capacity();
-				reserve(newcapacity);
+				size_t newcapacity = capacity() == 0 ? 4 : 2 * capacity(); //将容量扩大为原来的两倍
+				reserve(newcapacity); //增容
 			}
-			*_finish = x;
-			_finish++;
+			*_finish = x; //尾插数据
+			_finish++; //_finish指针后移
 		}
 		bool empty()const
 		{
 			return _start == _finish;
 		}
+		//尾删数据
 		void pop_back()
 		{
-			assert(!empty());
-			_finish--;
+			assert(!empty()); //容器为空则断言
+			_finish--; //_finish指针前移
 		}
+		//在pos位置插入数据
 		void insert(iterator pos, const T& x)
 		{
-			if (_finish == _endofstorage)
+			if (_finish == _endofstorage) //判断是否需要增容
 			{
-				size_t len = pos - _start;
-				size_t newcapacity = capacity() == 0 ? 4 : 2 * capacity();
-				reserve(newcapacity);
-				pos = _start + len;
+				size_t len = pos - _start; //记录pos与_start之间的间隔
+				size_t newcapacity = capacity() == 0 ? 4 : 2 * capacity(); //将容量扩大为原来的两倍
+				reserve(newcapacity); //增容
+				pos = _start + len; //通过len找到pos在增容后的容器当中的位置
 			}
-			T* end = _finish;
+			//将pos位置及其之后的数据统一向后挪动一位，以留出pos位置进行插入
+			iterator end = _finish;
 			while (end > pos + 1)
 			{
 				*end = *(end - 1);
 				end--;
 			}
-			*pos = x;
-			_finish++;
+			*pos = x; //将数据插入到pos位置
+			_finish++; //数据个数增加一个，_finish后移
 		}
+		//删除pos位置的数据
 		iterator erase(iterator pos)
 		{
-			assert(!empty());
+			assert(!empty()); //容器为空则断言
+			//将pos位置之后的数据统一向前挪动一位，以覆盖pos位置的数据
 			iterator it = pos + 1;
 			while (it != _finish)
 			{
 				*(it - 1) = *it;
 				it++;
 			}
-			_finish--;
+			_finish--; //数据个数减少一个，_finish前移
 			return pos;
 		}
+		//交换两个容器的数据
 		void swap(vector<T>& v)
 		{
+			//交换容器当中的各个成员变量
 			::swap(_start, v._start);
 			::swap(_finish, v._finish);
 			::swap(_endofstorage, v._endofstorage);
@@ -260,6 +270,17 @@ namespace cl
 		iterator _finish;
 		iterator _endofstorage;
 	};
+	template<class Con>
+	void Print(Con& c)
+	{
+		for (auto e : c)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+		cout << c.size() << endl;
+		cout << c.capacity() << endl;
+	}
 	void test1()
 	{
 		vector<int> v;
@@ -622,6 +643,18 @@ namespace cl
 			cout << e << " ";
 		}
 		cout << endl;
+	}
+	void test10()
+	{
+		vector<int> v(5, 3);
+		v.reserve(6);
+		Print(v);
+		v.reserve(2);
+		Print(v);
+		cout << int() << endl;
+		cout << char() << endl;
+		cout << double() << endl;
+		cout << bool() << endl;
 	}
 }
 

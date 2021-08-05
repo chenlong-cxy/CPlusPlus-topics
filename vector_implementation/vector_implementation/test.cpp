@@ -33,7 +33,8 @@ int main()
 	//cl::test6();
 	//cl::test7();
 	//cl::test8();
-	cl::test9();
+	//cl::test9();
+	cl::test10();
 	//list<int> l;
 	//l.push_back(1);
 	//l.push_back(2);
