@@ -184,33 +184,142 @@
 //}
 
 
+//#include <iostream>
+//#include <algorithm>
+//#include <vector>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt;
+//	lt.push_back(1);
+//	lt.push_back(2);
+//	lt.push_back(3);
+//	lt.push_back(4);
+//	lt.push_back(5);
+//	list<int>::iterator pos = find(lt.begin(), lt.end(), 2);
+//	lt.erase(pos); //删除2
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //1 3 4 5
+//	pos = find(lt.begin(), lt.end(), 4);
+//	lt.erase(pos, lt.end()); //删除4及其之后的元素
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //1 3
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt;
+//	lt.push_back(1);
+//	lt.push_back(2);
+//	lt.push_back(3);
+//	lt.push_back(4);
+//	cout << lt.size() << endl; //4
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt(5, 3);
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //3 3 3 3 3
+//	lt.resize(7, 6); //将size扩大为7，扩大的值为6
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //3 3 3 3 3 6 6
+//	lt.resize(2); //将size缩小为2
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //3 3
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt;
+//	cout << lt.empty() << endl; //1
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt(5, 2);
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //2 2 2 2 2
+//	cout << lt.size() << endl; //5
+//	lt.clear(); //清空容器
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //(无数据)
+//	cout << lt.size() << endl; //0
+//	return 0;
+//}
+
+
 #include <iostream>
-#include <algorithm>
-#include <vector>
 #include <list>
 using namespace std;
 
 int main()
 {
 	list<int> lt;
-	lt.push_back(1);
-	lt.push_back(2);
-	lt.push_back(3);
 	lt.push_back(4);
+	lt.push_back(7);
 	lt.push_back(5);
-	list<int>::iterator pos = find(lt.begin(), lt.end(), 2);
-	lt.erase(pos); //删除2
+	lt.push_back(9);
+	lt.push_back(6);
+	lt.push_back(0);
+	lt.push_back(3);
 	for (auto e : lt)
 	{
 		cout << e << " ";
 	}
-	cout << endl; //1 3 4 5
-	pos = find(lt.begin(), lt.end(), 4);
-	lt.erase(pos, lt.end()); //删除4及其之后的元素
+	cout << endl;
+	lt.sort();
 	for (auto e : lt)
 	{
 		cout << e << " ";
 	}
-	cout << endl; //1 3
+	cout << endl;
 	return 0;
 }
