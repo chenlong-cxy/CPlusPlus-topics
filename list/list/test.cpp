@@ -299,7 +299,7 @@
 #include <iostream>
 #include <list>
 using namespace std;
-
+bool comp()
 int main()
 {
 	list<int> lt;
@@ -314,12 +314,12 @@ int main()
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << endl; //4 7 5 9 6 0 3
 	lt.sort();
 	for (auto e : lt)
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << endl; //0 3 4 5 6 7 9
 	return 0;
 }
