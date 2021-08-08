@@ -296,30 +296,226 @@
 //}
 
 
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt;
+//	lt.push_back(4);
+//	lt.push_back(7);
+//	lt.push_back(5);
+//	lt.push_back(9);
+//	lt.push_back(6);
+//	lt.push_back(0);
+//	lt.push_back(3);
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //4 7 5 9 6 0 3
+//	lt.sort(); //默认将容器内数据排为升序
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //0 3 4 5 6 7 9
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt1(4, 2);
+//	list<int> lt2(4, 6);
+//	lt1.splice(lt1.begin(), lt2); //将容器lt2拼接到容器lt1的开头
+//	for (auto e : lt1)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //6 6 6 6 2 2 2 2 
+//
+//	list<int> lt3(4, 2);
+//	list<int> lt4(4, 6);
+//	lt3.splice(lt3.begin(), lt4, lt4.begin()); //将容器lt4的第一个数据拼接到容器lt3的开头
+//	for (auto e : lt3)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //6 2 2 2 2 
+//
+//	list<int> lt5(4, 2);
+//	list<int> lt6(4, 6);
+//	lt5.splice(lt5.begin(), lt6, lt6.begin(), lt6.end()); //将容器lt6的指定迭代器区间内的数据拼接到容器lt5的开头
+//	for (auto e : lt5)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //6 6 6 6 2 2 2 2
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//bool single_digit(const int& val)
+//{
+//	return val < 10;
+//}
+//int main()
+//{
+//	list<int> lt;
+//	lt.push_back(10);
+//	lt.push_back(4);
+//	lt.push_back(7);
+//	lt.push_back(18);
+//	lt.push_back(2);
+//	lt.push_back(5);
+//	lt.push_back(9);
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //10 4 7 18 2 5 9
+//	lt.remove_if(single_digit); //删除容器当中值小于10的元素
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //10 18
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt;
+//	lt.push_back(1);
+//	lt.push_back(4);
+//	lt.push_back(3);
+//	lt.push_back(3);
+//	lt.push_back(2);
+//	lt.push_back(2);
+//	lt.push_back(3);
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //1 4 3 3 2 2 3
+//	lt.sort(); //将容器当中的元素排为升序
+//	lt.unique(); //删除容器当中连续的重复元素
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //1 2 3 4
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt1;
+//	lt1.push_back(3);
+//	lt1.push_back(8);
+//	lt1.push_back(1);
+//	list<int> lt2;
+//	lt2.push_back(6);
+//	lt2.push_back(2);
+//	lt2.push_back(9);
+//	lt2.push_back(5);
+//	lt1.sort(); //将容器lt1排为升序
+//	lt2.sort(); //将容器lt2排为升序
+//	lt1.merge(lt2); //将lt2合并到lt1当中
+//	for (auto e : lt1)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //1 2 3 5 6 8 9 
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<int> lt;
+//	lt.push_back(1);
+//	lt.push_back(2);
+//	lt.push_back(3);
+//	lt.push_back(4);
+//	lt.push_back(5);
+//	lt.reverse(); //将容器当中元素的位置进行逆置
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //5 4 3 2 1 
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//#include <list>
+//using namespace std;
+//
+//int main()
+//{
+//	list<char> lt(3, 'a');
+//	lt.assign(3, 'b'); //将新内容分配给容器，替换其当前内容
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //b b b
+//	string s("hello world");
+//	lt.assign(s.begin(), s.end()); //将新内容分配给容器，替换其当前内容
+//	for (auto e : lt)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl; //h e l l o   w o r l d
+//	return 0;
+//}
+
+
 #include <iostream>
 #include <list>
 using namespace std;
-bool comp()
+
 int main()
 {
-	list<int> lt;
-	lt.push_back(4);
-	lt.push_back(7);
-	lt.push_back(5);
-	lt.push_back(9);
-	lt.push_back(6);
-	lt.push_back(0);
-	lt.push_back(3);
-	for (auto e : lt)
+	list<int> lt1(4, 2);
+	list<int> lt2(4, 6);
+	lt1.swap(lt2); //交换两个容器的内容
+	for (auto e : lt1)
 	{
 		cout << e << " ";
 	}
-	cout << endl; //4 7 5 9 6 0 3
-	lt.sort();
-	for (auto e : lt)
+	cout << endl; //6 6 6 6
+	for (auto e : lt2)
 	{
 		cout << e << " ";
 	}
-	cout << endl; //0 3 4 5 6 7 9
+	cout << endl; //2 2 2 2
 	return 0;
 }
