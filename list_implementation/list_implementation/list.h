@@ -1,4 +1,5 @@
 #pragma once
+#include "Date.h"
 #include <iostream>
 #include <assert.h>
 using namespace std;
@@ -8,6 +9,7 @@ namespace cl
 	template<class T>
 	struct _list_node
 	{
+		//构造函数
 		_list_node(const T& val = T())
 			:_val(val)
 			, _prev(nullptr)
@@ -25,50 +27,51 @@ namespace cl
 		typedef _list_node<T> node;
 		typedef _list_iterator<T, Ref, Ptr> self;
 
+		//构造函数
 		_list_iterator(node* pnode)
 			:_pnode(pnode)
 		{}
 		//前置++
 		self operator++()
 		{
-			_pnode = _pnode->_next;
-			return *this;
+			_pnode = _pnode->_next; //让结点指针指向后一个结点
+			return *this; //返回自增后的结点指针
 		}
 		//前置--
 		self operator--()
 		{
-			_pnode = _pnode->_prev;
-			return *this;
+			_pnode = _pnode->_prev; //让结点指针指向前一个结点
+			return *this; //返回自减后的结点指针
 		}
 		//后置++
 		self operator++(int)
 		{
-			self tmp(*this);
-			_pnode = _pnode->_next;
-			return tmp;
+			self tmp(*this); //记录当前结点指针的指向
+			_pnode = _pnode->_next; //让结点指针指向后一个结点
+			return tmp; //返回自增前的结点指针
 		}
 		//后置--
 		self operator--(int)
 		{
-			self tmp(*this);
-			_pnode = _pnode->_prev;
-			return tmp;
+			self tmp(*this); //记录当前结点指针的指向
+			_pnode = _pnode->_prev; //让结点指针指向前一个结点
+			return tmp; //返回自减前的结点指针
 		}
 		Ref operator*()
 		{
-			return _pnode->_val;
+			return _pnode->_val; //返回结点指针所指结点的数据
 		}
 		Ptr operator->()
 		{
-			return &_pnode->_val;
+			return &_pnode->_val; //返回结点指针所指结点的数据的地址
 		}
 		bool operator==(const self& s) const
 		{
-			return _pnode == s._pnode;
+			return _pnode == s._pnode; //判断两个结点指针指向是否相同
 		}
 		bool operator!=(const self& s) const
 		{
-			return _pnode != s._pnode;
+			return _pnode != s._pnode; //判断两个结点指针指向是否不同
 		}
 		node* _pnode;
 	};
@@ -80,21 +83,22 @@ namespace cl
 		typedef _list_node<T> node;
 		typedef _list_iterator<T, T&, T*> iterator;
 		typedef _list_iterator<T, const T&, const T*> const_iterator;
-
+		//构造函数
 		list()
 		{
-			_head = new node;
-			_head->_next = _head;
-			_head->_prev = _head;
+			_head = new node; //申请一个头结点
+			_head->_next = _head; //头结点的后继指针指向自己
+			_head->_prev = _head; //头结点的前驱指针指向自己
 		}
+		//拷贝构造函数
 		list(const list<T>& lt)
 		{
-			_head = new node;
-			_head->_next = _head;
-			_head->_prev = _head;
+			_head = new node; //申请一个头结点
+			_head->_next = _head; //头结点的后继指针指向自己
+			_head->_prev = _head; //头结点的前驱指针指向自己
 			for (const auto& e : lt)
 			{
-				push_back(e);
+				push_back(e); //将容器lt当中的数据一个个尾插到链表后面
 			}
 		}
 		void clear()
@@ -105,47 +109,55 @@ namespace cl
 				it = erase(it);
 			}
 		}
+		////传统写法
 		//list<T>& operator=(const list<T>& lt)
 		//{
-		//	if (this != &lt)
+		//	if (this != &lt) //避免自己给自己赋值
 		//	{
-		//		clear();
+		//		clear(); //清空容器
 		//		for (const auto& e : lt)
 		//		{
-		//			push_back(e);
+		//			push_back(e); //将容器lt当中的数据一个个尾插到链表后面
 		//		}
 		//	}
-		//	return *this;
+		//	return *this; //支持连续赋值
 		//}
 		void swap(list<T>& lt)
 		{
 			::swap(_head, lt._head);
 		}
-		list<T>& operator=(list<T> lt)
+		//赋值运算符重载函数
+		//现代写法
+		list<T>& operator=(list<T> lt) //编译器接收右值的时候自动调用其拷贝构造函数
 		{
-			swap(lt);
-			return *this;
+			swap(lt); //交换这两个对象
+			return *this; //支持连续赋值
 		}
+		//析构函数
 		~list()
 		{
-			clear();
-			delete _head;
-			_head = nullptr;
+			clear(); //清理容器
+			delete _head; //释放头结点
+			_head = nullptr; //头指针置空
 		}
 		iterator begin()
 		{
+			//返回使用头结点后一个结点的地址构造出来的普通迭代器
 			return iterator(_head->_next);
 		}
 		iterator end()
 		{
+			//返回使用头结点的地址构造出来的普通迭代器
 			return iterator(_head);
 		}
 		const_iterator begin() const
 		{
+			//返回使用头结点后一个结点的地址构造出来的const迭代器
 			return const_iterator(_head->_next);
 		}
 		const_iterator end() const
 		{
+			//返回使用头结点的地址构造出来的普通const迭代器
 			return const_iterator(_head);
 		}
 		//void push_back(const T& x)
@@ -208,7 +220,7 @@ namespace cl
 		size_t size() const
 		{
 			size_t sz = 0;
-			iterator it = begin();
+			const_iterator it = begin();
 			while (it != end())
 			{
 				sz++;
@@ -328,91 +340,103 @@ namespace cl
 		}
 		cout << endl;
 	}
+	void test4()
+	{
+		list<Date> lt;
+		Date d1(2021, 8, 10);
+		Date d2(1980, 4, 3);
+		Date d3(1931, 6, 29);
+		lt.push_back(d1);
+		lt.push_back(d2);
+		lt.push_back(d3);
+		list<Date>::iterator pos = lt.begin();
+		cout << pos->_year << endl; //输出第一个日期的年份
+	}
 }
 
 
 
-namespace cl
-{
-	//模拟实现list当中的结点类
-	template<class T>
-	struct _list_node
-	{
-		//成员函数
-		_list_node(const T& val = T()); //构造函数
-
-		//成员变量
-		T _val;                 //数据域
-		_list_node<T>* _next;   //后继指针
-		_list_node<T>* _prev;   //前驱指针
-	};
-
-	//模拟实现list迭代器
-	template<class T, class Ref, class Ptr>
-	struct _list_iterator
-	{
-		typedef _list_node<T> node;
-		typedef _list_iterator<T, Ref, Ptr> self;
-
-		_list_iterator(node* pnode);  //构造函数
-
-		//各种运算符重载函数
-		self operator++();
-		self operator--();
-		self operator++(int);
-		self operator--(int);
-		bool operator==(const self& s) const;
-		bool operator!=(const self& s) const;
-		Ref operator*();
-		Ptr operator->();
-
-		//成员变量
-		node* _pnode; //一个指向结点的指针
-	};
-
-	//模拟实现list
-	template<class T>
-	class list
-	{
-	public:
-		typedef _list_node<T> node;
-		typedef _list_iterator<T, T&, T*> iterator;
-		typedef _list_iterator<T, const T&, const T*> const_iterator;
-
-		//默认成员函数
-		list();
-		list(const list<T>& lt);
-		list<T>& operator=(const list<T>& lt);
-		~list();
-
-		//迭代器相关函数
-		iterator begin();
-		iterator end();
-		const_iterator begin() const;
-		const_iterator end() const;
-
-		//访问容器相关函数
-		T& front();
-		T& back();
-		const T& front() const;
-		const T& back() const;
-
-		//插入、删除函数
-		void insert(iterator pos, const T& x);
-		iterator erase(iterator pos);
-		void push_back(const T& x);
-		void pop_back();
-		void push_front(const T& x);
-		void pop_front();
-
-		//其他函数
-		size_t size() const;
-		void resize(size_t n, const T& val = T());
-		void clear();
-		bool empty() const;
-		void swap(list<T>& lt);
-
-	private:
-		node* _head; //指向链表头结点的指针
-	};
-}
+//namespace cl
+//{
+//	//模拟实现list当中的结点类
+//	template<class T>
+//	struct _list_node
+//	{
+//		//成员函数
+//		_list_node(const T& val = T()); //构造函数
+//
+//		//成员变量
+//		T _val;                 //数据域
+//		_list_node<T>* _next;   //后继指针
+//		_list_node<T>* _prev;   //前驱指针
+//	};
+//
+//	//模拟实现list迭代器
+//	template<class T, class Ref, class Ptr>
+//	struct _list_iterator
+//	{
+//		typedef _list_node<T> node;
+//		typedef _list_iterator<T, Ref, Ptr> self;
+//
+//		_list_iterator(node* pnode);  //构造函数
+//
+//		//各种运算符重载函数
+//		self operator++();
+//		self operator--();
+//		self operator++(int);
+//		self operator--(int);
+//		bool operator==(const self& s) const;
+//		bool operator!=(const self& s) const;
+//		Ref operator*();
+//		Ptr operator->();
+//
+//		//成员变量
+//		node* _pnode; //一个指向结点的指针
+//	};
+//
+//	//模拟实现list
+//	template<class T>
+//	class list
+//	{
+//	public:
+//		typedef _list_node<T> node;
+//		typedef _list_iterator<T, T&, T*> iterator;
+//		typedef _list_iterator<T, const T&, const T*> const_iterator;
+//
+//		//默认成员函数
+//		list();
+//		list(const list<T>& lt);
+//		list<T>& operator=(const list<T>& lt);
+//		~list();
+//
+//		//迭代器相关函数
+//		iterator begin();
+//		iterator end();
+//		const_iterator begin() const;
+//		const_iterator end() const;
+//
+//		//访问容器相关函数
+//		T& front();
+//		T& back();
+//		const T& front() const;
+//		const T& back() const;
+//
+//		//插入、删除函数
+//		void insert(iterator pos, const T& x);
+//		iterator erase(iterator pos);
+//		void push_back(const T& x);
+//		void pop_back();
+//		void push_front(const T& x);
+//		void pop_front();
+//
+//		//其他函数
+//		size_t size() const;
+//		void resize(size_t n, const T& val = T());
+//		void clear();
+//		bool empty() const;
+//		void swap(list<T>& lt);
+//
+//	private:
+//		node* _head; //指向链表头结点的指针
+//	};
+//}
