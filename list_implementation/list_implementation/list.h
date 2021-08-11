@@ -104,7 +104,7 @@ namespace cl
 		void clear()
 		{
 			iterator it = begin();
-			while (it != end())
+			while (it != end()) //逐个删除结点，只保留头结点
 			{
 				it = erase(it);
 			}
@@ -124,7 +124,7 @@ namespace cl
 		//}
 		void swap(list<T>& lt)
 		{
-			::swap(_head, lt._head);
+			::swap(_head, lt._head); //交换两个容器当中的头指针即可
 		}
 		//赋值运算符重载函数
 		//现代写法
@@ -169,106 +169,115 @@ namespace cl
 		//	_head->_prev = newnode;
 		//	newnode->_next = _head;
 		//}
+		//插入函数
 		void insert(iterator pos, const T& x)
 		{
-			assert(pos._pnode);
+			assert(pos._pnode); //检测pos的合法性
 
-			node* cur = pos._pnode;
-			node* prev = cur->_prev;
-			node* newnode = new node(x);
+			node* cur = pos._pnode; //迭代器pos处的结点指针
+			node* prev = cur->_prev; //迭代器pos前一个位置的结点指针
+			node* newnode = new node(x); //根据所给数据x构造一个待插入结点
 
+			//建立newnode与cur之间的双向关系
 			newnode->_next = cur;
 			cur->_prev = newnode;
+			//建立newnode与prev之间的双向关系
 			newnode->_prev = prev;
 			prev->_next = newnode;
 		}
+		//尾插
 		void push_back(const T& x)
 		{
-			insert(end(), x);
+			insert(end(), x); //在头结点前插入结点
 		}
+		//头插
 		void push_front(const T& x)
 		{
-			insert(begin(), x);
+			insert(begin(), x); //在第一个有效结点前插入结点
 		}
+		//删除函数
 		iterator erase(iterator pos)
 		{
-			assert(pos._pnode);
-			assert(pos != end());
+			assert(pos._pnode); //检测pos的合法性
+			assert(pos != end()); //删除的结点不能是头结点
 
-			node* cur = pos._pnode;
-			node* prev = cur->_prev;
-			node* next = cur->_next;
+			node* cur = pos._pnode; //迭代器pos处的结点指针
+			node* prev = cur->_prev; //迭代器pos前一个位置的结点指针
+			node* next = cur->_next; //迭代器pos后一个位置的结点指针
 
-			delete cur;
+			delete cur; //释放cur结点
+
+			//建立prev与next之间的双向关系
 			prev->_next = next;
 			next->_prev = prev;
 			
-			return iterator(next);
+			return iterator(next); //返回所给迭代器pos的下一个迭代器
 		}
+		//尾删
 		void pop_back()
 		{
-			erase(--end());
+			erase(--end()); //删除头结点的前一个结点
 		}
+		//头删
 		void pop_front()
 		{
-			erase(begin());
+			erase(begin()); //删除第一个有效结点
 		}
 		bool empty() const
 		{
-			return begin() == end();
+			return begin() == end(); //判断是否只有头结点
 		}
 		size_t size() const
 		{
-			size_t sz = 0;
-			const_iterator it = begin();
-			while (it != end())
+			size_t sz = 0; //统计有效数据个数
+			const_iterator it = begin(); //获取第一个有效数据的迭代器
+			while (it != end()) //通过遍历统计有效数据个数
 			{
 				sz++;
 				it++;
 			}
-			return sz;
+			return sz; //返回有效数据个数
 		}
 		T& front()
 		{
-			return *begin();
+			return *begin(); //返回第一个有效数据的引用
 		}
 		const T& front() const
 		{
-			return *begin();
+			return *begin(); //返回第一个有效数据的const引用
 		}
 		T& back()
 		{
-			return *(--end());
+			return *(--end()); //返回最后一个有效数据的引用
 		}
 		const T& back() const
 		{
-			return *(--end());
+			return *(--end()); //返回最后一个有效数据的const引用
 		}
 		void resize(size_t n, const T& val = T())
 		{
-			iterator i = begin();
-			size_t len = 0;
+			iterator i = begin(); //获取第一个有效数据的迭代器
+			size_t len = 0; //记录当前所遍历的数据个数
 			while (len < n&&i != end())
 			{
 				len++;
 				i++;
 			}
-			if (len == n)
+			if (len == n) //说明容器当中的有效数据个数大于或是等于n
 			{
-				while (i != end())
+				while (i != end()) //只保留前n个有效数据
 				{
-					i = erase(i);
+					i = erase(i); //每次删除后接收下一个数据的迭代器
 				}
 			}
-			else
+			else //说明容器当中的有效数据个数小于n
 			{
-				while (len < n)
+				while (len < n) //尾插数据为val的结点，直到容器当中的有效数据个数为n
 				{
 					push_back(val);
 					len++;
 				}
 			}
-
 		}
 	private:
 		node* _head;
