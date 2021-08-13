@@ -214,9 +214,9 @@
 //}
 
 
-#include <iostream>
-#include <string>
-using namespace std;
+//#include <iostream>
+//#include <string>
+//using namespace std;
 
 //int main()
 //{
@@ -454,19 +454,122 @@ using namespace std;
 //}
 
 
+//class Solution {
+//public:
+//	string reverseStr(string s, int k) {
+//		int sz = s.size();
+//		for (int start = 0; start < sz; start += 2 * k)
+//		{
+//			int left = start;
+//			int right = start + k - 1;
+//			if (right >= sz)
+//				right = sz - 1;
+//			while (left < right)
+//				swap(s[left++], s[right--]);
+//		}
+//		return s;
+//	}
+//}
+
+
+//把字符串转换成整数
+//#include <iostream>
+//#include <string>
+//
+//class Solution {
+//public:
+//	int StrToInt(string str) {
+//		if (str.size() == 0) //空字符串，返回0
+//			return 0;
+//		int start = 0; //头指针指向第一个字符
+//		int end = str.size() - 1; //尾指针指向最后一个字符
+//		int ret = 0; //字符串转换为整数后的结果
+//		int i = 1; //标识十进制当前位的权重（当前为个位，权重为1）
+//		while (start < end) //判断第一个字符之后的字符
+//		{
+//			if (str[end] < '0' || str[end] > '9') //若不是数字，则非法
+//			{
+//				return 0;
+//			}
+//			ret += i*(str[end] - '0'); //ret更新
+//			i *= 10; //下一位权重增大十倍
+//			end--; //继续判断
+//		}
+//		//判断第一个字符
+//		if (str[end] >= '0' && str[end] <= '9') //是数字
+//			return ret + i*(str[end] - '0'); //再次更新ret并返回正值
+//		if (str[end] == '+') //标识正数
+//			return ret; //返回正值
+//		if (str[end] == '-') //标识负数
+//			return -ret; //返回负值
+//		return 0; //第一个字符不是数字、+、-当中的一个，则非法
+//	}
+//};
+
+
+//反转字符串
+//class Solution {
+//public:
+//	void reverseString(vector<char>& s) {
+//		//使用下标进行交换
+//		int left = 0, right = s.size() - 1;
+//		while (left < right)
+//		{
+//			swap(s[left], s[right]);
+//			left++;
+//			right--;
+//		}
+//	}
+//};
+//
+//class Solution {
+//public:
+//	void reverseString(vector<char>& s) {
+//		//使用逆置函数进行逆置
+//		reverse(s.begin(), s.end());
+//	}
+//};
+
+
+//字符串相乘
+#include <string>
+#include <iostream>
+using namespace std;
 class Solution {
 public:
-	string reverseStr(string s, int k) {
-		int sz = s.size();
-		for (int start = 0; start < sz; start += 2 * k)
+	string multiply(string num1, string num2) {
+		int end1 = num1.size() - 1, end2 = num2.size() - 1;
+		string RetStr;
+		int next = 0;
+		while (end1 >= 0 || end2 >= 0)
 		{
-			int left = start;
-			int right = start + k - 1;
-			if (right >= sz)
-				right = sz - 1;
-			while (left < right)
-				swap(s[left++], s[right--]);
+			int val1 = 1;
+			if (end1 >= 0)
+			{
+				val1 = num1[end1] - '0';
+				end1--;
+			}
+			int val2 = 1;
+			if (end2 >= 0)
+			{
+				val2 = num2[end2] - '0';
+				end2--;
+			}
+			int RetVal = val1 * val2 + next;
+			next = RetVal / 10;
+			RetVal = RetVal % 10;
+			RetStr.insert(0, 1, RetVal + '0');
 		}
-		return s;
+		while (next != 0)
+		{
+			RetStr.insert(0, 1, next % 10 + '0');
+			next = next / 10;
+		}
+		return RetStr;
 	}
+};
+int main()
+{
+	cout << Solution().multiply("123", "456") << endl;
+	return 0;
 }
