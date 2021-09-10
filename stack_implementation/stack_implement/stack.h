@@ -23,7 +23,11 @@ namespace cl //防止命名冲突
 			_con.pop_back();
 		}
 		//获取栈顶元素
-		const T& top()
+		T& top()
+		{
+			return _con.back();
+		}
+		const T& top() const
 		{
 			return _con.back();
 		}
