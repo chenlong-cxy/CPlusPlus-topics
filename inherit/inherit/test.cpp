@@ -85,28 +85,84 @@
 //	return 0;
 //}
 
+//#include <iostream>
+//#include <string>
+//using namespace std;
+////基类
+//class Person
+//{
+//protected:
+//	string _name; //姓名
+//	string _sex;  //性别
+//	int _age;     //年龄
+//};
+////派生类
+//class Student : public Person
+//{
+//protected:
+//	int _stuid;   //学号
+//};
+//int main()
+//{
+//	Student s;
+//	Person p = s;     //派生类对象赋值给基类对象
+//	Person* ptr = &s; //派生类对象赋值给基类指针
+//	Person& ref = s;  //派生类对象赋值给基类引用
+//	return 0;
+//}
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+////父类
+//class Person
+//{
+//protected:
+//	int _num = 111;
+//};
+////子类
+//class Student : public Person
+//{
+//public:
+//	void fun()
+//	{
+//		cout << Person::_num << endl;
+//	}
+//protected:
+//	int _num = 999;
+//};
+//int main()
+//{
+//	Student s;
+//	s.fun(); //999
+//	return 0;
+//}
+
 #include <iostream>
 #include <string>
 using namespace std;
-//基类
+//父类
 class Person
 {
-protected:
-	string _name; //姓名
-	string _sex;  //性别
-	int _age;     //年龄
+public:
+	void fun(int x)
+	{
+		cout << x << endl;
+	}
 };
-//派生类
+//子类
 class Student : public Person
 {
-protected:
-	int _stuid;   //学号
+public:
+	void fun(double x)
+	{
+		cout << x << endl;
+	}
 };
 int main()
 {
 	Student s;
-	Person p = s;     //派生类对象赋值给基类对象
-	Person* ptr = &s; //派生类对象赋值给基类指针
-	Person& ref = s;  //派生类对象赋值给基类引用
+	s.fun(3.14);       //直接调用子类当中的成员函数fun
+	s.Person::fun(20); //指定调用父类当中的成员函数fun
 	return 0;
 }
