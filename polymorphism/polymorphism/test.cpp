@@ -134,38 +134,171 @@
 //	return 0;
 //}
 
+//#include <iostream>
+//using namespace std;
+////父类
+//class Person
+//{
+//public:
+//	virtual ~Person()
+//	{
+//		cout << "~Person()" << endl;
+//	}
+//};
+////子类
+//class Student : public Person
+//{
+//public:
+//	virtual ~Student()
+//	{
+//		cout << "~Student()" << endl;
+//	}
+//};
+//int main()
+//{
+//	//Person p;
+//	//Student st;
+//
+//	//分别new一个父类对象和子类对象，并均用父类指针指向它们
+//	Person* p1 = new Person;
+//	Person* p2 = new Student;
+//
+//	//使用delete调用析构函数并释放对象空间
+//	delete p1;
+//	delete p2;
+//
+//	return 0;
+//}
+
+//#include <stdio.h>
+//#include <stdlib.h>
+//struct Node
+//{
+//	int val;
+//	struct Node* next;
+//};
+//struct Node* fun(struct Node* pd)
+//{
+//	struct Node* phead = (struct Node*)malloc(sizeof(struct Node));
+//	phead->next = pd;
+//	struct Node* prev = phead;
+//	struct Node* after = prev->next;
+//	struct Node* curprev = after;
+//	struct Node* cur = after->next;
+//	while (cur)
+//	{
+//		while (cur&&cur->val >= 0)
+//		{
+//			curprev = curprev->next;
+//			cur = cur->next;
+//		}
+//		if (cur)
+//		{
+//			struct Node* tmp = cur->next;
+//			curprev->next = cur->next;
+//			prev->next = cur;
+//			cur->next = after;
+//			prev = cur;
+//			cur = tmp;
+//		}
+//	}
+//	struct Node* head = phead->next;
+//	free(phead);
+//	return head;
+//}
+//int main()
+//{
+//	struct Node d1;
+//	struct Node d2;
+//	struct Node d3;
+//	struct Node d4;
+//	struct Node d5;
+//	struct Node d6;
+//	struct Node d7;
+//	d1.val = 1;
+//	d2.val = -5;
+//	d3.val = -4;
+//	d4.val = 2;
+//	d5.val = 8;
+//	d6.val = -9;
+//	d7.val = 10;
+//	d1.next = &d2;
+//	d2.next = &d3;
+//	d3.next = &d4;
+//	d4.next = &d5;
+//	d5.next = &d6;
+//	d6.next = &d7;
+//	d7.next = NULL;
+//	struct Node* ret = fun(&d1);
+//	while (ret)
+//	{
+//		printf("%d ", ret->val);
+//		ret = ret->next;
+//	}
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+////父类
+//class Person
+//{
+//public:
+//	//被final修饰，该虚函数不能再被重写
+//	virtual void BuyTicket() final
+//	{
+//		cout << "买票-全价" << endl;
+//	}
+//};
+////子类
+//class Student : public Person
+//{
+//public:
+//	//重写，编译报错
+//	virtual void BuyTicket()
+//	{
+//		cout << "买票-半价" << endl;
+//	}
+//};
+////子类
+//class Soldier : public Person
+//{
+//public:
+//	//重写，编译报错
+//	virtual void BuyTicket()
+//	{
+//		cout << "优先-买票" << endl;
+//	}
+//};
+
 #include <iostream>
 using namespace std;
 //父类
 class Person
 {
 public:
-	virtual ~Person()
+	virtual void BuyTicket()
 	{
-		cout << "~Person()" << endl;
+		cout << "买票-全价" << endl;
 	}
 };
 //子类
 class Student : public Person
 {
 public:
-	virtual ~Student()
+	//子类完成了父类虚函数的重写，编译通过
+	virtual void BuyTicket() override
 	{
-		cout << "~Student()" << endl;
+		cout << "买票-半价" << endl;
 	}
 };
-int main()
+//子类
+class Soldier : public Person
 {
-	//Person p;
-	//Student st;
-
-	//分别new一个父类对象和子类对象，并均用父类指针指向它们
-	Person* p1 = new Person;
-	Person* p2 = new Student;
-
-	//使用delete调用析构函数并释放对象空间
-	delete p1;
-	delete p2;
-
-	return 0;
-}
+public:
+	//子类没有完成了父类虚函数的重写，编译报错
+	virtual void BuyTicket(int i) override
+	{
+		cout << "优先-买票" << endl;
+	}
+};
