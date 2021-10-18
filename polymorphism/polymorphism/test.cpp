@@ -271,6 +271,158 @@
 //	}
 //};
 
+//#include <iostream>
+//using namespace std;
+////父类
+//class Person
+//{
+//public:
+//	virtual void BuyTicket()
+//	{
+//		cout << "买票-全价" << endl;
+//	}
+//};
+////子类
+//class Student : public Person
+//{
+//public:
+//	//子类完成了父类虚函数的重写，编译通过
+//	virtual void BuyTicket() override
+//	{
+//		cout << "买票-半价" << endl;
+//	}
+//};
+////子类
+//class Soldier : public Person
+//{
+//public:
+//	//子类没有完成了父类虚函数的重写，编译报错
+//	virtual void BuyTicket(int i) override
+//	{
+//		cout << "优先-买票" << endl;
+//	}
+//};
+
+//#include <iostream>
+//using namespace std;
+////抽象类（接口类）
+//class Car
+//{
+//public:
+//	//纯虚函数
+//	virtual void Drive() = 0;
+//};
+//int main()
+//{
+//	Car c; //抽象类不能实例化出对象，error
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+////抽象类（接口类）
+//class Car
+//{
+//public:
+//	//纯虚函数
+//	virtual void Drive() = 0;
+//};
+////派生类
+//class Benz : public Car
+//{
+//public:
+//	//重写纯虚函数
+//	virtual void Drive()
+//	{
+//		cout << "Benz-舒适" << endl;
+//	}
+//};
+////派生类
+//class BMV : public Car
+//{
+//public:
+//	//重写纯虚函数
+//	virtual void Drive()
+//	{
+//		cout << "BMV-操控" << endl;
+//	}
+//};
+//int main()
+//{
+//	//派生类重写了纯虚函数，可以实例化出对象
+//	Benz b1;
+//	BMV b2;
+//	//不同对象用基类指针调用Drive函数，完成不同的行为
+//	Car* p1 = &b1;
+//	Car* p2 = &b2;
+//	p1->Drive();  //Benz-舒适
+//	p2->Drive();  //BMV-操控
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//class Base
+//{
+//public:
+//	virtual void Func1()
+//	{
+//		cout << "Func1()" << endl;
+//	}
+//private:
+//	int _b;
+//};
+//
+//int main()
+//{
+//	Base b;
+//	cout << sizeof(b) << endl; //8
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+////父类
+//class Base
+//{
+//public:
+//	//虚函数
+//	virtual void Func1()
+//	{
+//		cout << "Base::Func1()" << endl;
+//	}
+//	//虚函数
+//	virtual void Func2()
+//	{
+//		cout << "Base::Func2()" << endl;
+//	}
+//	//普通成员函数
+//	void Func3()
+//	{
+//		cout << "Base::Func3()" << endl;
+//	}
+//private:
+//	int _b = 1;
+//};
+////子类
+//class Derive : public Base
+//{
+//public:
+//	//重写虚函数Func1
+//	virtual void Func1()
+//	{
+//		cout << "Derive::Func1()" << endl;
+//	}
+//private:
+//	int _d = 2;
+//};
+//int main()
+//{
+//	Base b;
+//	Derive d;
+//	return 0;
+//}
+
 #include <iostream>
 using namespace std;
 //父类
@@ -286,19 +438,18 @@ public:
 class Student : public Person
 {
 public:
-	//子类完成了父类虚函数的重写，编译通过
-	virtual void BuyTicket() override
+	virtual void BuyTicket()
 	{
 		cout << "买票-半价" << endl;
 	}
 };
-//子类
-class Soldier : public Person
+int main()
 {
-public:
-	//子类没有完成了父类虚函数的重写，编译报错
-	virtual void BuyTicket(int i) override
-	{
-		cout << "优先-买票" << endl;
-	}
-};
+	Person Mike;
+	Student Johnson;
+	Person* p1 = &Mike;
+	Person* p2 = &Johnson;
+	p1->BuyTicket(); //买票-全价
+	p2->BuyTicket(); //买票-半价
+	return 0;
+}
