@@ -423,33 +423,300 @@
 //	return 0;
 //}
 
+//#include <iostream>
+//using namespace std;
+////父类
+//class Person
+//{
+//public:
+//	virtual void BuyTicket()
+//	{
+//		cout << "买票-全价" << endl;
+//	}
+//	int _p = 1;
+//};
+////子类
+//class Student : public Person
+//{
+//public:
+//	virtual void BuyTicket()
+//	{
+//		cout << "买票-半价" << endl;
+//	}
+//	int _s = 2;
+//};
+//int main()
+//{
+//	Person Mike;
+//	Student Johnson;
+//	Johnson._p = 3; //以便观察是否完成切片
+//	Person* p1 = &Mike;
+//	Person* p2 = &Johnson;
+//	p1->BuyTicket(); //买票-全价
+//	p2->BuyTicket(); //买票-半价
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+////父类
+//class Person
+//{
+//public:
+//	virtual void BuyTicket()
+//	{
+//		cout << "买票-全价" << endl;
+//	}
+//};
+////子类
+//class Student : public Person
+//{
+//public:
+//	virtual void BuyTicket()
+//	{
+//		cout << "买票-半价" << endl;
+//	}
+//};
+//int main()
+//{
+//	Student Johnson;
+//	//Person p = Johnson; //不构成多态
+//	Person& p = Johnson; //构成多态
+//	p.BuyTicket();
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+////父类
+//class Base
+//{
+//public:
+//	//虚函数
+//	virtual void Func1()
+//	{
+//		cout << "Base::Func1()" << endl;
+//	}
+//	//虚函数
+//	virtual void Func2()
+//	{
+//		cout << "Base::Func2()" << endl;
+//	}
+//	//普通成员函数
+//	void Func3()
+//	{
+//		cout << "Base::Func3()" << endl;
+//	}
+//private:
+//	int _b = 1;
+//};
+////子类
+//class Derive : public Base
+//{
+//public:
+//	//重写虚函数Func1
+//	virtual void Func1()
+//	{
+//		cout << "Derive::Func1()" << endl;
+//	}
+//private:
+//	int _d = 2;
+//};
+//int j = 0;
+//int main()
+//{
+//	Base b;
+//	Base* p = &b;
+//	printf("vfptr:%p\n", *((int*)p)); //000FDCAC
+//	int i = 0;
+//	printf("栈上地址:%p\n", &i);      //005CFE24
+//	printf("数据段地址:%p\n", &j);    //0010038C
+//
+//	int* k = new int;
+//	printf("堆上地址:%p\n", k);       //00A6CA00
+//	char* cp = "hello world";
+//	printf("代码段地址:%p\n", cp);    //000FDCB4
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+////基类
+//class Base
+//{
+//public:
+//	virtual void func1() { cout << "Base::func1()" << endl; }
+//	virtual void func2() { cout << "Base::func2()" << endl; }
+//private:
+//	int _a;
+//};
+////派生类
+//class Derive : public Base
+//{
+//public:
+//	virtual void func1() { cout << "Derive::func1()" << endl; }
+//	virtual void func3() { cout << "Derive::func3()" << endl; }
+//	virtual void func4() { cout << "Derive::func4()" << endl; }
+//private:
+//	int _b;
+//};
+//typedef void(*VFPTR)(); //虚函数指针类型重命名
+////打印虚表地址及其内容
+//void PrintVFT(VFPTR* ptr)
+//{
+//	printf("虚表地址:%p\n", ptr);
+//	for (int i = 0; ptr[i] != nullptr; i++)
+//	{
+//		printf("ptr[%d]:%p-->", i, ptr[i]); //打印虚表当中的虚函数地址
+//		ptr[i](); //使用虚函数地址调用虚函数
+//	}
+//	printf("\n");
+//}
+//int main()
+//{
+//	Base b;
+//	PrintVFT((VFPTR*)(*(int*)&b)); //打印基类对象b的虚表地址及其内容
+//	Derive d;
+//	PrintVFT((VFPTR*)(*(int*)&d)); //打印派生类对象d的虚表地址及其内容
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+////基类1
+//class Base1
+//{
+//public:
+//	virtual void func1() { cout << "Base1::func1()" << endl; }
+//	virtual void func2() { cout << "Base1::func2()" << endl; }
+//private:
+//	int _b1;
+//};
+////基类2
+//class Base2
+//{
+//public:
+//	virtual void func1() { cout << "Base2::func1()" << endl; }
+//	virtual void func2() { cout << "Base2::func2()" << endl; }
+//private:
+//	int _b2;
+//};
+////多继承派生类
+//class Derive : public Base1, public Base2
+//{
+//public:
+//	virtual void func1() { cout << "Derive::func1()" << endl; }
+//	virtual void func3() { cout << "Derive::func3()" << endl; }
+//private:
+//	int _d1;
+//};
+//typedef void(*VFPTR)(); //虚函数指针类型重命名
+////打印虚表地址及其内容
+//void PrintVFT(VFPTR* ptr)
+//{
+//	printf("虚表地址:%p\n", ptr);
+//	for (int i = 0; ptr[i] != nullptr; i++)
+//	{
+//		printf("ptr[%d]:%p-->", i, ptr[i]); //打印虚表当中的虚函数地址
+//		ptr[i](); //使用虚函数地址调用虚函数
+//	}
+//	printf("\n");
+//}
+//int main()
+//{
+//	Base1 b1;
+//	Base2 b2;
+//	PrintVFT((VFPTR*)(*(int*)&b1)); //打印基类对象b1的虚表地址及其内容
+//	PrintVFT((VFPTR*)(*(int*)&b2)); //打印基类对象b2的虚表地址及其内容
+//	Derive d;
+//	PrintVFT((VFPTR*)(*(int*)&d)); //打印派生类对象d的第一个虚表地址及其内容
+//	PrintVFT((VFPTR*)(*(int*)((char*)&d + sizeof(Base1)))); //打印派生类对象d的第二个虚表地址及其内容
+//	return 0;
+//}
+
+
 #include <iostream>
 using namespace std;
-//父类
-class Person
+class A
 {
 public:
-	virtual void BuyTicket()
+	virtual void funcA()
 	{
-		cout << "买票-全价" << endl;
+		cout << "A::funcA()" << endl;
 	}
+private:
+	int _a;
 };
-//子类
-class Student : public Person
+class B : virtual public A
 {
 public:
-	virtual void BuyTicket()
+	virtual void funcA()
 	{
-		cout << "买票-半价" << endl;
+		cout << "B::funcA()" << endl;
 	}
+	virtual void funcB()
+	{
+		cout << "B::funcB()" << endl;
+	}
+private:
+	int _b;
 };
+class C : virtual public A
+{
+public:
+	virtual void funcA()
+	{
+		cout << "C::funcA()" << endl;
+	}
+	virtual void funcC()
+	{
+		cout << "C::funcC()" << endl;
+	}
+private:
+	int _c;
+};
+class D : public B, public C
+{
+public:
+	virtual void funcA()
+	{
+		cout << "D::funcA()" << endl;
+	}
+	virtual void funcD()
+	{
+		cout << "D::funcD()" << endl;
+	}
+private:
+	int _d;
+};
+typedef void(*VFPTR)(); //虚函数指针类型重命名
+//打印虚表地址及其内容
+void PrintVFT(VFPTR* ptr)
+{
+	printf("虚表地址:%p\n", ptr);
+	for (int i = 0; ptr[i] != nullptr; i++)
+	{
+		printf("ptr[%d]:%p-->", i, ptr[i]); //打印虚表当中的虚函数地址
+		ptr[i](); //使用虚函数地址调用虚函数
+	}
+	printf("\n");
+}
 int main()
 {
-	Person Mike;
-	Student Johnson;
-	Person* p1 = &Mike;
-	Person* p2 = &Johnson;
-	p1->BuyTicket(); //买票-全价
-	p2->BuyTicket(); //买票-半价
+	A a;
+	B b;
+	C c;
+	D d;
+
+	printf("A\n");
+	PrintVFT((VFPTR*)(*(int*)&a));
+	printf("B\n");
+	PrintVFT((VFPTR*)(*(int*)&b));
+	printf("B:%d\n", sizeof(B));
+	PrintVFT((VFPTR*)(*(int*)((char*)&d + 12)));
+	printf("C\n");
+	PrintVFT((VFPTR*)(*(int*)&c));
 	return 0;
 }
