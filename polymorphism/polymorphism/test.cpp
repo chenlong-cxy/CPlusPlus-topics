@@ -637,86 +637,254 @@
 //}
 
 
+//#include <iostream>
+//using namespace std;
+//class A
+//{
+//public:
+//	virtual void funcA()
+//	{
+//		cout << "A::funcA()" << endl;
+//	}
+//private:
+//	int _a;
+//};
+//class B : virtual public A
+//{
+//public:
+//	virtual void funcA()
+//	{
+//		cout << "B::funcA()" << endl;
+//	}
+//	virtual void funcB()
+//	{
+//		cout << "B::funcB()" << endl;
+//	}
+//private:
+//	int _b;
+//};
+//class C : virtual public A
+//{
+//public:
+//	virtual void funcA()
+//	{
+//		cout << "C::funcA()" << endl;
+//	}
+//	virtual void funcC()
+//	{
+//		cout << "C::funcC()" << endl;
+//	}
+//private:
+//	int _c;
+//};
+//class D : public B, public C
+//{
+//public:
+//	virtual void funcA()
+//	{
+//		cout << "D::funcA()" << endl;
+//	}
+//	virtual void funcD()
+//	{
+//		cout << "D::funcD()" << endl;
+//	}
+//private:
+//	int _d;
+//};
+//typedef void(*VFPTR)(); //虚函数指针类型重命名
+////打印虚表地址及其内容
+//void PrintVFT(VFPTR* ptr)
+//{
+//	printf("虚表地址:%p\n", ptr);
+//	for (int i = 0; ptr[i] != nullptr; i++)
+//	{
+//		printf("ptr[%d]:%p-->", i, ptr[i]); //打印虚表当中的虚函数地址
+//		ptr[i](); //使用虚函数地址调用虚函数
+//	}
+//	printf("\n");
+//}
+//int main()
+//{
+//	D d;
+//	d.B::_a = 1;
+//	d.C::_a = 2;
+//	d._b = 3;
+//	d._c = 4;
+//	d._d = 5;
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	C c;
+//	c._a = 1;
+//	c._c = 2;
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	B b;
+//	b._a = 1;
+//	b._b = 2;
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	A a;
+//	a._a = 1;
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	A a;
+//	B b;
+//	C c;
+//	D d;
+//	
+//	a._a = 1;
+//
+//	b._a = 1;
+//	b._b = 2;
+//
+//	c._a = 1;
+//	c._c = 2;
+//
+//	d.B::_a = 1;
+//	d.C::_a = 2;
+//	d._b = 3;
+//	d._c = 4;
+//	d._d = 5;
+//
+//	PrintVFT((VFPTR*)(*(int*)&b));
+//	PrintVFT((VFPTR*)(*(int*)((char*)&b + 12)));
+//
+//	//A
+//	//PrintVFT((VFPTR*)(*(int*)&a));
+//
+//	//D
+//	//PrintVFT((VFPTR*)(*(int*)&d));
+//	//PrintVFT((VFPTR*)(*(int*)((char*)&d + 12)));
+//	//PrintVFT((VFPTR*)(*(int*)((char*)&d + 12 + 16)));
+//
+//	//printf("A\n");
+//	//PrintVFT((VFPTR*)(*(int*)&a));
+//	//printf("B\n");
+//	//PrintVFT((VFPTR*)(*(int*)&b));
+//	//printf("B:%d\n", sizeof(B));
+//	//PrintVFT((VFPTR*)(*(int*)((char*)&d + 12)));
+//	//printf("C\n");
+//	//PrintVFT((VFPTR*)(*(int*)&c));
+//
+//
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//class A
+//{
+//public:
+//	A(char* s) { cout << s << endl; }
+//	~A() {};
+//};
+//class B : virtual public A
+//{
+//public:
+//	B(char* s1, char* s2)
+//		:A(s1)
+//	{
+//		cout << s2 << endl;
+//	}
+//};
+//class C : virtual public A
+//{
+//public:
+//	C(char* s1, char* s2)
+//		:A(s1)
+//	{
+//		cout << s2 << endl;
+//	}
+//};
+////初始列表执行顺序跟声明有关，继承成员声明顺序是按《继承顺序》算的
+//class D : public B, public C
+//{
+//public:
+//	D(char* s1, char* s2, char* s3, char* s4)
+//		:B(s1, s2)
+//		, C(s1, s3)
+//		, A(s1) //A只会初始化一次，编译器会处理
+//	{
+//		cout << s4 << endl;
+//	}
+//};
+//int main()
+//{
+//	D* p = new D("class A", "class B", "class C", "class D");
+//	delete p;
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//class Base1
+//{
+//public:
+//	int _b1;
+//};
+//class Base2
+//{
+//public:
+//	int _b2;
+//};
+//class Derive : public Base1, public Base2
+//{
+//public:
+//	int _d;
+//};
+//int main()
+//{
+//	Derive d;
+//	Base1* p1 = &d;
+//	Base2* p2 = &d;
+//	Derive* p3 = &d;
+//	cout << p1 << endl;
+//	cout << p2 << endl;
+//	cout << p3 << endl;
+//	return 0;
+//}
+
 #include <iostream>
 using namespace std;
 class A
 {
 public:
-	virtual void funcA()
+	virtual void func(int val = 1)
 	{
-		cout << "A::funcA()" << endl;
+		cout << "A->" << val << endl;
 	}
-private:
-	int _a;
+	virtual void test()
+	{
+		func();
+	}
 };
-class B : virtual public A
+class B : public A
 {
 public:
-	virtual void funcA()
+	void func(int val = 0)
 	{
-		cout << "B::funcA()" << endl;
+		cout << "B->" << val << endl;
 	}
-	virtual void funcB()
-	{
-		cout << "B::funcB()" << endl;
-	}
-private:
-	int _b;
 };
-class C : virtual public A
-{
-public:
-	virtual void funcA()
-	{
-		cout << "C::funcA()" << endl;
-	}
-	virtual void funcC()
-	{
-		cout << "C::funcC()" << endl;
-	}
-private:
-	int _c;
-};
-class D : public B, public C
-{
-public:
-	virtual void funcA()
-	{
-		cout << "D::funcA()" << endl;
-	}
-	virtual void funcD()
-	{
-		cout << "D::funcD()" << endl;
-	}
-private:
-	int _d;
-};
-typedef void(*VFPTR)(); //虚函数指针类型重命名
-//打印虚表地址及其内容
-void PrintVFT(VFPTR* ptr)
-{
-	printf("虚表地址:%p\n", ptr);
-	for (int i = 0; ptr[i] != nullptr; i++)
-	{
-		printf("ptr[%d]:%p-->", i, ptr[i]); //打印虚表当中的虚函数地址
-		ptr[i](); //使用虚函数地址调用虚函数
-	}
-	printf("\n");
-}
 int main()
 {
-	A a;
-	B b;
-	C c;
-	D d;
-
-	printf("A\n");
-	PrintVFT((VFPTR*)(*(int*)&a));
-	printf("B\n");
-	PrintVFT((VFPTR*)(*(int*)&b));
-	printf("B:%d\n", sizeof(B));
-	PrintVFT((VFPTR*)(*(int*)((char*)&d + 12)));
-	printf("C\n");
-	PrintVFT((VFPTR*)(*(int*)&c));
+	B* p = new B;
+	p->test();
 	return 0;
 }
