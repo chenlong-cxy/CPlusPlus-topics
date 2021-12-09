@@ -10,34 +10,36 @@ enum Colour
 	BLACK
 };
 
-template<class K, class V>
+//////////////////////////////////////////1
+template<class T>
 struct RBTreeNode
 {
 	//三叉链
-	RBTreeNode<K, V>* _left;
-	RBTreeNode<K, V>* _right;
-	RBTreeNode<K, V>* _parent;
+	RBTreeNode<T>* _left;
+	RBTreeNode<T>* _right;
+	RBTreeNode<T>* _parent;
 
-	//存储的键值对
-	pair<K, V> _kv;
+	//存储的数据
+	T _data;
 
 	//结点的颜色
 	int _col; //红/黑
 
 	//构造函数
-	RBTreeNode(const pair<K, V>& kv)
+	RBTreeNode(const T& data)
 		:_left(nullptr)
 		, _right(nullptr)
 		, _parent(nullptr)
-		, _kv(kv)
+		, _data(data)
 		, _col(RED)
 	{}
 };
 
-template<class K, class V>
+template<class T, class Ref, class Ptr> /////////
 struct __TreeIterator
 {
-	typedef RBTreeNode<K, V> Node;
+	typedef RBTreeNode<T> Node;
+	typedef __TreeIterator<T, Ref, Ptr> Self;
 
 	Node* _node;
 
@@ -45,18 +47,29 @@ struct __TreeIterator
 		:_node(node)
 	{}
 
-	operator*()
+	Ref operator*()
 	{
-		return _node->_kv;
+		return _node->_data;
 	}
-	//operator++();
+	Ptr operator->()
+	{
+		return &_node->_data;
+	}
+	bool operator!=(const Self& s) const
+	{
+		return _node != s._node;
+	}
+	Self operator++()
+	{
+
+	}
 	//operator--();
 };
 
-template<class K, class V>
+template<class K, class T, class KeyOfT>
 class RBTree
 {
-	typedef RBTreeNode<K, V> Node;
+	typedef RBTreeNode<T> Node; /////////T决定红黑树里面存储的是什么
 public:
 	//构造函数
 	RBTree()
@@ -64,13 +77,13 @@ public:
 	{}
 
 	//拷贝构造
-	RBTree(const RBTree<K, V>& t)
+	RBTree(const RBTree<K, T, KeyOfT>& t)
 	{
 		_root = _Copy(t._root);
 	}
 
 	//operator=
-	RBTree<K, V>& operator=(RBTree<K, V> t)
+	RBTree<K, T, KeyOfT>& operator=(RBTree<K, T, KeyOfT> t)
 	{
 		swap(_root, t._root);
 		return *this;
@@ -86,14 +99,15 @@ public:
 	//查找函数
 	Node* Find(const K& key)
 	{
+		KeyOfT kot;
 		Node* cur = _root;
 		while (cur)
 		{
-			if (key < cur->_kv.first) //key值小于该结点的值
+			if (key < kot(cur->_data)) //key值小于该结点的值
 			{
 				cur = cur->_left; //在该结点的左子树当中查找
 			}
-			else if (key > cur->_kv.first) //key值大于该结点的值
+			else if (key > kot(cur->_data)) //key值大于该结点的值
 			{
 				cur = cur->_right; //在该结点的右子树当中查找
 			}
@@ -106,26 +120,27 @@ public:
 	}
 
 	//插入函数
-	pair<Node*, bool> Insert(const pair<K, V>& kv)
+	pair<Node*, bool> Insert(const T& data)
 	{
 		if (_root == nullptr) //若红黑树为空树，则插入结点直接作为根结点
 		{
-			_root = new Node(kv);
+			_root = new Node(data);
 			_root->_col = BLACK; //根结点必须是黑色
 			return make_pair(_root, true); //插入成功
 		}
 		//1、按二叉搜索树的插入方法，找到待插入位置
+		KeyOfT kot;
 		Node* cur = _root;
 		Node* parent = nullptr;
 		while (cur)
 		{
-			if (kv.first < cur->_kv.first) //待插入结点的key值小于当前结点的key值
+			if (kot(data) < kot(cur->_data)) //待插入结点的key值小于当前结点的key值
 			{
 				//往该结点的左子树走
 				parent = cur;
 				cur = cur->_left;
 			}
-			else if (kv.first > cur->_kv.first) //待插入结点的key值大于当前结点的key值
+			else if (kot(data) > kot(cur->_data)) //待插入结点的key值大于当前结点的key值
 			{
 				//往该结点的右子树走
 				parent = cur;
@@ -138,9 +153,9 @@ public:
 		}
 
 		//2、将待插入结点插入到树中
-		cur = new Node(kv); //根据所给值构造一个结点
+		cur = new Node(data); //根据所给值构造一个结点
 		Node* newnode = cur; //记录新插入的结点（便于后序返回）
-		if (kv.first < parent->_kv.first) //新结点的key值小于parent的key值
+		if (kot(data) < kot(parent->_data)) //新结点的key值小于parent的key值
 		{
 			//插入到parent的左边
 			parent->_left = cur;

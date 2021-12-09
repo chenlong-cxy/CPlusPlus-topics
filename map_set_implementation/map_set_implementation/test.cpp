@@ -1,20 +1,19 @@
 #include "RBTree.h"
-
-void test1()
-{
-	RBTree<int, int> t;
-	t.Insert(make_pair(1, 1));
-	t.Insert(make_pair(2, 2));
-	t.Insert(make_pair(3, 3));
-	RBTree<int, int> t1(t);
-	RBTree<int, int> t2;
-	t2 = t;
-	t1.Inorder();
-	t2.Inorder();
-}
+#include "map.h"
+#include "set.h"
 
 int main()
 {
-	test1();
+	cl::map<int, int> m;
+	m.insert(make_pair(1, 1));
+	m.insert(make_pair(2, 2));
+	m.insert(make_pair(3, 3));
+	m.insert(make_pair(4, 4));
+
+	cl::set<int> s;
+	s.insert(1);
+	s.insert(2);
+	s.insert(3);
+	s.insert(4);
 	return 0;
 }

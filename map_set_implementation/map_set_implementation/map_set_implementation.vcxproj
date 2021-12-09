@@ -76,7 +76,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="map.h" />
     <ClInclude Include="RBTree.h" />
+    <ClInclude Include="set.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp" />
