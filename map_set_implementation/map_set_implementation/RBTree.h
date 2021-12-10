@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <assert.h>
+#include "iterator.h"
 using namespace std;
 
 //枚举定义结点的颜色
@@ -10,7 +11,7 @@ enum Colour
 	BLACK
 };
 
-//////////////////////////////////////////1
+//红黑树结点的定义
 template<class T>
 struct RBTreeNode
 {
@@ -35,42 +36,144 @@ struct RBTreeNode
 	{}
 };
 
-template<class T, class Ref, class Ptr> /////////
+//正向迭代器
+template<class T, class Ref, class Ptr>
 struct __TreeIterator
 {
-	typedef RBTreeNode<T> Node;
-	typedef __TreeIterator<T, Ref, Ptr> Self;
+	typedef Ref reference; //结点指针的引用
+	typedef Ptr pointer; //结点指针
 
-	Node* _node;
+	typedef RBTreeNode<T> Node; //红黑树当中的结点，结点当中存储的是T类型的数据
+	typedef __TreeIterator<T, Ref, Ptr> Self; //正向迭代器本身的类型
 
+	Node* _node; //正向迭代器所索引结点的指针
+
+	//构造函数
 	__TreeIterator(Node* node)
-		:_node(node)
+		:_node(node) //根据所给结点指针构造一个正向迭代器
 	{}
 
 	Ref operator*()
 	{
-		return _node->_data;
+		return _node->_data; //返回结点数据的引用
 	}
 	Ptr operator->()
 	{
-		return &_node->_data;
+		return &_node->_data; //返回结点数据的指针
 	}
+	//判断两个正向迭代器是否不同
 	bool operator!=(const Self& s) const
 	{
-		return _node != s._node;
+		return _node != s._node; //判断两个正向迭代器所索引的结点是否是同一个
 	}
+	//判断两个正向迭代器是否相同
+	bool operator==(const Self& s) const
+	{
+		return _node == s._node; //判断两个正向迭代器所索引的结点是否是同一个
+	}
+
+	//前置++
 	Self operator++()
 	{
-
+		if (_node->_right) //结点的右子树不为空
+		{
+			//寻找该结点右子树当中的最左结点
+			Node* left = _node->_right;
+			while (left->_left)
+			{
+				left = left->_left;
+			}
+			_node = left; //++后变为该结点
+		}
+		else //结点的右子树为空
+		{
+			//寻找孩子不在父亲右的祖先
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			while (parent&&cur == parent->_right)
+			{
+				cur = parent;
+				parent = parent->_parent;
+			}
+			_node = parent; //++后变为该结点
+		}
+		return *this;
 	}
-	//operator--();
+
+	//前置--
+	Self operator--()
+	{
+		if (_node->_left) //结点的左子树不为空
+		{
+			//寻找该结点左子树当中的最右结点
+			Node* right = _node->_left;
+			while (right->_right)
+			{
+				right = right->_right;
+			}
+			_node = right; //--后变为该结点
+		}
+		else //结点的左子树为空
+		{
+			//寻找孩子不在父亲左的祖先
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			while (parent&&cur == parent->_left)
+			{
+				cur = parent;
+				parent = parent->_parent;
+			}
+			_node = parent; //--后变为该结点
+		}
+		return *this;
+	}
 };
 
+//红黑树的实现
 template<class K, class T, class KeyOfT>
 class RBTree
 {
-	typedef RBTreeNode<T> Node; /////////T决定红黑树里面存储的是什么
+	typedef RBTreeNode<T> Node; //红黑树当中的结点，结点当中存储的是T类型的数据
 public:
+	typedef __TreeIterator<T, T&, T*> iterator; //普通迭代器
+	typedef __TreeIterator<T, const T&, const T*> const_iterator; //const迭代器
+
+	typedef ReverseIterator<iterator> reverse_iterator; //反向迭代器
+	typedef ReverseIterator<const iterator> const_reverse_iterator; //const反向迭代器
+
+	reverse_iterator rbegin()
+	{
+		//寻找最右结点
+		Node* right = _root;
+		while (right&&right->_right)
+		{
+			right = right->_right;
+		}
+		//返回最右结点的反向迭代器
+		return reverse_iterator(iterator(right));
+	}
+	reverse_iterator rend()
+	{
+		//返回由nullptr构造得到的反向迭代器（不严谨）
+		return reverse_iterator(iterator(nullptr));
+	}
+
+	iterator begin()
+	{
+		//寻找最左结点
+		Node* left = _root;
+		while (left&&left->_left)
+		{
+			left = left->_left;
+		}
+		//返回最左结点的正向迭代器
+		return iterator(left);
+	}
+	iterator end()
+	{
+		//返回由nullptr构造得到的正向迭代器（不严谨）
+		return iterator(nullptr);
+	}
 	//构造函数
 	RBTree()
 		:_root(nullptr)
@@ -82,11 +185,11 @@ public:
 		_root = _Copy(t._root);
 	}
 
-	//operator=
+	//赋值运算符重载（现代写法）
 	RBTree<K, T, KeyOfT>& operator=(RBTree<K, T, KeyOfT> t)
 	{
 		swap(_root, t._root);
-		return *this;
+		return *this; //支持连续赋值
 	}
 
 	//析构函数
@@ -120,13 +223,13 @@ public:
 	}
 
 	//插入函数
-	pair<Node*, bool> Insert(const T& data)
+	pair<iterator, bool> Insert(const T& data)
 	{
 		if (_root == nullptr) //若红黑树为空树，则插入结点直接作为根结点
 		{
 			_root = new Node(data);
 			_root->_col = BLACK; //根结点必须是黑色
-			return make_pair(_root, true); //插入成功
+			return make_pair(iterator(_root), true); //插入成功
 		}
 		//1、按二叉搜索树的插入方法，找到待插入位置
 		KeyOfT kot;
@@ -148,7 +251,7 @@ public:
 			}
 			else //待插入结点的key值等于当前结点的key值
 			{
-				return make_pair(cur, false); //插入失败
+				return make_pair(iterator(cur), false); //插入失败
 			}
 		}
 
@@ -242,7 +345,7 @@ public:
 			}
 		}
 		_root->_col = BLACK; //根结点的颜色为黑色（可能被情况一变成了红色，需要变回黑色）
-		return make_pair(newnode, true); //插入成功
+		return make_pair(iterator(newnode), true); //插入成功
 	}
 
 	//删除函数
@@ -660,5 +763,5 @@ private:
 		RotateL(parent);
 	}
 
-	Node* _root;
+	Node* _root; //红黑树的根结点
 };

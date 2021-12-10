@@ -76,6 +76,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="iterator.h" />
+    <ClInclude Include="list.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="RBTree.h" />
     <ClInclude Include="set.h" />
