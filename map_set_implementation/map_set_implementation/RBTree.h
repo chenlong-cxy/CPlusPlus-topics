@@ -43,10 +43,10 @@ struct __TreeIterator
 	typedef Ref reference; //结点指针的引用
 	typedef Ptr pointer; //结点指针
 
-	typedef RBTreeNode<T> Node; //红黑树当中的结点，结点当中存储的是T类型的数据
-	typedef __TreeIterator<T, Ref, Ptr> Self; //正向迭代器本身的类型
+	typedef RBTreeNode<T> Node; //结点的类型
+	typedef __TreeIterator<T, Ref, Ptr> Self; //正向迭代器的类型
 
-	Node* _node; //正向迭代器所索引结点的指针
+	Node* _node; //正向迭代器所封装结点的指针
 
 	//构造函数
 	__TreeIterator(Node* node)
@@ -64,12 +64,12 @@ struct __TreeIterator
 	//判断两个正向迭代器是否不同
 	bool operator!=(const Self& s) const
 	{
-		return _node != s._node; //判断两个正向迭代器所索引的结点是否是同一个
+		return _node != s._node; //判断两个正向迭代器所封装的结点是否是同一个
 	}
 	//判断两个正向迭代器是否相同
 	bool operator==(const Self& s) const
 	{
-		return _node == s._node; //判断两个正向迭代器所索引的结点是否是同一个
+		return _node == s._node; //判断两个正向迭代器所封装的结点是否是同一个
 	}
 
 	//前置++
@@ -133,13 +133,13 @@ struct __TreeIterator
 template<class K, class T, class KeyOfT>
 class RBTree
 {
-	typedef RBTreeNode<T> Node; //红黑树当中的结点，结点当中存储的是T类型的数据
+	typedef RBTreeNode<T> Node; //结点的类型
 public:
-	typedef __TreeIterator<T, T&, T*> iterator; //普通迭代器
-	typedef __TreeIterator<T, const T&, const T*> const_iterator; //const迭代器
+	typedef __TreeIterator<T, T&, T*> iterator; //正向迭代器
+	//typedef __TreeIterator<T, const T&, const T*> const_iterator; //const迭代器
 
 	typedef ReverseIterator<iterator> reverse_iterator; //反向迭代器
-	typedef ReverseIterator<const iterator> const_reverse_iterator; //const反向迭代器
+	//typedef ReverseIterator<const iterator> const_reverse_iterator; //const反向迭代器
 
 	reverse_iterator rbegin()
 	{
@@ -200,7 +200,7 @@ public:
 	}
 
 	//查找函数
-	Node* Find(const K& key)
+	iterator Find(const K& key)
 	{
 		KeyOfT kot;
 		Node* cur = _root;
@@ -216,10 +216,10 @@ public:
 			}
 			else //找到了目标结点
 			{
-				return cur; //返回该结点
+				return iterator(cur); //返回该结点
 			}
 		}
-		return nullptr; //查找失败
+		return end(); //查找失败
 	}
 
 	//插入函数
@@ -351,6 +351,7 @@ public:
 	//删除函数
 	bool Erase(const K& key)
 	{
+		KeyOfT kot;
 		//用于遍历二叉树
 		Node* parent = nullptr;
 		Node* cur = _root;
@@ -359,13 +360,13 @@ public:
 		Node* delPos = nullptr;
 		while (cur)
 		{
-			if (key < cur->_kv.first) //所给key值小于当前结点的key值
+			if (key < kot(cur->_data)) //所给key值小于当前结点的key值
 			{
 				//往该结点的左子树走
 				parent = cur;
 				cur = cur->_left;
 			}
-			else if (key > cur->_kv.first) //所给key值大于当前结点的key值
+			else if (key > kot(cur->_data)) //所给key值大于当前结点的key值
 			{
 				//往该结点的右子树走
 				parent = cur;
@@ -424,8 +425,7 @@ public:
 						minParent = minRight;
 						minRight = minRight->_left;
 					}
-					cur->_kv.first = minRight->_kv.first; //将待删除结点的key改为minRight的key
-					cur->_kv.second = minRight->_kv.second; //将待删除结点的value改为minRight的value
+					cur->_data = minRight->_data; //将待删除结点的_data改为minRight的_data
 					delParentPos = minParent; //标记实际删除结点的父结点
 					delPos = minRight; //标记实际删除的结点
 					break; //进行红黑树的调整以及结点的实际删除
@@ -583,39 +583,7 @@ public:
 		delete del; //实际删除结点
 		return true;
 	}
-	
-	//判断是否为红黑树
-	bool ISRBTree()
-	{
-		if (_root == nullptr) //空树是红黑树
-		{
-			return true;
-		}
-		if (_root->_col == RED)
-		{
-			cout << "error：根结点为红色" << endl;
-			return false;
-		}
-		
-		//找最左路径作为黑色结点数目的参考值
-		Node* cur = _root;
-		int BlackCount = 0;
-		while (cur)
-		{
-			if (cur->_col == BLACK)
-				BlackCount++;
-			cur = cur->_left;
-		}
 
-		int count = 0;
-		return _ISRBTree(_root, count, BlackCount);
-	}
-
-	//中序遍历
-	void Inorder()
-	{
-		_Inorder(_root);
-	}
 private:
 	//拷贝树
 	Node* _Copy(Node* root)
@@ -628,41 +596,6 @@ private:
 		copyNode->_left = _Copy(root->_left);
 		copyNode->_right = _Copy(root->_right);
 		return copyNode;
-	}
-
-	//中序遍历子函数
-	void _Inorder(Node* root)
-	{
-		if (root == nullptr)
-			return;
-		_Inorder(root->_left);
-		cout << root->_kv.first << " ";
-		_Inorder(root->_right);
-	}
-
-	//判断是否为红黑树的子函数
-	bool _ISRBTree(Node* root, int count, int BlackCount)
-	{
-		if (root == nullptr) //该路径已经走完了
-		{
-			if (count != BlackCount)
-			{
-				cout << "error：黑色结点的数目不相等" << endl;
-				return false;
-			}
-			return true;
-		}
-
-		if (root->_col == RED&&root->_parent->_col == RED)
-		{
-			cout << "error：存在连续的红色结点" << endl;
-			return false;
-		}
-		if (root->_col == BLACK)
-		{
-			count++;
-		}
-		return _ISRBTree(root->_left, count, BlackCount) && _ISRBTree(root->_right, count, BlackCount);
 	}
 
 	//析构函数子函数

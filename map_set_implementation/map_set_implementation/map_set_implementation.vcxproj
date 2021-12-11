@@ -80,6 +80,7 @@
     <ClInclude Include="list.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="RBTree.h" />
+    <ClInclude Include="RBTreeS.h" />
     <ClInclude Include="set.h" />
   </ItemGroup>
   <ItemGroup>

@@ -102,16 +102,91 @@ void test4()
 	m.insert(make_pair("3", "three"));
 	m["2"] = "double";
 	m["2021"] = "dragon";
-	cl::map<string, string>::reverse_iterator rit = m.rbegin();
-	while (rit != m.rend())
+	cl::map<string, string>::iterator it = m.begin();
+	while (it != m.end())
 	{
-		cout << rit->first << ":" << rit->second << endl;
-		++rit;
+		cout << it->first << ":" << it->second << endl;
+		++it;
+	}
+	cout << "over" << endl;
+	m.erase("2021");
+	it = m.begin();
+	while (it != m.end())
+	{
+		cout << it->first << ":" << it->second << endl;
+		++it;
 	}
 	cout << "over" << endl;
 }
+void test5()
+{
+	cl::map<int, int> m;
+	m.insert(make_pair(1, 11));
+	m.insert(make_pair(2, 22));
+	m.insert(make_pair(3, 33));
+	m.insert(make_pair(4, 44));
+	m[2] = 6;
+	m[2021] = 2022;
+	cl::map<int, int>::iterator it = m.begin();
+	while (it != m.end())
+	{
+		cout << it->first << ":" << it->second << endl;
+		++it;
+	}
+	m.erase(2021);
+	m.erase(2);
+	it = m.begin();
+	while (it != m.end())
+	{
+		cout << it->first << ":" << it->second << endl;
+		++it;
+	}
+	cout << "over" << endl;
+	cl::map<int, int>::iterator pos = m.find(1);
+	if (pos == m.end())
+	{
+		cout << "no" << endl;
+		return;
+	}
+	pos->second = 2222;
+	cout << "yes" << endl;
+	cout << pos->first << ":" << pos->second << endl;
+}
+void test6()
+{
+	cl::set<int> s;
+	s.insert(43);
+	s.insert(434);
+	s.insert(123);
+	s.insert(233);
+	s.insert(353);
+	cl::set<int>::reverse_iterator rit = s.rbegin();
+	while (rit != s.rend())
+	{
+		cout << *rit << " ";
+		++rit;
+	}
+	cout << endl;
+	s.erase(233);
+	s.erase(23);
+	rit = s.rbegin();
+	while (rit != s.rend())
+	{
+		cout << *rit << " ";
+		++rit;
+	}
+	cout << endl;
+	cl::set<int>::iterator pos = s.find(13);
+	if (pos == s.end())
+	{
+		cout << "no" << endl;
+		return;
+	}
+	cout << "yes" << endl;
+	cout << *pos << endl;
+}
 int main()
 {
-	test4();
+	test5();
 	return 0;
 }
