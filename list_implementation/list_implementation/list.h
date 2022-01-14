@@ -32,13 +32,13 @@ namespace cl
 			:_pnode(pnode)
 		{}
 		//前置++
-		self operator++()
+		self& operator++()
 		{
 			_pnode = _pnode->_next; //让结点指针指向后一个结点
 			return *this; //返回自增后的结点指针
 		}
 		//前置--
-		self operator--()
+		self& operator--()
 		{
 			_pnode = _pnode->_prev; //让结点指针指向前一个结点
 			return *this; //返回自减后的结点指针
