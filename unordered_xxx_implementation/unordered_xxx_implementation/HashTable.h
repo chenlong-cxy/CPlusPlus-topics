@@ -5,7 +5,7 @@
 using namespace std;
 
 
-//每个哈希桶中存储数据的结构
+//哈希结点的定义
 template<class T>
 struct HashNode
 {
@@ -120,7 +120,7 @@ class HashTable
 	template<class K, class T, class KeyOfT, class HashFunc>
 	friend struct __HTIterator;
 	//friend struct __HTIterator<K, T,KeyOfT, HashFunc>;
-	typedef HashNode<T> Node;
+	typedef HashNode<T> Node; //哈希结点类型
 public:
 	typedef __HTIterator<K, T, KeyOfT, HashFunc> iterator;
 

@@ -5,9 +5,10 @@ namespace cl
 	template<class K>
 	class unordered_set
 	{
+		//仿函数
 		struct SetKeyOfT
 		{
-			const K& operator()(const K& key)
+			const K& operator()(const K& key) //返回键值key
 			{
 				return key;
 			}
@@ -28,6 +29,14 @@ namespace cl
 		{
 			return _ht.Insert(key);
 		}
+		void erase(const K& key)
+		{
+			_ht.Erase(key);
+		}
+		iterator find(const K& key)
+		{
+			return _ht.Find(key);
+		}
 	private:
 		HashTable<K, K, SetKeyOfT> _ht;
 	};
@@ -46,6 +55,22 @@ namespace cl
 			++it;
 		}
 		cout << endl;
-
+		it = us.find(2);
+		if (it != us.end())
+		{
+			cout << "找到了" << endl;
+		}
+		else
+		{
+			cout << "没找到" << endl;
+		}
+		us.erase(2);
+		it = us.begin();
+		while (it != us.end())
+		{
+			cout << *it << " ";
+			++it;
+		}
+		cout << endl;
 	}
 }

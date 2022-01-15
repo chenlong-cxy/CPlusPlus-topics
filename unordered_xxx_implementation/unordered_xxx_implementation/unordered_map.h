@@ -5,9 +5,10 @@ namespace cl
 	template<class K, class V>
 	class unordered_map
 	{
+		//仿函数
 		struct MapKeyOfT
 		{
-			const K& operator()(const pair<K, V>& kv)
+			const K& operator()(const pair<K, V>& kv) //返回键值对当中的键值key
 			{
 				return kv.first;
 			}
@@ -32,6 +33,14 @@ namespace cl
 			pair<iterator, bool> ret = insert(make_pair(key, V()));
 			iterator it = ret.first;
 			return it->second;
+		}
+		void erase(const K& key)
+		{
+			_ht.Erase(key);
+		}
+		iterator find(const K& key)
+		{
+			return _ht.Find(key);
 		}
 	private:
 		HashTable<K, pair<K, V>, MapKeyOfT> _ht;
@@ -64,6 +73,24 @@ namespace cl
 		cout << endl;
 
 		tmp = um;
+		it = tmp.begin();
+		while (it != tmp.end())
+		{
+			cout << it->first << ":" << it->second << " ";
+			++it;
+		}
+		cout << endl;
+		it = tmp.find("香蕉");
+		if (it != tmp.end())
+		{
+			cout << "找到了" << endl;
+		}
+		else
+		{
+			cout << "没找到" << endl;
+		}
+		tmp.erase("香蕉");
+
 		it = tmp.begin();
 		while (it != tmp.end())
 		{
