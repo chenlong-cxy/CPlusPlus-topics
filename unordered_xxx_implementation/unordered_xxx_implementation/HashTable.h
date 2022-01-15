@@ -28,7 +28,7 @@ template<class K, class T, class KeyOfT, class HashFunc = Hash<K>>
 struct __HTIterator
 {
 	typedef HashNode<T> Node;
-	typedef HashTable<K, T, KeyOfT, HashFunc> HT;
+	typedef HashTable<K, T, KeyOfT, HashFunc> HT; //注：不能用typename代替前置声明
 	typedef __HTIterator<K, T, KeyOfT, HashFunc> Self;
 
 	Node* _node; //结点指针
@@ -85,11 +85,11 @@ struct __HTIterator
 		}
 		return *this;
 	}
-	//前置--
-	Self& operator--()
-	{
+	//前置--（单向迭代器，没有实现--，若要实现可以考虑将单链表换成双链表）
+	//Self& operator--()
+	//{
 
-	}
+	//}
 };
 
 template<class K>
@@ -117,9 +117,13 @@ struct Hash<string>
 template<class K, class T, class KeyOfT, class HashFunc = Hash<K>>
 class HashTable
 {
+	template<class K, class T, class KeyOfT, class HashFunc>
+	friend struct __HTIterator;
+	//friend struct __HTIterator<K, T,KeyOfT, HashFunc>;
 	typedef HashNode<T> Node;
-	typedef __HTIterator<K, T, KeyOfT, HashFunc> iterator;
 public:
+	typedef __HTIterator<K, T, KeyOfT, HashFunc> iterator;
+
 	iterator begin()
 	{
 		size_t i = 0;
@@ -127,7 +131,7 @@ public:
 		{
 			if (_table[i])
 			{
-				return __HTIterator(_table[i], this);
+				return iterator(_table[i], this);
 			}
 			i++;
 		}
@@ -135,69 +139,60 @@ public:
 	}
 	iterator end()
 	{
-		return __HTIterator(nullptr, this);
+		return iterator(nullptr, this);
 	}
-	////构造函数
-	//HashTable()
-	//	:_n(0)
-	//{}
-	////拷贝构造函数
-	//HashTable(const HashTable<K, V>& ht)
-	//{
-	//	//1、先将原来的哈希表释放
-	//	_Destroy(_table);
-	//	//2、将哈希表的大小调整为ht._table的大小
-	//	_table.resize(ht._table.size());
-	//	//3、将ht._table每个桶当中的结点一个个拷贝到自己的哈希表中（深拷贝）
-	//	for (size_t i = 0; i < ht._table.size(); i++)
-	//	{
-	//		if (ht._table[i])
-	//		{
-	//			Node* cur = ht._table[i];
-	//			while (cur)
-	//			{
-	//				Node* next = cur->_next;
-	//				Node* newnode = new Node(cur->_kv);
-	//				newnode->_next = _table[i];
-	//				_table[i] = newnode;
-	//				cur = next;
-	//			}
-	//		}
-	//	}
-	//	//4、更改哈希表当中的有效数据个数
-	//	_n = ht._n;
-	//}
-	////赋值运算符重载函数
-	//HashTable<K, V>& operator=(const HashTable<K, V> ht)
-	//{
-	//	_table.swap(ht._table);
-	//	swap(_n, ht._n);
-	//	return *this;
-	//}
-	//void _Destroy(vector<Node*>& v)
-	//{
-	//	//将哈希表当中的结点一个个释放
-	//	for (size_t i = 0; i < v.size(); i++)
-	//	{
-	//		if (v[i]) //桶不为空
-	//		{
-	//			Node* cur = v[i];
-	//			while (cur)
-	//			{
-	//				Node* next = cur->_next;
-	//				delete cur;
-	//				cur = next;
-	//			}
-	//			v[i] = nullptr;
-	//		}
-	//	}
-	//}
-	////析构函数
-	//~HashTable()
-	//{
-	//	//释放哈希表
-	//	_Destroy(_table);
-	//}
+	//构造函数
+	HashTable() = default; //显示指定生成默认构造
+
+	//拷贝构造函数
+	HashTable(const HashTable& ht)
+	{
+		//1、将哈希表的大小调整为ht._table的大小
+		_table.resize(ht._table.size());
+		//2、将ht._table每个桶当中的结点一个个拷贝到自己的哈希表中（深拷贝）
+		for (size_t i = 0; i < ht._table.size(); i++)
+		{
+			if (ht._table[i])
+			{
+				Node* cur = ht._table[i];
+				while (cur)
+				{
+					Node* copy = new Node(cur->_data);
+					copy->_next = _table[i];
+					_table[i] = copy;
+					cur = cur->_next;
+				}
+			}
+		}
+		//3、更改哈希表当中的有效数据个数
+		_n = ht._n;
+	}
+	//赋值运算符重载函数
+	HashTable& operator=(HashTable ht)
+	{
+		_table.swap(ht._table);
+		swap(_n, ht._n);
+		return *this;
+	}
+	//析构函数
+	~HashTable()
+	{
+		//将哈希表当中的结点一个个释放
+		for (size_t i = 0; i < _table.size(); i++)
+		{
+			if (_table[i]) //桶不为空
+			{
+				Node* cur = _table[i];
+				while (cur)
+				{
+					Node* next = cur->_next;
+					delete cur;
+					cur = next;
+				}
+				_table[i] = nullptr;
+			}
+		}
+	}
 	//获取本次增容后哈希表的大小
 	size_t GetNextPrime(size_t prime)
 	{
@@ -221,14 +216,14 @@ public:
 		return primeList[i];
 	}
 	//插入函数
-	bool Insert(const T& data)
+	pair<iterator, bool> Insert(const T& data)
 	{
 		KeyOfT kot;
 		//1、查看哈希表中是否存在该键值的键值对
-		Node* ret = Find(kot(data));
-		if (ret) //哈希表中已经存在该键值的键值对（不允许数据冗余）
+		iterator ret = Find(kot(data));
+		if (ret != end()) //哈希表中已经存在该键值的键值对（不允许数据冗余）
 		{
-			return false; //插入失败
+			return make_pair(ret, false); //插入失败
 		}
 
 		//2、判断是否需要调整哈希表的大小
@@ -276,14 +271,14 @@ public:
 
 		//4、哈希表中的有效元素个数加一
 		_n++;
-		return true;
+		return make_pair(iterator(newnode, this), true);
 	}
 	//查找函数
-	HashNode<T>* Find(const K& key)
+	iterator Find(const K& key)
 	{
 		if (_table.size() == 0) //哈希表大小为0，查找失败
 		{
-			return nullptr;
+			return end();
 		}
 
 		KeyOfT kot;
@@ -295,11 +290,11 @@ public:
 		{
 			if (kot(cur->_data) == key) //key值匹配，则查找成功
 			{
-				return cur;
+				return iterator(cur, this);
 			}
 			cur = cur->_next;
 		}
-		return nullptr; //直到该桶全部遍历完毕还没有找到目标元素，查找失败
+		return end(); //直到该桶全部遍历完毕还没有找到目标元素，查找失败
 	}
 	//删除函数
 	bool Erase(const K& key)
@@ -338,5 +333,5 @@ public:
 	}
 private:
 	vector<Node*> _table;
-	size_t _n;
+	size_t _n = 0;
 };

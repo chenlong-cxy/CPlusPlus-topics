@@ -13,22 +13,63 @@ namespace cl
 			}
 		};
 	public:
-		bool insert(const pair<K, V>& kv)
+		typedef typename HashTable<K, pair<K, V>, MapKeyOfT>::iterator iterator;
+
+		iterator begin()
 		{
-			_ht.Insert(kv);
-			return true;
+			return _ht.begin();
 		}
-		bool erase(const K& key)
+		iterator end()
 		{
-			_ht.Erase(key);
-			return true;
+			return _ht.end();
 		}
-		bool find(const K& key)
+		pair<iterator, bool> insert(const pair<K, V>& kv)
 		{
-			_ht.Find(key);
-			return true;
+			return _ht.Insert(kv);
+		}
+		V& operator[](const K& key)
+		{
+			pair<iterator, bool> ret = insert(make_pair(key, V()));
+			iterator it = ret.first;
+			return it->second;
 		}
 	private:
 		HashTable<K, pair<K, V>, MapKeyOfT> _ht;
 	};
+
+	void testmap()
+	{
+		unordered_map<string, int> um;
+		um.insert(make_pair("Æ»¹û", 1));
+		um.insert(make_pair("Ïã½¶", 1));
+		um.insert(make_pair("·¬ÇÑ", 1));
+		um.insert(make_pair("ÆÏÌÑ", 1));
+		um["Æ»¹û"]--;
+		um["³È×Ó"] = 9;
+		unordered_map<string, int>::iterator it = um.begin();
+		while (it != um.end())
+		{
+			cout << it->first << ":" << it->second << " ";
+			++it;
+		}
+		cout << endl;
+		unordered_map<string, int> tmp(um);
+		tmp["³È×Ó"] = 2022;
+		it = tmp.begin();
+		while (it != tmp.end())
+		{
+			cout << it->first << ":" << it->second << " ";
+			++it;
+		}
+		cout << endl;
+
+		tmp = um;
+		it = tmp.begin();
+		while (it != tmp.end())
+		{
+			cout << it->first << ":" << it->second << " ";
+			++it;
+		}
+		cout << endl;
+	}
 }

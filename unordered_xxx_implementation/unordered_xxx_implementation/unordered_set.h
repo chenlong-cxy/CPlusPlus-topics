@@ -13,8 +13,8 @@ namespace cl
 			}
 		};
 	public:
-		//在内嵌类型里面找不到，因为要实例化后才能找
-		typedef HashTable<K, K, SetKeyOfT>::iterator iterator;
+		//现在没有实例化，没办法到HashTable里面找iterator，所以typename就是告诉编译器这里是一个类型，实例化以后再去取
+		typedef typename HashTable<K, K, SetKeyOfT>::iterator iterator;
 
 		iterator begin()
 		{
@@ -24,12 +24,28 @@ namespace cl
 		{
 			return _ht.end();
 		}
-		bool insert(const K& key)
+		pair<iterator, bool> insert(const K& key)
 		{
-			_ht.Insert(key);
-			return true;
+			return _ht.Insert(key);
 		}
 	private:
 		HashTable<K, K, SetKeyOfT> _ht;
 	};
+
+	void testset()
+	{
+		unordered_set<int> us;
+		us.insert(124);
+		us.insert(2);
+		us.insert(324);
+		us.insert(4);
+		unordered_set<int>::iterator it = us.begin();
+		while (it != us.end())
+		{
+			cout << *it << " ";
+			++it;
+		}
+		cout << endl;
+
+	}
 }
