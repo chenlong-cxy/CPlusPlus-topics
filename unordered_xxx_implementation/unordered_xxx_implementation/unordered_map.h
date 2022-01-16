@@ -1,6 +1,6 @@
 #include "HashTable.h"
 
-namespace cl
+namespace cl //防止命名冲突
 {
 	template<class K, class V>
 	class unordered_map
@@ -24,20 +24,24 @@ namespace cl
 		{
 			return _ht.end();
 		}
+		//插入函数
 		pair<iterator, bool> insert(const pair<K, V>& kv)
 		{
 			return _ht.Insert(kv);
 		}
+		//赋值运算符重载
 		V& operator[](const K& key)
 		{
 			pair<iterator, bool> ret = insert(make_pair(key, V()));
 			iterator it = ret.first;
 			return it->second;
 		}
+		//删除函数
 		void erase(const K& key)
 		{
 			_ht.Erase(key);
 		}
+		//查找函数
 		iterator find(const K& key)
 		{
 			return _ht.Find(key);

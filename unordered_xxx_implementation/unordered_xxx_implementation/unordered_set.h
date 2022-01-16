@@ -1,6 +1,6 @@
 #include "HashTable.h"
 
-namespace cl
+namespace cl //·ÀÖ¹ÃüÃû³åÍ»
 {
 	template<class K>
 	class unordered_set
@@ -25,14 +25,17 @@ namespace cl
 		{
 			return _ht.end();
 		}
+		//²åÈëº¯Êı
 		pair<iterator, bool> insert(const K& key)
 		{
 			return _ht.Insert(key);
 		}
+		//É¾³ıº¯Êı
 		void erase(const K& key)
 		{
 			_ht.Erase(key);
 		}
+		//²éÕÒº¯Êı
 		iterator find(const K& key)
 		{
 			return _ht.Find(key);

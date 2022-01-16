@@ -27,61 +27,62 @@ class HashTable;
 template<class K, class T, class KeyOfT, class HashFunc = Hash<K>>
 struct __HTIterator
 {
-	typedef HashNode<T> Node;
-	typedef HashTable<K, T, KeyOfT, HashFunc> HT; //注：不能用typename代替前置声明
-	typedef __HTIterator<K, T, KeyOfT, HashFunc> Self;
+	typedef HashNode<T> Node; //哈希结点的类型
+	typedef HashTable<K, T, KeyOfT, HashFunc> HT; //哈希表的类型
+	typedef __HTIterator<K, T, KeyOfT, HashFunc> Self; //正向迭代器的类型
 
 	Node* _node; //结点指针
 	HT* _pht; //哈希表的地址
 
+	//构造函数
 	__HTIterator(Node* node, HT* pht)
-		:_node(node)
-		, _pht(pht)
+		:_node(node) //结点指针
+		, _pht(pht) //哈希表地址
 	{}
 
 	T& operator*()
 	{
-		return _node->_data;
+		return _node->_data; //返回哈希结点中数据的引用
 	}
 
 	T* operator->()
 	{
-		return &_node->_data;
+		return &_node->_data; //返回哈希结点中数据的地址
 	}
 
 	bool operator!=(const Self& s) const
 	{
-		return _node != s._node;
+		return _node != s._node; //判断两个结点的地址是否不同
 	}
 
 	bool operator==(const Self& s) const
 	{
-		return _node == s._node;
+		return _node == s._node; //判断两个结点的地址是否相同
 	}
 
 	//前置++
 	Self& operator++()
 	{
-		if (_node->_next)
+		if (_node->_next) //该结点不是当前哈希桶中的最后一个结点
 		{
-			_node = _node->_next;
+			_node = _node->_next; //++后变为当前哈希桶中的下一个结点
 		}
-		else
+		else //该结点是当前哈希桶中的最后一个结点
 		{
 			KeyOfT kot;
 			HashFunc hf;
-			size_t index = hf(kot(_node->_data)) % _pht->_table.size();
-			index++; //从下一个桶开始找
-			while (index < _pht->_table.size())
+			size_t index = hf(kot(_node->_data)) % _pht->_table.size(); //通过哈希函数计算出当前所处哈希桶编号index（除数不能是capacity）
+			index++; //从下一个位置开始找一个非空的哈希桶
+			while (index < _pht->_table.size()) //直到将整个哈希表找完
 			{
-				if (_pht->_table[index])
+				if (_pht->_table[index]) //当前哈希桶非空
 				{
-					_node = _pht->_table[index];
+					_node = _pht->_table[index]; //++后变为当前哈希桶中的第一个结点
 					return *this;
 				}
-				index++;
+				index++; //当前哈希桶为空桶，找下一个哈希桶
 			}
-			_node = nullptr;
+			_node = nullptr; //哈希表中已经没有空桶了，++后变为nullptr
 		}
 		return *this;
 	}
@@ -95,20 +96,21 @@ struct __HTIterator
 template<class K>
 struct Hash
 {
-	size_t operator()(const K& key)
+	size_t operator()(const K& key) //返回键值key
 	{
 		return key;
 	}
 };
+//string类型的特化
 template<>
 struct Hash<string>
 {
-	size_t operator()(const string& s)
+	size_t operator()(const string& s) //BKDRHash算法
 	{
 		size_t value = 0;
 		for (auto ch : s)
 		{
-			value = value * 131 + ch; //BKDR
+			value = value * 131 + ch;
 		}
 		return value;
 	}
@@ -117,30 +119,32 @@ struct Hash<string>
 template<class K, class T, class KeyOfT, class HashFunc = Hash<K>>
 class HashTable
 {
+	//将正向迭代器类声明为哈希表类的友元
 	template<class K, class T, class KeyOfT, class HashFunc>
 	friend struct __HTIterator;
 	//friend struct __HTIterator<K, T,KeyOfT, HashFunc>;
 	typedef HashNode<T> Node; //哈希结点类型
 public:
-	typedef __HTIterator<K, T, KeyOfT, HashFunc> iterator;
+	typedef __HTIterator<K, T, KeyOfT, HashFunc> iterator; //正向迭代器的类型
 
 	iterator begin()
 	{
 		size_t i = 0;
-		while (i < _table.size())
+		while (i < _table.size()) //找到第一个非空哈希桶
 		{
-			if (_table[i])
+			if (_table[i]) //该哈希桶非空
 			{
-				return iterator(_table[i], this);
+				return iterator(_table[i], this); //返回该哈希桶中的第一个结点的正向迭代器
 			}
 			i++;
 		}
-		return end();
+		return end(); //哈希桶中无数据，返回end()
 	}
 	iterator end()
 	{
-		return iterator(nullptr, this);
+		return iterator(nullptr, this); //返回nullptr的正向迭代器
 	}
+
 	//构造函数
 	HashTable() = default; //显示指定生成默认构造
 
@@ -152,15 +156,16 @@ public:
 		//2、将ht._table每个桶当中的结点一个个拷贝到自己的哈希表中（深拷贝）
 		for (size_t i = 0; i < ht._table.size(); i++)
 		{
-			if (ht._table[i])
+			if (ht._table[i]) //桶不为空
 			{
 				Node* cur = ht._table[i];
-				while (cur)
+				while (cur) //将该桶的结点取完为止
 				{
-					Node* copy = new Node(cur->_data);
+					Node* copy = new Node(cur->_data); //创建拷贝结点
+					//将拷贝结点头插到当前桶
 					copy->_next = _table[i];
 					_table[i] = copy;
-					cur = cur->_next;
+					cur = cur->_next; //取下一个待拷贝结点
 				}
 			}
 		}
@@ -170,9 +175,11 @@ public:
 	//赋值运算符重载函数
 	HashTable& operator=(HashTable ht)
 	{
+		//交换哈希表中两个成员变量的数据
 		_table.swap(ht._table);
 		swap(_n, ht._n);
-		return *this;
+
+		return *this; //支持连续赋值
 	}
 	//析构函数
 	~HashTable()
@@ -183,13 +190,13 @@ public:
 			if (_table[i]) //桶不为空
 			{
 				Node* cur = _table[i];
-				while (cur)
+				while (cur) //将该桶的结点取完为止
 				{
-					Node* next = cur->_next;
-					delete cur;
+					Node* next = cur->_next; //记录下一个结点
+					delete cur; //释放结点
 					cur = next;
 				}
-				_table[i] = nullptr;
+				_table[i] = nullptr; //将该哈希桶置空
 			}
 		}
 	}
@@ -332,6 +339,6 @@ public:
 		return false; //直到该桶全部遍历完毕还没有找到待删除元素，删除失败
 	}
 private:
-	vector<Node*> _table;
-	size_t _n = 0;
+	vector<Node*> _table; //哈希表
+	size_t _n = 0; //哈希表中的有效元素个数
 };
