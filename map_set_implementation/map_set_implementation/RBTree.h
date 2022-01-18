@@ -182,7 +182,7 @@ public:
 	//拷贝构造
 	RBTree(const RBTree<K, T, KeyOfT>& t)
 	{
-		_root = _Copy(t._root);
+		_root = _Copy(t._root, nullptr);
 	}
 
 	//赋值运算符重载（现代写法）
@@ -586,15 +586,16 @@ public:
 
 private:
 	//拷贝树
-	Node* _Copy(Node* root)
+	Node* _Copy(Node* root, Node* parent)
 	{
 		if (root == nullptr)
 		{
 			return nullptr;
 		}
-		Node* copyNode = new Node(root->_kv);
-		copyNode->_left = _Copy(root->_left);
-		copyNode->_right = _Copy(root->_right);
+		Node* copyNode = new Node(root->_data);
+		copyNode->_parent = parent;
+		copyNode->_left = _Copy(root->_left, copyNode);
+		copyNode->_right = _Copy(root->_right, copyNode);
 		return copyNode;
 	}
 

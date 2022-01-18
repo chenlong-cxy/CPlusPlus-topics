@@ -185,8 +185,31 @@ void test6()
 	cout << "yes" << endl;
 	cout << *pos << endl;
 }
+void test7()
+{
+	string a[] = { "Smith", "smith", "SMITH", "SmItH", "Dean", "dean", "Lord", "lord", "SMITH", "Dean" };
+	cl::map<string, int>m;
+	for (auto& e : a)
+	{
+		m[e]++;
+	}
+	cl::map<string, int>::iterator it = m.begin();
+	while (it != m.end())
+	{
+		cout << it->first << ": " << it->second << endl;
+		++it;
+	}
+	cout << endl;
+	cl::map<string, int> T(m);
+	cl::map<string, int>::iterator i = T.begin();
+	while (i != T.end())
+	{
+		cout << i->first << ": " << i->second << endl;
+		++i;
+	}
+}
 int main()
 {
-	test5();
+	test7();
 	return 0;
 }
