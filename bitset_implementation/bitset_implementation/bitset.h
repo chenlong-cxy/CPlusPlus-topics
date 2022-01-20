@@ -46,7 +46,7 @@ namespace cl
 			int j = pos % 32;
 			_bits[i] ^= (1 << j); //将该进行反转（不影响其他位）
 		}
-		//获取比特位状态
+		//获取位的状态
 		bool test(size_t pos)
 		{
 			assert(pos < N);
@@ -120,62 +120,110 @@ namespace cl
 		{
 			int count = 0;
 			size_t n = _bits.size();
+			//先打印前n-1个整数
 			for (size_t i = 0; i < n - 1; i++)
 			{
 				for (size_t j = 0; j < 32; j++)
 				{
-					if (_bits[i] & (1 << j))
+					if (_bits[i] & (1 << j)) //该位被设置
 						cout << "1";
-					else
+					else //该位未被设置
 						cout << "0";
 					count++;
 				}
 			}
+			//再打印最后一个整数的前N%32位
 			for (size_t j = 0; j < N % 32; j++)
 			{
-				if (_bits[n - 1] & (1 << j))
+				if (_bits[n - 1] & (1 << j)) //该位被设置
 					cout << "1";
-				else
+				else //该位未被设置
 					cout << "0";
 				count++;
 			}
-			cout << " " << count << endl;
+			cout << " " << count << endl; //打印总共打印的位的个数
 		}
 	private:
 		vector<int> _bits; //位图
 	};
 }
 
-namespace cl
-{
-	//模拟实现位图
-	template<size_t N>
-	class bitset
-	{
-	public:
-		//构造函数
-		bitset();
-		//设置位
-		void set(size_t pos);
-		//清空位
-		void reset(size_t pos);
-		//反转位
-		void flip(size_t pos);
-		//获取比特位状态
-		bool test(size_t pos);
-		//获取可以容纳的位的个数
-		size_t size();
-		//获取被设置位的个数
-		size_t count();
-		//判断位图中是否有位被设置
-		bool any();
-		//判断位图中是否全部位都没有被设置
-		bool none();
-		//判断位图中是否全部位都被设置
-		bool all();
-		//打印函数
-		void Print();
-	private:
-		vector<int> _bits; //位图
-	};
-}
+//namespace cl
+//{
+//	//模拟实现位图
+//	template<size_t N>
+//	class bitset
+//	{
+//	public:
+//		//构造函数
+//		bitset();
+//		//设置位
+//		void set(size_t pos);
+//		//清空位
+//		void reset(size_t pos);
+//		//反转位
+//		void flip(size_t pos);
+//		//获取位的状态
+//		bool test(size_t pos);
+//		//获取可以容纳的位的个数
+//		size_t size();
+//		//获取被设置位的个数
+//		size_t count();
+//		//判断位图中是否有位被设置
+//		bool any();
+//		//判断位图中是否全部位都没有被设置
+//		bool none();
+//		//判断位图中是否全部位都被设置
+//		bool all();
+//		//打印函数
+//		void Print();
+//	private:
+//		vector<int> _bits; //位图
+//	};
+//}
+
+//#include <iostream>
+//#include <string>
+//#include <map>
+//#include <queue>
+//using namespace std;
+//struct Func
+//{
+//	bool operator()(const pair<string, int>& p1, const pair<string, int>& p2)
+//	{
+//		if (p1.first > p2.first)
+//			return true;
+//		else if (p1.first == p2.first&&p1.second > p2.second)
+//			return true;
+//		else
+//			return false;
+//	}
+//};
+//int main()
+//{
+//	map<pair<string, int>, int, Func> m; //<<name, rows>, num>
+//	queue<pair<string, int>> q; //<name, rows>
+//	string path;
+//	int n;
+//	while (cin >> path >> n)
+//	{
+//		size_t pos = path.rfind('\\');
+//		string name = path.substr(pos + 1);
+//		if (name.size() > 16)
+//			name = name.substr(name.size() - 16); //只保留最后16位
+//		m[make_pair(name, n)]++;
+//		if (m[make_pair(name, n)] == 1)
+//		{
+//			q.push(make_pair(name, n));
+//			if (q.size() > 8)
+//				q.pop();
+//		}
+//	}
+//	while (!q.empty())
+//	{
+//		auto front = q.front();
+//		q.pop();
+//		cout << front.first << " " << front.second << " " << m[front] << endl;
+//	}
+//	return 0;
+//}
