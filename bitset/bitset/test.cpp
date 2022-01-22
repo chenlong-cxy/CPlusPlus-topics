@@ -127,16 +127,100 @@
 //	return 0;
 //}
 
+//#include <iostream>
+//#include <string>
+//#include <bitset>
+//using namespace std;
+//
+//int main()
+//{
+//	bitset<8> bs(string("00110101"));
+//	cout << bs[0] << endl; //1
+//	bs[0] = 0;
+//	cout << bs << endl; //00110100
+//	return 0;
+//}
+
+//#include <iostream>
+//#include <vector>
+//#include <assert.h>
+//#include <bitset>
+//using namespace std;
+//
+//int main()
+//{
+//	vector<int> v{ 12, 33, 4, 2, 7, 3, 32, 3, 3, 12, 21 };
+//	//在堆上申请空间
+//	bitset<4294967295>* bs1 = new bitset<4294967295>;
+//	bitset<4294967295>* bs2 = new bitset<4294967295>;
+//	//bitset<4294967295> bs1; //4294967295
+//	//bitset<4294967295> bs2;
+//	for (auto e : v)
+//	{
+//		if (!bs1->test(e) && !bs2->test(e)) //00->01
+//		{
+//			bs2->set(e);
+//		}
+//		else if (!bs1->test(e) && bs2->test(e)) //01->10
+//		{
+//			bs1->set(e);
+//			bs2->reset(e);
+//		}
+//		else if (bs1->test(e) && !bs2->test(e)) //10->10
+//		{
+//			//不做处理
+//		}
+//		else //11（理论上不会出现该情况）
+//		{
+//			assert(false);
+//		}
+//	}
+//	for (size_t i = 0; i < 4294967295; i++)
+//	{
+//		if (!bs1->test(i) && bs2->test(i)) //01
+//			cout << i << endl;
+//	}
+//	return 0;
+//}
+
 #include <iostream>
-#include <string>
+#include <vector>
+#include <assert.h>
 #include <bitset>
 using namespace std;
 
 int main()
 {
-	bitset<8> bs(string("00110101"));
-	cout << bs[0] << endl; //1
-	bs[0] = 0;
-	cout << bs << endl; //00110100
+	vector<int> v{ 12, 33, 4, 2, 7, 3, 32, 3, 3, 12, 21 };
+	//在堆上申请空间
+	bitset<4294967295>* bs1 = new bitset<4294967295>;
+	bitset<4294967295>* bs2 = new bitset<4294967295>;
+	//bitset<4294967295> bs1; //4294967295
+	//bitset<4294967295> bs2;
+	for (auto e : v)
+	{
+		if (!bs1->test(e) && !bs2->test(e)) //00->01
+		{
+			bs2->set(e);
+		}
+		else if (!bs1->test(e) && bs2->test(e)) //01->10
+		{
+			bs1->set(e);
+			bs2->reset(e);
+		}
+		else if (bs1->test(e) && !bs2->test(e)) //10->11
+		{
+			bs2->set(e);
+		}
+		else //11->11
+		{
+			//不做处理
+		}
+	}
+	for (size_t i = 0; i < 4294967295; i++)
+	{
+		if ((!bs1->test(i) && bs2->test(i)) || (bs1->test(i) && !bs2->test(i))) //01或10
+			cout << i << endl;
+	}
 	return 0;
 }
