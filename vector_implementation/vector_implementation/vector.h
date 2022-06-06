@@ -69,19 +69,19 @@ namespace cl
 			}
 		}
 		//传统写法
-		//vector(const vector<T>& v)
-		//	:_start(nullptr)
-		//	, _finish(nullptr)
-		//	, _endofstorage(nullptr)
-		//{
-		//	_start = new T[v.capacity()]; //开辟一块和容器v大小相同的空间
-		//	for (size_t i = 0; i < v.size(); i++) //将容器v当中的数据一个个拷贝过来
-		//	{
-		//		_start[i] = v[i];
-		//	}
-		//	_finish = _start + v.size(); //容器有效数据的尾
-		//	_endofstorage = _start + v.capacity(); //整个容器的尾
-		//}
+		vector(const vector<T>& v)
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _endofstorage(nullptr)
+		{
+			_start = new T[v.capacity()]; //开辟一块和容器v大小相同的空间
+			for (size_t i = 0; i < v.size(); i++) //将容器v当中的数据一个个拷贝过来
+			{
+				_start[i] = v[i];
+			}
+			_finish = _start + v.size(); //容器有效数据的尾
+			_endofstorage = _start + v.capacity(); //整个容器的尾
+		}
 		//现代写法
 		//vector(const vector<T>& v)
 		//	:_start(nullptr)
@@ -281,380 +281,390 @@ namespace cl
 		cout << c.size() << endl;
 		cout << c.capacity() << endl;
 	}
-	void test1()
-	{
-		vector<int> v;
-		v.push_back(1);
-		v.push_back(2);
-		v.push_back(3);
-		v.push_back(4);
-		v.push_back(5);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.pop_back();
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.pop_back();
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.pop_back();
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.pop_back();
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.pop_back();
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v.size() << endl;
-		cout << v.capacity() << endl;
-	}
-	void test2()
-	{
-		vector<int> v;
-		v.insert(v.begin(), 1);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.insert(v.begin(), 2);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.insert(v.begin(), 3);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.insert(v.begin() + 3, 4);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.insert(v.begin(), 5);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
+	//void test1()
+	//{
+	//	vector<int> v;
+	//	v.push_back(1);
+	//	v.push_back(2);
+	//	v.push_back(3);
+	//	v.push_back(4);
+	//	v.push_back(5);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.pop_back();
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.pop_back();
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.pop_back();
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.pop_back();
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.pop_back();
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v.size() << endl;
+	//	cout << v.capacity() << endl;
+	//}
+	//void test2()
+	//{
+	//	vector<int> v;
+	//	v.insert(v.begin(), 1);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.insert(v.begin(), 2);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.insert(v.begin(), 3);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.insert(v.begin() + 3, 4);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.insert(v.begin(), 5);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
 
 
-		v.erase(v.begin() + 2);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.erase(v.begin());
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.erase(v.begin() + 1);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.erase(v.begin());
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		v.erase(v.begin());
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-	}
-	void test3()
-	{
-		vector<int> v(6, 2);
-		v[3] = 3;
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v.size() << endl;
-		cout << v.capacity() << endl;
-		vector<int> v1(v);
-		v1[0] = 10;
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		//string s("hello world");
-		//vector<char> c(s.begin(), s.end());
-		//for (auto e : c)
-		//{
-		//	cout << e << " ";
-		//}
-		//cout << endl;
-		//cout << c.size() << endl;
-		//cout << c.capacity() << endl;
-	}
-	void test4()
-	{
-		vector<int> v1(5, 3);
-		vector<int> v2(6, 4);
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-		v1.insert(v1.begin() + 3, 9);
-		v2.insert(v2.begin(), 9);
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-		v1.erase(v1.begin() + 3);
-		v2.erase(v2.begin());
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-		//v1 = v2;
-		//for (auto e : v1)
-		//{
-		//	cout << e << " ";
-		//}
-		//cout << endl;
-		//cout << v1.size() << endl;
-		//cout << v1.capacity() << endl;
-		//for (auto e : v2)
-		//{
-		//	cout << e << " ";
-		//}
-		//cout << endl;
-		//cout << v2.size() << endl;
-		//cout << v2.capacity() << endl;
-	}
-	void test5()
-	{
-		vector<int> v1(5, 4);
-		vector<int> v2(6, 3);
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-		v1 = v2;
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-		v1[3] = 9;
-		v2[3] = 10;
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-	}
-	void test6()
-	{
-		vector<int> v1(5, 7);
-		vector<int> v2(6, 8);
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-		v1.swap(v2);
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-	}
-	void test7()
-	{
-		vector<string> v1(5, "aa");
-		vector<string> v2(v1.begin(), v1.end());
-		for (auto e : v1)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v1.size() << endl;
-		cout << v1.capacity() << endl;
-		for (auto e : v2)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v2.size() << endl;
-		cout << v2.capacity() << endl;
-	}
-	void test8()
-	{
-		list<string> l;
-		l.push_back("a");
-		l.push_back("bb");
-		l.push_back("ccc");
-		l.push_back("dddd");
-		l.push_back("eeeee");
-		for (auto e : l)
-		{
-			cout << e << " ";
-		}
-		vector<string> v(l.begin(), l.end());
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		cout << v.size() << endl;
-		cout << v.capacity() << endl;
-	}
-	void test9()
-	{
-		vector<string> v;
-		v.push_back("hello world");
-		v.push_back("hello world");
-		v.push_back("hello world");
-		v.push_back("hello world");
-		v.push_back("hello world");
-		vector<string> copy(v);
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		for (auto e : copy)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		copy[2] = "hello Linux";
-		for (auto e : v)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-		for (auto e : copy)
-		{
-			cout << e << " ";
-		}
-		cout << endl;
-	}
-	void test10()
+	//	v.erase(v.begin() + 2);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.erase(v.begin());
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.erase(v.begin() + 1);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.erase(v.begin());
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	v.erase(v.begin());
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//}
+	//void test3()
+	//{
+	//	vector<int> v(6, 2);
+	//	v[3] = 3;
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v.size() << endl;
+	//	cout << v.capacity() << endl;
+	//	vector<int> v1(v);
+	//	v1[0] = 10;
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	//string s("hello world");
+	//	//vector<char> c(s.begin(), s.end());
+	//	//for (auto e : c)
+	//	//{
+	//	//	cout << e << " ";
+	//	//}
+	//	//cout << endl;
+	//	//cout << c.size() << endl;
+	//	//cout << c.capacity() << endl;
+	//}
+	//void test4()
+	//{
+	//	vector<int> v1(5, 3);
+	//	vector<int> v2(6, 4);
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//	v1.insert(v1.begin() + 3, 9);
+	//	v2.insert(v2.begin(), 9);
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//	v1.erase(v1.begin() + 3);
+	//	v2.erase(v2.begin());
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//	//v1 = v2;
+	//	//for (auto e : v1)
+	//	//{
+	//	//	cout << e << " ";
+	//	//}
+	//	//cout << endl;
+	//	//cout << v1.size() << endl;
+	//	//cout << v1.capacity() << endl;
+	//	//for (auto e : v2)
+	//	//{
+	//	//	cout << e << " ";
+	//	//}
+	//	//cout << endl;
+	//	//cout << v2.size() << endl;
+	//	//cout << v2.capacity() << endl;
+	//}
+	//void test5()
+	//{
+	//	vector<int> v1(5, 4);
+	//	vector<int> v2(6, 3);
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//	v1 = v2;
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//	v1[3] = 9;
+	//	v2[3] = 10;
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//}
+	//void test6()
+	//{
+	//	vector<int> v1(5, 7);
+	//	vector<int> v2(6, 8);
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//	v1.swap(v2);
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//}
+	//void test7()
+	//{
+	//	vector<string> v1(5, "aa");
+	//	vector<string> v2(v1.begin(), v1.end());
+	//	for (auto e : v1)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v1.size() << endl;
+	//	cout << v1.capacity() << endl;
+	//	for (auto e : v2)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v2.size() << endl;
+	//	cout << v2.capacity() << endl;
+	//}
+	//void test8()
+	//{
+	//	list<string> l;
+	//	l.push_back("a");
+	//	l.push_back("bb");
+	//	l.push_back("ccc");
+	//	l.push_back("dddd");
+	//	l.push_back("eeeee");
+	//	for (auto e : l)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	vector<string> v(l.begin(), l.end());
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	cout << v.size() << endl;
+	//	cout << v.capacity() << endl;
+	//}
+	//void test9()
+	//{
+	//	vector<string> v;
+	//	v.push_back("hello world");
+	//	v.push_back("hello world");
+	//	v.push_back("hello world");
+	//	v.push_back("hello world");
+	//	v.push_back("hello world");
+	//	vector<string> copy(v);
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	for (auto e : copy)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	copy[2] = "hello Linux";
+	//	for (auto e : v)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//	for (auto e : copy)
+	//	{
+	//		cout << e << " ";
+	//	}
+	//	cout << endl;
+	//}
+	//void test10()
+	//{
+	//	vector<int> v(5, 3);
+	//	v.reserve(6);
+	//	Print(v);
+	//	v.reserve(2);
+	//	Print(v);
+	//	cout << int() << endl;
+	//	cout << char() << endl;
+	//	cout << double() << endl;
+	//	cout << bool() << endl;
+	//}
+	void test11()
 	{
 		vector<int> v(5, 3);
-		v.reserve(6);
-		Print(v);
-		v.reserve(2);
-		Print(v);
-		cout << int() << endl;
-		cout << char() << endl;
-		cout << double() << endl;
-		cout << bool() << endl;
+		vector<int> tmp(v);
+		for (auto e : tmp)
+		{
+			e += 3;
+		}
+		cout << endl;
 	}
 }
 

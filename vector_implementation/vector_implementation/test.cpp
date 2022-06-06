@@ -34,7 +34,8 @@ int main()
 	//cl::test7();
 	//cl::test8();
 	//cl::test9();
-	cl::test10();
+	//cl::test10();
+	cl::test11();
 	//list<int> l;
 	//l.push_back(1);
 	//l.push_back(2);
