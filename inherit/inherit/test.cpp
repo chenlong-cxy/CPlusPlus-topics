@@ -372,7 +372,7 @@
 
 
 #include <iostream>
-//#include <string>
+#include <string>
 //using namespace std;
 //class Person
 //{
@@ -522,7 +522,7 @@
 //	}
 //};
 
-
+using namespace std;
 class Tire
 {
 protected:
@@ -536,3 +536,7 @@ protected:
 	string _num; //³µÅÆºÅ
 	Tire _t; //ÂÖÌ¥
 };
+int main()
+{
+	return 0;
+}
