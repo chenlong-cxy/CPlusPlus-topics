@@ -5,7 +5,6 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-
 namespace cl //·ÀÖ¹ÃüÃû³åÍ»
 {
 	template<class T, class Container = std::deque<T>>
