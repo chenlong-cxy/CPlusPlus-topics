@@ -50,6 +50,7 @@ struct DJBHash
 		return value;
 	}
 };
+//²¼Â¡¹ıÂËÆ÷
 template<size_t N, class K = string, class Hash1 = BKDRHash, class Hash2 = APHash, class Hash3 = DJBHash>
 class BloomFilter
 {
