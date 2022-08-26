@@ -194,3 +194,136 @@
 //}
 
 
+//请设计一个类，只能在堆上创建对象
+//#include <iostream>
+//using namespace std;
+//class HeapOnly
+//{
+//public:
+//	//2、提供一个获取对象的接口，并且该接口必须设置为静态成员函数
+//	static HeapOnly* CreateObj()
+//	{
+//		return new HeapOnly;
+//	}
+//private:
+//	//1、将构造函数设置为私有
+//	HeapOnly()
+//	{}
+//	//3、将拷贝构造函数设置为私有，并且只声明不实现
+//	//C++98
+//	HeapOnly(const HeapOnly&);
+//	//C++11
+//	//HeapOnly(const HeapOnly&) = delete;
+//};
+//int main()
+//{
+//	HeapOnly* p = HeapOnly::CreateObj();
+//	//HeapOnly copy(*p);
+//	return 0;
+//}
+
+//请设计一个类，只能在栈上创建对象
+//#include <iostream>
+//using namespace std;
+//class StackOnly
+//{
+//public:
+//	static StackOnly CreateObj()
+//	{
+//		return StackOnly();
+//	}
+//private:
+//	StackOnly()
+//	{}
+//};
+//int main()
+//{
+//	StackOnly p = StackOnly::CreateObj();
+//	StackOnly* ptr = new StackOnly(p);
+//	return 0;
+//}
+//#include <iostream>
+//using namespace std;
+//class StackOnly
+//{
+//public:
+//	StackOnly()
+//	{}
+//private:
+//	//C++98
+//	void* operator new(size_t size);
+//	void operator delete(void* p);
+//	//C++11
+//	//void* operator new(size_t size) = delete;
+//	//void operator delete(void* p) = delete;
+//};
+//int main()
+//{
+//	StackOnly s;
+//	static StackOnly ss;
+//	return 0;
+//}
+
+//请设计一个类，不能被拷贝
+//#include <iostream>
+//using namespace std;
+//class CopyBan
+//{
+//public:
+//	CopyBan()
+//	{}
+//private:
+//	//C++98
+//	CopyBan(const CopyBan&);
+//	CopyBan& operator=(const CopyBan&);
+//	//C++11
+//	//CopyBan(const CopyBan&) = delete;
+//	/CopyBan& operator=(const CopyBan&) = delete;
+//};
+//int main()
+//{
+//	CopyBan c;
+//	return 0;
+//}
+
+//请设计一个类，不能被继承
+//C++98
+//#include <iostream>
+//using namespace std;
+//class NonInherit
+//{
+//public:
+//	static NonInherit CreateObj()
+//	{
+//		return NonInherit();
+//	}
+//private:
+//	NonInherit()
+//	{}
+//};
+//class A :public NonInherit
+//{};
+//int main()
+//{
+//	A a;
+//	return 0;
+//}
+
+//C++11
+#include <iostream>
+using namespace std;
+class NonInherit final
+{
+public:
+	static NonInherit CreateObj()
+	{
+		return NonInherit();
+	}
+private:
+	NonInherit()
+	{}
+};
+int main()
+{
+	return 0;
+}
