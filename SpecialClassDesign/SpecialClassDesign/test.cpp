@@ -228,18 +228,21 @@
 //class StackOnly
 //{
 //public:
+//	//2、提供一个获取对象的接口，并且该接口必须设置为静态成员函数
 //	static StackOnly CreateObj()
 //	{
 //		return StackOnly();
 //	}
 //private:
+//	//1、将构造函数设置为私有
 //	StackOnly()
 //	{}
 //};
 //int main()
 //{
-//	StackOnly p = StackOnly::CreateObj();
-//	StackOnly* ptr = new StackOnly(p);
+//	StackOnly obj1 = StackOnly::CreateObj();
+//	static StackOnly obj2(obj1); //在静态区拷贝构造对象
+//	StackOnly* ptr = new StackOnly(obj1); //在堆上拷贝构造对象
 //	return 0;
 //}
 //#include <iostream>
@@ -260,7 +263,7 @@
 //int main()
 //{
 //	StackOnly s;
-//	static StackOnly ss;
+//	static StackOnly obj; //在静态区创建对象
 //	return 0;
 //}
 
@@ -278,7 +281,7 @@
 //	CopyBan& operator=(const CopyBan&);
 //	//C++11
 //	//CopyBan(const CopyBan&) = delete;
-//	/CopyBan& operator=(const CopyBan&) = delete;
+//	//CopyBan& operator=(const CopyBan&) = delete;
 //};
 //int main()
 //{
@@ -298,6 +301,7 @@
 //		return NonInherit();
 //	}
 //private:
+//	//将构造函数设置为私有
 //	NonInherit()
 //	{}
 //};
@@ -310,20 +314,235 @@
 //}
 
 //C++11
+//#include <iostream>
+//using namespace std;
+//class NonInherit final
+//{
+//	//...
+//};
+//class A :public NonInherit
+//{};
+//int main()
+//{
+//	return 0;
+//}
+
+
+//请设计一个类，只能创建一个对象（单例模式）
+//饿汉模式
+//#include <iostream>
+//using namespace std;
+//class Singleton
+//{
+//public:
+//	//3、提供一个全局访问点获取单例对象
+//	static Singleton* GetInstance()
+//	{
+//		return _inst;
+//	}
+//private:
+//	//1、将构造函数设置为私有，并防拷贝
+//	Singleton()
+//	{}
+//	Singleton(const Singleton&) = delete;
+//	Singleton& operator=(const Singleton&) = delete;
+//	//2、提供一个指向单例对象的static指针
+//	static Singleton* _inst;
+//};
+//
+////在程序入口之前完成单例对象的初始化
+//Singleton* Singleton::_inst = new Singleton;
+//
+//int main()
+//{
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	return 0;
+//}
+
+//懒汉模式
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//class Singleton
+//{
+//public:
+//	//3、提供一个全局访问点获取单例对象
+//	static Singleton* GetInstance()
+//	{
+//		//双检查
+//		if (_inst == nullptr)
+//		{
+//			_mtx.lock();
+//			if (_inst == nullptr)
+//			{
+//				_inst = new Singleton;
+//			}
+//			_mtx.unlock();
+//		}
+//		return _inst;
+//	}
+//private:
+//	//1、将构造函数设置为私有，并防拷贝
+//	Singleton()
+//	{}
+//	Singleton(const Singleton&) = delete;
+//	Singleton& operator=(const Singleton&) = delete;
+//	//2、提供一个指向单例对象的static指针
+//	static Singleton* _inst;
+//	static mutex _mtx; //互斥锁
+//};
+//
+////在程序入口之前先将static指针初始化为空
+//Singleton* Singleton::_inst = nullptr;
+//mutex Singleton::_mtx; //初始化互斥锁
+//
+//int main()
+//{
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	char* p = new char[1024 * 1024 * 1024];
+//	return 0;
+//}
+
+////释放
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//class Singleton
+//{
+//public:
+//	static Singleton* GetInstance()
+//	{
+//		//双检查加锁
+//		if (_inst == nullptr)
+//		{
+//			_mtx.lock();
+//			if (_inst == nullptr)
+//			{
+//				_inst = new Singleton;
+//			}
+//			_mtx.unlock();
+//		}
+//		return _inst;
+//	}
+//	static void DelInstance()
+//	{
+//		_mtx.lock();
+//		if (_inst != nullptr)
+//		{
+//			delete _inst;
+//			_inst = nullptr;
+//		}
+//		_mtx.unlock();
+//	}
+//private:
+//	Singleton()
+//	{}
+//
+//	Singleton(const Singleton&) = delete;
+//	Singleton& operator=(const Singleton&) = delete;
+//
+//	static Singleton* _inst;
+//	static mutex _mtx;
+//};
+//
+//Singleton* Singleton::_inst = nullptr;
+//mutex Singleton::_mtx;
+//
+//int main()
+//{
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	char* p = new char[1024 * 1024 * 1024];
+//	return 0;
+//}
+
+////释放
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//class Singleton
+//{
+//public:
+//	static Singleton* GetInstance()
+//	{
+//		//双检查加锁
+//		if (_inst == nullptr)
+//		{
+//			_mtx.lock();
+//			if (_inst == nullptr)
+//			{
+//				_inst = new Singleton;
+//			}
+//			_mtx.unlock();
+//		}
+//		return _inst;
+//	}
+//	class CGarbo
+//	{
+//	public:
+//		~CGarbo()
+//		{
+//			if (_inst != nullptr)
+//			{
+//				delete _inst;
+//				_inst = nullptr;
+//			}
+//		}
+//	};
+//private:
+//	Singleton()
+//	{}
+//
+//	Singleton(const Singleton&) = delete;
+//	Singleton& operator=(const Singleton&) = delete;
+//
+//	static Singleton* _inst;
+//	static mutex _mtx;
+//	static CGarbo _gc;
+//};
+//
+//Singleton* Singleton::_inst = nullptr;
+//mutex Singleton::_mtx;
+//Singleton::CGarbo Singleton::_gc;
+//
+//int main()
+//{
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	return 0;
+//}
+
+//其他版本懒汉
 #include <iostream>
+#include <mutex>
 using namespace std;
-class NonInherit final
+class Singleton
 {
 public:
-	static NonInherit CreateObj()
+	//2、提供一个全局访问点获取单例对象
+	static Singleton* GetInstance()
 	{
-		return NonInherit();
+		static Singleton inst;
+		return &inst;
 	}
 private:
-	NonInherit()
+	//1、将构造函数设置为私有，并防拷贝
+	Singleton()
 	{}
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
 };
+
 int main()
 {
+	cout << Singleton::GetInstance() << endl;
+	cout << Singleton::GetInstance() << endl;
+	cout << Singleton::GetInstance() << endl;
 	return 0;
 }

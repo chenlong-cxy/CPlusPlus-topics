@@ -1,12 +1,12 @@
-﻿生成启动时间为 2022/8/26 21:03:25。
+﻿生成启动时间为 2022/8/27 17:03:21。
      1>项目“D:\github\CPlusPlus-topics\SpecialClassDesign\SpecialClassDesign\SpecialClassDesign.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt test.cpp
          test.cpp
-     1>d:\github\cplusplus-topics\specialclassdesign\specialclassdesign\test.cpp(326): error C3246: “A”: 无法从“NonInherit”继承，因为它已被声明为“final”
-                 d:\github\cplusplus-topics\specialclassdesign\specialclassdesign\test.cpp(315) : 参见“NonInherit”的声明
+     1>d:\github\cplusplus-topics\specialclassdesign\specialclassdesign\test.cpp(324): error C3246: “A”: 无法从“NonInherit”继承，因为它已被声明为“final”
+                 d:\github\cplusplus-topics\specialclassdesign\specialclassdesign\test.cpp(320) : 参见“NonInherit”的声明
      1>已完成生成项目“D:\github\CPlusPlus-topics\SpecialClassDesign\SpecialClassDesign\SpecialClassDesign.vcxproj”(Build 个目标)的操作 - 失败。
 
 生成失败。
 
-已用时间 00:00:00.29
+已用时间 00:00:00.69
