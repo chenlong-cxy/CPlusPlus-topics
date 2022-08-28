@@ -462,82 +462,54 @@
 //}
 
 ////释放
-//#include <iostream>
-//#include <mutex>
-//using namespace std;
-//class Singleton
-//{
-//public:
-//	static Singleton* GetInstance()
-//	{
-//		//双检查加锁
-//		if (_inst == nullptr)
-//		{
-//			_mtx.lock();
-//			if (_inst == nullptr)
-//			{
-//				_inst = new Singleton;
-//			}
-//			_mtx.unlock();
-//		}
-//		return _inst;
-//	}
-//	class CGarbo
-//	{
-//	public:
-//		~CGarbo()
-//		{
-//			if (_inst != nullptr)
-//			{
-//				delete _inst;
-//				_inst = nullptr;
-//			}
-//		}
-//	};
-//private:
-//	Singleton()
-//	{}
-//
-//	Singleton(const Singleton&) = delete;
-//	Singleton& operator=(const Singleton&) = delete;
-//
-//	static Singleton* _inst;
-//	static mutex _mtx;
-//	static CGarbo _gc;
-//};
-//
-//Singleton* Singleton::_inst = nullptr;
-//mutex Singleton::_mtx;
-//Singleton::CGarbo Singleton::_gc;
-//
-//int main()
-//{
-//	cout << Singleton::GetInstance() << endl;
-//	cout << Singleton::GetInstance() << endl;
-//	cout << Singleton::GetInstance() << endl;
-//	return 0;
-//}
-
-//其他版本懒汉
 #include <iostream>
 #include <mutex>
 using namespace std;
 class Singleton
 {
 public:
-	//2、提供一个全局访问点获取单例对象
 	static Singleton* GetInstance()
 	{
-		static Singleton inst;
-		return &inst;
+		//双检查加锁
+		if (_inst == nullptr)
+		{
+			_mtx.lock();
+			if (_inst == nullptr)
+			{
+				_inst = new Singleton;
+			}
+			_mtx.unlock();
+		}
+		return _inst;
 	}
+	//垃圾回收类
+	class CGarbo
+	{
+	public:
+		~CGarbo()
+		{
+			if (_inst != nullptr)
+			{
+				delete _inst;
+				_inst = nullptr;
+			}
+		}
+	};
 private:
-	//1、将构造函数设置为私有，并防拷贝
 	Singleton()
 	{}
+
 	Singleton(const Singleton&) = delete;
 	Singleton& operator=(const Singleton&) = delete;
+
+	static Singleton* _inst;
+	static mutex _mtx;
+	static CGarbo _gc;
 };
+
+Singleton* Singleton::_inst = nullptr;
+mutex Singleton::_mtx;
+Singleton::CGarbo Singleton::_gc;
 
 int main()
 {
@@ -546,3 +518,32 @@ int main()
 	cout << Singleton::GetInstance() << endl;
 	return 0;
 }
+
+//其他版本懒汉
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//class Singleton
+//{
+//public:
+//	//2、提供一个全局访问点获取单例对象
+//	static Singleton* GetInstance()
+//	{
+//		static Singleton inst;
+//		return &inst;
+//	}
+//private:
+//	//1、将构造函数设置为私有，并防拷贝
+//	Singleton()
+//	{}
+//	Singleton(const Singleton&) = delete;
+//	Singleton& operator=(const Singleton&) = delete;
+//};
+//
+//int main()
+//{
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	cout << Singleton::GetInstance() << endl;
+//	return 0;
+//}
