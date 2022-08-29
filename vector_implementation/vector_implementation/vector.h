@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <list>
+#include <initializer_list>
 #include <assert.h>
 using namespace std;
 
@@ -264,6 +265,31 @@ namespace cl
 			::swap(_start, v._start);
 			::swap(_finish, v._finish);
 			::swap(_endofstorage, v._endofstorage);
+		}
+		//----------------------C++11-----------------//
+		vector(initializer_list<T> il)
+		{
+			_start = new T[il.size()];
+			_finish = _start;
+			_endofstorage = _start + il.size();
+			/*typename initializer_list<T>::iterator it = il.begin();
+			while (it != il.end())
+			{
+				push_back(*it);
+				it++;
+			}*/
+			for (auto e : il)
+			{
+				push_back(e);
+			}
+		}
+		vector<T>& operator=(initializer_list<T> il)
+		{
+			vector<T> tmp(il);
+			std::swap(_start, tmp._start);
+			std::swap(_finish, tmp._finish);
+			std::swap(_endofstorage, tmp._endofstorage);
+			return *this;
 		}
 	private:
 		iterator _start;
@@ -656,15 +682,32 @@ namespace cl
 	//	cout << double() << endl;
 	//	cout << bool() << endl;
 	//}
-	void test11()
+	//void test11()
+	//{
+	//	vector<int> v(5, 3);
+	//	vector<int> tmp(v);
+	//	for (auto e : tmp)
+	//	{
+	//		e += 3;
+	//	}
+	//	cout << endl;
+	//}
+	void testcpp11()
 	{
-		vector<int> v(5, 3);
-		vector<int> tmp(v);
-		for (auto e : tmp)
-		{
-			e += 3;
-		}
+		vector<int> v1{ 1, 2, 3, 4, 5 };
+		for (auto e : v1)
+			cout << e << " ";
 		cout << endl;
+		vector<int> v2={ 10, 20, 30, 40, 50 };
+		for (auto e : v2)
+			cout << e << " ";
+		cout << endl;
+		v2 = { 8, 4, 2, 1 };
+		for (auto e : v2)
+			cout << e << " ";
+		cout << endl;
+		cout << v2.size() << endl;
+		cout << v2.capacity() << endl;
 	}
 }
 

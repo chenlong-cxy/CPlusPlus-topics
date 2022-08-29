@@ -35,7 +35,7 @@ int main()
 	//cl::test8();
 	//cl::test9();
 	//cl::test10();
-	cl::test11();
+	//cl::test11();
 	//list<int> l;
 	//l.push_back(1);
 	//l.push_back(2);
@@ -89,5 +89,6 @@ int main()
 	//cout << endl;
 	//cout << v2.size() << endl;
 	//cout << v2.capacity() << endl;
+	cl::testcpp11();
 	return 0;
 }
