@@ -414,3 +414,58 @@
 //	arr[11]=19;
 //	return 0;
 //}
+
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//	//将数组元素值全部乘以2
+//	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+//	{
+//		arr[i] *= 2;
+//	}
+//	//打印数组中的所有元素
+//	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+//	{
+//		cout << arr[i] << " ";
+//	}
+//	cout << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//	//将数组元素值全部乘以2
+//	for (auto& e : arr)
+//	{
+//		e *= 2;
+//	}
+//	//打印数组中的所有元素
+//	for (auto e : arr)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//	return 0;
+//}
+
+
+#include <iostream>
+#include <array>
+using namespace std;
+int main()
+{
+	array<int, 10> a1;   //定义一个可存储10个int类型元素的array容器
+	array<double, 5> a2; //定义一个可存储5个double类型元素的array容器
+	//a1[11] = 0;
+	//a1.at(11);
+	int arr[10];
+	arr[11]=19;
+	return 0;
+}
