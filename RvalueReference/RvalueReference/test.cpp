@@ -197,6 +197,8 @@
 
 #include <iostream>
 #include <string.h>
+#include <list>
+#include <string>
 #include <assert.h>
 using namespace std;
 namespace cl
@@ -249,22 +251,22 @@ namespace cl
 			swap(tmp); //交换这两个对象
 			return *this; //返回左值（支持连续赋值）
 		}
-		////移动构造
-		//string(string&& s)
-		//	:_str(nullptr)
-		//	, _size(0)
-		//	, _capacity(0)
-		//{
-		//	cout << "string(string&& s) -- 移动语义" << endl;
-		//	swap(s);
-		//}
-		////移动赋值
-		//string& operator=(string&& s)
-		//{
-		//	cout << "string& operator=(string&& s) -- 移动语义" << endl;
-		//	swap(s);
-		//	return *this;
-		//}
+		//移动构造
+		string(string&& s)
+			:_str(nullptr)
+			, _size(0)
+			, _capacity(0)
+		{
+			cout << "string(string&& s) -- 移动构造" << endl;
+			swap(s);
+		}
+		//移动赋值
+		string& operator=(string&& s)
+		{
+			cout << "string& operator=(string&& s) -- 移动赋值" << endl;
+			swap(s);
+			return *this;
+		}
 		//析构函数
 		~string()
 		{
@@ -365,3 +367,73 @@ int main()
 	cl::string s = cl::to_string(1234);
 	return 0;
 }
+
+//int main()
+//{
+//	//cl::string s = cl::to_string(1234);
+//	//cl::to_string(1234);
+//
+//	cl::string s;
+//	//...
+//	s = cl::to_string(1234);
+//	return 0;
+//}
+
+//namespace cl
+//{
+//	cl::string to_string(int value)
+//	{
+//		cl::string str;
+//		//...
+//		return str;
+//	}
+//}
+//int main()
+//{
+//	cl::string s = cl::to_string(1234);
+//
+//	return 0;
+//}
+
+//namespace cl
+//{
+//	cl::string to_string(int value)
+//	{
+//		cl::string str;
+//		//...
+//		return str;
+//	}
+//}
+//int main()
+//{
+//	cl::string s;
+//	//...
+//	s = cl::to_string(1234);
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	int* p = nullptr;
+//	delete p;
+//	list<cl::string> lt;
+//	lt.push_back("1234");
+//	cl::string s("hello");
+//	lt.push_back(s);
+//	lt.push_back(move(s));
+//	return 0;
+//}
+
+//template<class _Ty>
+//inline typename remove_reference<_Ty>::type&& move(_Ty&& _Arg) _NOEXCEPT
+//{
+//	//forward _Arg as movable
+//	return ((typename remove_reference<_Ty>::type&&)_Arg);
+//}
+//int main()
+//{
+//	string s("123");
+//	string s1(move(s));
+//	return 0;
+//}
