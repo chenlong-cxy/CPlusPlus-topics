@@ -362,11 +362,11 @@ void func2(const cl::string& s)
 //	return 0;
 //}
 
-int main()
-{
-	cl::string s = cl::to_string(1234);
-	return 0;
-}
+//int main()
+//{
+//	cl::string s = cl::to_string(1234);
+//	return 0;
+//}
 
 //int main()
 //{
@@ -388,6 +388,7 @@ int main()
 //		return str;
 //	}
 //}
+
 //int main()
 //{
 //	cl::string s = cl::to_string(1234);
@@ -437,3 +438,27 @@ int main()
 //	string s1(move(s));
 //	return 0;
 //}
+
+//cl::string& func(cl::string& s)
+//{
+//	return s;
+//}
+//int main()
+//{
+//	cl::string s("hello");
+//	func(s);
+//	return 0;
+//}
+
+int main()
+{
+	list<cl::string> lt;
+	cl::string s("1111");
+
+	lt.push_back(s); //调用string的拷贝构造
+
+	lt.push_back("2222");             //调用string的移动构造
+	lt.push_back(cl::string("3333")); //调用string的移动构造
+	lt.push_back(std::move(s));       //调用string的移动构造
+	return 0;
+}
