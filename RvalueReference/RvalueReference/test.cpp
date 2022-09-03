@@ -450,15 +450,125 @@ void func2(const cl::string& s)
 //	return 0;
 //}
 
+//int main()
+//{
+//	list<cl::string> lt;
+//	cl::string s("1111");
+//
+//	lt.push_back(s); //调用string的拷贝构造
+//
+//	lt.push_back("2222");             //调用string的移动构造
+//	lt.push_back(cl::string("3333")); //调用string的移动构造
+//	lt.push_back(std::move(s));       //调用string的移动构造
+//	return 0;
+//}
+
+//void Func(int& x)
+//{
+//	cout << "左值引用" << endl;
+//}
+//void Func(const int& x)
+//{
+//	cout << "const 左值引用" << endl;
+//}
+//void Func(int&& x)
+//{
+//	cout << "右值引用" << endl;
+//}
+//void Func(const int&& x)
+//{
+//	cout << "const 右值引用" << endl;
+//}
+//template<class T>
+//void PerfectForward(T&& t)
+//{
+//	Func(std::forward<T>(t));
+//}
+//int main()
+//{
+//	int a = 10;
+//	PerfectForward(a);       //左值
+//	PerfectForward(move(a)); //右值
+//
+//	const int b = 20;
+//	PerfectForward(b);       //const 左值
+//	PerfectForward(move(b)); //const 右值
+//
+//	return 0;
+//}
+
+
+namespace cl
+{
+	template<class T>
+	struct ListNode
+	{
+		T _data;
+		ListNode<T>* _next = nullptr;
+		ListNode<T>* _prev = nullptr;
+	};
+	template<class T>
+	class list
+	{
+		typedef ListNode<T> node;
+	public:
+		//构造函数
+		list()
+		{
+			_head = new node;
+			//_head = (node*)malloc(sizeof(node));
+			_head->_next = _head;
+			_head->_prev = _head;
+		}
+		//左值引用版本的push_back
+		void push_back(const T& x)
+		{
+			insert(_head, x);
+		}
+		//右值引用版本的push_back
+		void push_back(T&& x)
+		{
+			insert(_head, std::forward<T>(x)); //完美转发
+		}
+		//左值引用版本的insert
+		void insert(node* pos, const T& x)
+		{
+			node* prev = pos->_prev;
+			//node* newnode = new node;
+			node* newnode = (node*)malloc(sizeof(node));
+			//newnode->_data = x;
+			new(&newnode->_data)T(x);
+
+			prev->_next = newnode;
+			newnode->_prev = prev;
+			newnode->_next = pos;
+			pos->_prev = newnode;
+		}
+		//右值引用版本的insert
+		void insert(node* pos, T&& x)
+		{
+			node* prev = pos->_prev;
+			//node* newnode = new node;
+			node* newnode = (node*)malloc(sizeof(node));
+			//newnode->_data = std::forward<T>(x); //完美转发
+			new(&newnode->_data)T(std::forward<T>(x));
+
+			prev->_next = newnode;
+			newnode->_prev = prev;
+			newnode->_next = pos;
+			pos->_prev = newnode;
+		}
+	private:
+		node* _head; //指向链表头结点的指针
+	};
+}
 int main()
 {
-	list<cl::string> lt;
-	cl::string s("1111");
+	cl::list<cl::string> lt;
+	cl::string s("1111"); 
+	lt.push_back(s);      //调用左值引用版本的push_back
 
-	lt.push_back(s); //调用string的拷贝构造
-
-	lt.push_back("2222");             //调用string的移动构造
-	lt.push_back(cl::string("3333")); //调用string的移动构造
-	lt.push_back(std::move(s));       //调用string的移动构造
+	lt.push_back("2222"); //调用右值引用版本的push_back
 	return 0;
 }
+
