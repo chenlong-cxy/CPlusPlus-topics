@@ -198,35 +198,35 @@ using namespace std;
 //	return 0;
 //}
 
-#include <iostream>
-using namespace std;
-//支持无参调用
-void ShowList()
-{
-	cout << endl;
-}
-//处理函数
-template<class T>
-int PrintArg(const T& t)
-{
-	cout << t << " ";
-	return 0;
-}
-//展开函数
-template<class ...Args>
-void ShowList(Args... args)
-{
-	int arr[] = { PrintArg(args)... }; //列表初始化
-	cout << endl;
-}
-int main()
-{
-	ShowList();
-	ShowList(1);
-	ShowList(1, 'A');
-	ShowList(1, 'A', string("hello"));
-	return 0;
-}
+//#include <iostream>
+//using namespace std;
+////支持无参调用
+//void ShowList()
+//{
+//	cout << endl;
+//}
+////处理函数
+//template<class T>
+//int PrintArg(const T& t)
+//{
+//	cout << t << " ";
+//	return 0;
+//}
+////展开函数
+//template<class ...Args>
+//void ShowList(Args... args)
+//{
+//	int arr[] = { PrintArg(args)... }; //列表初始化
+//	cout << endl;
+//}
+//int main()
+//{
+//	ShowList();
+//	ShowList(1);
+//	ShowList(1, 'A');
+//	ShowList(1, 'A', string("hello"));
+//	return 0;
+//}
 
 
 //#include <iostream>
@@ -264,13 +264,15 @@ int main()
 //using namespace std;
 //int main()
 //{
-//	list<pair<int, char>> mylist;
-//	mylist.emplace_back(10, 'a');
-//	mylist.emplace_back(20, 'b');
-//	mylist.emplace_back(make_pair(30, 'c'));
+//	list<pair<int, string>> mylist;
+//	pair<int, string> kv(10, "111");
+//	mylist.push_back(kv);                              //传左值
+//	mylist.push_back(pair<int, string>(20, "222"));    //传右值
+//	mylist.push_back({ 30, "333" });                   //列表初始化
 //
-//	mylist.push_back(make_pair(40, 'd'));
-//	mylist.push_back({ 50, 'e' });
+//	mylist.emplace_back(kv);                           //传左值
+//	mylist.emplace_back(pair<int, string>(40, "444")); //传右值
+//	mylist.emplace_back(50, "555");                    //传参数包
 //
 //	for (auto e : mylist)
 //	{
@@ -407,25 +409,41 @@ namespace cl
 //	list<pair<int, cl::string>> mylist;
 //	pair<int, cl::string> kv(1, "one");
 //
-//	mylist.emplace_back(kv);                  //左值
+//	mylist.emplace_back(kv);                              //传左值
 //	cout << endl;
-//	mylist.emplace_back(pair<int, cl::string>(2, "two")); //右值
+//	mylist.emplace_back(pair<int, cl::string>(2, "two")); //传右值
+//	//mylist.emplace_back(move(kv)); //右值
 //	cout << endl;
-//	mylist.emplace_back(3, "three");          //参数包
+//	mylist.emplace_back(3, "three");                      //传参数包
 //
 //	return 0;
 //}
 
+int main()
+{
+	list<pair<int, cl::string>> mylist;
+	pair<int, cl::string> kv(1, "one");
+
+	mylist.push_back(kv);                              //传左值
+	cout << endl;
+	mylist.push_back(pair<int, cl::string>(2, "two")); //传右值
+	cout << endl;
+	mylist.push_back({ 3, "three" });                  //列表初始化
+
+	return 0;
+}
+
 //int main()
 //{
-//	list<pair<int, cl::string>> mylist;
-//	pair<int, cl::string> kv(1, "one");
+//	list<cl::string> mylist;
+//	cl::string kv("one");
 //
-//	mylist.push_back(kv);                  //左值
+//	mylist.emplace_back(kv);                              //传左值
 //	cout << endl;
-//	mylist.push_back(pair<int, cl::string>(2, "two")); //右值
+//	mylist.emplace_back(cl::string("two")); //传右值
+//	//mylist.emplace_back(move(kv)); //右值
 //	cout << endl;
-//	mylist.push_back({ 3, "three" });
+//	mylist.emplace_back("three");                      //传参数包
 //
 //	return 0;
 //}
