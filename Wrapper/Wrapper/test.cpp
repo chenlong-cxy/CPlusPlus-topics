@@ -9,7 +9,7 @@
 //
 //	return f(x);
 //}
-//double func(double i)
+//double f(double i)
 //{
 //	return i / 2;
 //}
@@ -22,10 +22,10 @@
 //};
 //int main()
 //{
-//	//函数名
-//	cout << useF(func, 11.11) << endl;
+//	//函数指针
+//	cout << useF(f, 11.11) << endl;
 //
-//	//函数对象
+//	//仿函数
 //	cout << useF(Functor(), 11.11) << endl;
 //
 //	//lambda表达式
@@ -227,18 +227,74 @@ public:
 };
 int main()
 {
+	//无意义的绑定
 	function<int(int, int)> func1 = bind(Plus, placeholders::_1, placeholders::_2);
-	cout << func1(1, 2) << endl;
+	cout << func1(1, 2) << endl; //3
+	//cout << typeid(func1).name() << endl;
 
-	//想把plus绑定成一个值+10
+	//绑定固定参数
 	function<int(int)> func2 = bind(Plus, placeholders::_1, 10);
-	cout << func2(2) << endl;
+	cout << func2(2) << endl; //12
 
-	//绑定固定的可调用对象
+	//绑定固定参数
 	function<int(int, int)> func3 = bind(&Sub::sub, Sub(), placeholders::_1, placeholders::_2);
-	cout << func3(1, 2) << endl;
+	cout << func3(1, 2) << endl; //-1
 
+	//调整传参顺序
 	function<int(int, int)> func4 = bind(&Sub::sub, Sub(), placeholders::_2, placeholders::_1);
-	cout << func4(1, 2) << endl;
+	cout << func4(1, 2) << endl; //1
 	return 0;
 }
+
+
+//#include <iostream>
+//#include <functional>
+//using namespace std;
+//int f(int a, int b)
+//{
+//	return a + b;
+//}
+//struct Functor
+//{
+//public:
+//	int operator()(int a, int b)
+//	{
+//		return a + b;
+//	}
+//};
+//class Plus
+//{
+//public:
+//	static int plusi(int a, int b)
+//	{
+//		return a + b;
+//	}
+//	double plusd(double a, double b)
+//	{
+//		return a + b;
+//	}
+//};
+//int main()
+//{
+//	//1、包装函数指针（函数名）
+//	function<int(int, int)> func1 = f;
+//	cout << func1(1, 2) << endl;
+//
+//	//2、包装仿函数（函数对象）
+//	function<int(int, int)> func2 = Functor();
+//	cout << func2(1, 2) << endl;
+//
+//	//3、包装lambda表达式
+//	function<int(int, int)> func3 = [](int a, int b){return a + b; };
+//	cout << func3(1, 2) << endl;
+//
+//	//4、类的静态成员函数
+//	//function<int(int, int)> func4 = Plus::plusi;
+//	function<int(int, int)> func4 = &Plus::plusi;
+//	cout << func4(1, 2) << endl;
+//
+//	//5、类的非静态成员函数
+//	function<double(Plus, double, double)> func5 = &Plus::plusd;
+//	cout << func5(Plus(), 1.1, 2.2) << endl;
+//	return 0;
+//}
