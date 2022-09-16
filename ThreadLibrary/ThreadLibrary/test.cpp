@@ -376,42 +376,460 @@
 //}
 
 
+//#include <iostream>
+//#include <thread>
+//#include <mutex>
+//#include <condition_variable>
+//using namespace std;
+//int main()
+//{
+//	mutex mtx;
+//	condition_variable cv;
+//	int n = 0;
+//	bool flag = true;
+//	thread t1([&mtx, &cv, &flag, &n]
+//	{
+//		unique_lock<mutex> ul(mtx);
+//		while (n < 100)
+//		{
+//			cv.wait(ul, [&flag]{return flag; });
+//			cout << this_thread::get_id() << ":" << n << endl;
+//			n++;
+//			flag = false;
+//			cv.notify_one();
+//		}
+//	});
+//	thread t2([&mtx, &cv, &flag, &n]
+//	{
+//		unique_lock<mutex> ul(mtx);
+//		while (n < 100)
+//		{
+//			cv.wait(ul, [&flag]{return !flag; });
+//			cout << this_thread::get_id() << ":" << n << endl;
+//			n++;
+//			flag = true;
+//			cv.notify_one();
+//		}
+//	});
+//	t1.join();
+//	t2.join();
+//	return 0;
+//}
+
+
+
+//#include <iostream>
+//#include <vector>
+//#include <thread>
+//#include <mutex>
+//#include <condition_variable>
+//using namespace std;
+//int main()
+//{
+//	int n = 100;
+//	mutex mtx;
+//	//奇数
+//	thread t1([&](){
+//		int i = 1;
+//		for (; i < n; i += 2)
+//		{
+//			unique_lock<mutex> lock(mtx);
+//			cout << i << endl;
+//		}
+//	});
+//	//偶数
+//	thread t2([&](){
+//		int j = 2;
+//		for (; j < n; j += 2)
+//		{
+//			unique_lock<mutex> lock(mtx);
+//			cout << j << endl;
+//		}
+//	});
+//	t1.join();
+//	t2.join();
+//	return 0;
+//}
+
+
+
+//#include <iostream>
+//#include <vector>
+//#include <thread>
+//#include <mutex>
+//#include <condition_variable>
+//using namespace std;
+//int main()
+//{
+//	int n = 100;
+//	mutex mtx;
+//	condition_variable cv;
+//	bool flag = true;
+//	//奇数
+//	thread t1([&](){
+//		int i = 1;
+//		while (i <= n)
+//		{
+//			unique_lock<mutex> lock(mtx);
+//			cv.wait(lock, [&flag]()->bool{return flag; });
+//			cout << this_thread::get_id() << ":" << i << endl;
+//			i += 2;
+//			flag = false;
+//			cv.notify_one();
+//		}
+//	});
+//	//偶数
+//	thread t2([&](){
+//		int j = 2;
+//		while (j <= n)
+//		{
+//			unique_lock<mutex> lock(mtx);
+//			cv.wait(lock, [&flag]()->bool{return !flag; });
+//			cout << this_thread::get_id() << ":" << j << endl;
+//			j += 2;
+//			flag = true;
+//			cv.notify_one();
+//		}
+//	});
+//	t1.join();
+//	t2.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//int main()
+//{
+//	thread t2(func, 10);
+//
+//	t2.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//int main()
+//{
+//	thread t3 = thread(func, 10);
+//	
+//	t3.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//int main()
+//{
+//	thread t1;
+//	cout << t1.joinable() << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//int main()
+//{
+//	thread t1;
+//	//...
+//	t1 = thread(func, 10);
+//
+//	t1.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//void test()
+//{
+//	thread t(func, 10);
+//	t.join();
+//}
+//int main()
+//{
+//	thread t(test);
+//	t.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//int main()
+//{
+//	thread t(func, 20);
+//	t.detach();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func()
+//{
+//	cout << this_thread::get_id() << endl; //获取线程id
+//}
+//int main()
+//{
+//	thread t(func);
+//
+//	t.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void add(int& num)
+//{
+//	num++;
+//}
+//int main()
+//{
+//	int num = 0;
+//	thread t(add, num);
+//	t.join();
+//
+//	cout << num << endl; //0
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//int main()
+//{
+//	int num = 0;
+//	thread t([&num]{num++; });
+//	t.join();
+//
+//	cout << num << endl; //1
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void add(int* num)
+//{
+//	(*num)++;
+//}
+//int main()
+//{
+//	int num = 0;
+//	thread t(add, &num);
+//	t.join();
+//
+//	cout << num << endl; //1
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void add(int& num)
+//{
+//	num++;
+//}
+//int main()
+//{
+//	int num = 0;
+//	thread t(add, ref(num));
+//	t.join();
+//
+//	cout << num << endl; //1
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//int main()
+//{
+//	thread t(func, 2);
+//	t.join();
+//
+//	t = thread(func, 2);
+//	t.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//bool DoSomething()
+//{
+//	return false;
+//}
+//int main()
+//{
+//	thread t(func, 20);
+//
+//	//...
+//	if (!DoSomething())
+//		return -1;
+//	//...
+//
+//	t.join(); //不会被执行
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//class myThread
+//{
+//public:
+//	myThread(thread& t)
+//		:_t(t)
+//	{}
+//	~myThread()
+//	{
+//		if (_t.joinable())
+//			_t.join();
+//	}
+//	//防拷贝
+//	myThread(myThread const&) = delete;
+//	myThread& operator=(const myThread&) = delete;
+//private:
+//	thread& _t;
+//};
+//bool DoSomething()
+//{
+//	return false;
+//}
+//int main()
+//{
+//	thread t(func, 20);
+//	myThread mt(t); //使用myThread对线程对象进行封装
+//
+//	//...
+//	if (!DoSomething())
+//		return -1;
+//	//...
+//
+//	t.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//int main()
+//{
+//	thread t(func, 20);
+//	t.join();
+//
+//	t = thread(func, 30);
+//	t.join();
+//	return 0;
+//}
+
+
 #include <iostream>
 #include <thread>
-#include <mutex>
-#include <condition_variable>
 using namespace std;
+void func(int n)
+{
+	for (int i = 0; i <= n; i++)
+	{
+		cout << i << endl;
+	}
+}
+bool DoSomething()
+{
+	return false;
+}
 int main()
 {
-	mutex mtx;
-	condition_variable cv;
-	int n = 0;
-	bool flag = true;
-	thread t1([&mtx, &cv, &flag, &n]
+	if (!DoSomething())
 	{
-		unique_lock<mutex> ul(mtx);
-		while (n < 100)
-		{
-			cv.wait(ul, [&flag]{return flag; });
-			cout << this_thread::get_id() << ":" << n << endl;
-			n++;
-			flag = false;
-			cv.notify_one();
-		}
-	});
-	thread t2([&mtx, &cv, &flag, &n]
-	{
-		unique_lock<mutex> ul(mtx);
-		while (n < 100)
-		{
-			cv.wait(ul, [&flag]{return !flag; });
-			cout << this_thread::get_id() << ":" << n << endl;
-			n++;
-			flag = true;
-			cv.notify_one();
-		}
-	});
-	t1.join();
-	t2.join();
+		thread t(func, 20);
+		//t.detach();
+		//t.join();
+	}
+
 	return 0;
 }
