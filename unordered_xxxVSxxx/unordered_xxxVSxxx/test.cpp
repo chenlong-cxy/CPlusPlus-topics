@@ -6,7 +6,7 @@ using namespace std;
 //#define CLOCKS_PER_SEC  1000
 int main()
 {
-	int N = 1000;
+	int N = 100000;
 	vector<int> v;
 	v.reserve(N);
 	srand((unsigned int)time(NULL));
@@ -65,7 +65,7 @@ int main()
 	clock_t begin5 = clock();
 	for (auto e : v)
 	{
-		s.find(e);
+		s.erase(e);
 	}
 	clock_t end5 = clock();
 
@@ -73,7 +73,7 @@ int main()
 	clock_t begin6 = clock();
 	for (auto e : v)
 	{
-		us.find(e);
+		us.erase(e);
 	}
 	clock_t end6 = clock();
 
