@@ -452,9 +452,7 @@
 //}
 
 
-
 //#include <iostream>
-//#include <vector>
 //#include <thread>
 //#include <mutex>
 //#include <condition_variable>
@@ -808,28 +806,462 @@
 //}
 
 
+//#include <iostream>
+//#include <thread>
+//using namespace std;
+//void func(int n)
+//{
+//	for (int i = 0; i <= n; i++)
+//	{
+//		cout << i << endl;
+//	}
+//}
+//bool DoSomething()
+//{
+//	return false;
+//}
+//int main()
+//{
+//	if (!DoSomething())
+//	{
+//		thread t(func, 20);
+//		//t.detach();
+//		//t.join();
+//	}
+//
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//#include <mutex>
+//using namespace std;
+//void func(int n, mutex& mtx)
+//{
+//	mtx.lock();
+//	for (int i = 1; i <= n; i++)
+//	{
+//		//mtx.lock();
+//		cout << i << endl;
+//		//mtx.unlock();
+//	}
+//	mtx.unlock();
+//}
+//int main()
+//{
+//	mutex mtx;
+//	thread t1(func, 100, ref(mtx));
+//	thread t2(func, 100, ref(mtx));
+//
+//	t1.join();
+//	t2.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//#include <mutex>
+//using namespace std;
+//mutex mtx;
+//void func(int n)
+//{
+//	mtx.lock();
+//	for (int i = 1; i <= n; i++)
+//	{
+//		//mtx.lock();
+//		cout << i << endl;
+//		//mtx.unlock();
+//	}
+//	mtx.unlock();
+//}
+//int main()
+//{
+//	thread t1(func, 200);
+//	thread t2(func, 100);
+//
+//	t1.join();
+//	t2.join();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include "TestGlobal.h"
+//using namespace std;
+//
+//int main()
+//{
+//	cout << global << endl;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//mutex mtx;
+//void func()
+//{
+//	mtx.lock();
+//	FILE* fout = fopen("data.txt", "r");
+//	if (fout == nullptr)
+//	{
+//		//...
+//		return;
+//	}
+//	mtx.unlock();
+//}
+//int main()
+//{
+//	func();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//mutex mtx;
+//void func()
+//{
+//	mtx.lock();
+//	//...
+//	int n = 0;
+//	cin >> n;
+//	char* p = new char[n]; //抛异常
+//	//...
+//	mtx.unlock();
+//}
+//int main()
+//{
+//	func();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//mutex mtx;
+//void func()
+//{
+//	lock_guard<mutex> lg(mtx); //调用构造函数加锁
+//	//...
+//	FILE* fout = fopen("data.txt", "r");
+//	if (fout == nullptr)
+//	{
+//		//...
+//		return; //调用析构函数解锁
+//	}
+//	//...
+//} //调用析构函数解锁
+//int main()
+//{
+//	func();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//mutex mtx;
+//void func()
+//{
+//	//...
+//	//匿名局部域
+//	{
+//		lock_guard<mutex> lg(mtx); //调用构造函数加锁
+//		FILE* fout = fopen("data.txt", "r");
+//		if (fout == nullptr)
+//		{
+//			//...
+//			return; //调用析构函数解锁
+//		}
+//	} //调用析构函数解锁
+//	//...
+//}
+//int main()
+//{
+//	func();
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//namespace cl
+//{
+//	template<class Mutex>
+//	class lock_guard
+//	{
+//	public:
+//		lock_guard(Mutex& mtx)
+//			:_mtx(mtx)
+//		{
+//			mtx.lock(); //加锁
+//		}
+//		~lock_guard()
+//		{
+//			mtx.unlock(); //解锁
+//		}
+//		lock_guard(const lock_guard&) = delete;
+//		lock_guard& operator=(const lock_guard&) = delete;
+//	private:
+//		Mutex& _mtx;
+//	};
+//	template<class Mutex>
+//	class unique_lock
+//	{
+//	public:
+//		unique_lock(Mutex& mtx)
+//			:_mtx(mtx)
+//		{
+//			mtx.lock(); //加锁
+//		}
+//		void lock()
+//		{
+//			mtx.lock();
+//		}
+//		void unlock()
+//		{
+//			mtx.unlock();
+//		}
+//		~unique_lock()
+//		{
+//			mtx.unlock(); //解锁
+//		}
+//		unique_lock(const unique_lock&) = delete;
+//		unique_lock& operator=(const unique_lock&) = delete;
+//	private:
+//		Mutex& _mtx;
+//	};
+//}
+//mutex mtx;
+//void func()
+//{
+//	//cl::lock_guard<mutex> lg(mtx);
+//	//mtx.lock();
+//	//...
+//	{
+//		cl::lock_guard<mutex> lg(mtx);
+//		FILE* fout = fopen("data.txt", "r");
+//		if (fout == nullptr)
+//		{
+//			//
+//			return;
+//		}
+//	}
+//
+//	int n = 0;
+//	cin >> n;
+//	char* p = new char[n]; //抛异常
+//	//...
+//	//mtx.unlock();
+//}
+//int main()
+//{
+//	try{
+//		func();
+//	}
+//	catch (exception& e)
+//	{
+//		cout << e.what() << endl;
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//int main()
+//{
+//	mutex mtx;
+//	unique_lock<mutex> ul;
+//	auto i = ul.release();
+//	cout << typeid(i).name() << endl;
+//	return 0;
+//}
+
+//#include <iostream>
+//#include <mutex>
+//using namespace std;
+//void func2()
+//{
+//	//...
+//}
+//mutex mtx;
+//void func1()
+//{
+//	unique_lock<mutex> ul(mtx); //调用构造函数加锁
+//	//...
+//
+//	ul.unlock(); //解锁
+//	func2();
+//	ul.lock();   //加锁
+//
+//	//...
+//} //调用析构函数解锁
+
+
+//#include <iostream>
+//#include <thread>
+//#include <mutex>
+//using namespace std;
+//void func(int& n, int times)
+//{
+//	for (int i = 0; i < times; i++)
+//	{
+//		n++;
+//	}
+//}
+//int main()
+//{
+//	int n = 0;
+//	int times = 100000; //每个线程对n++的次数
+//	thread t1(func, ref(n), times);
+//	thread t2(func, ref(n), times);
+//
+//	t1.join();
+//	t2.join();
+//	cout << n << endl; //打印n的值
+//	return 0;
+//}
+
+
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	int n = 0;
+//	n++;
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//#include <mutex>
+//using namespace std;
+//void func(int& n, int times, mutex& mtx)
+//{
+//	mtx.lock();
+//	for (int i = 0; i < times; i++)
+//	{
+//		//mtx.lock();
+//		n++;
+//		//mtx.unlock();
+//	}
+//	mtx.unlock();
+//}
+//int main()
+//{
+//	int n = 0;
+//	int times = 100000; //每个线程对n++的次数
+//	mutex mtx;
+//	thread t1(func, ref(n), times, ref(mtx));
+//	thread t2(func, ref(n), times, ref(mtx));
+//
+//	t1.join();
+//	t2.join();
+//	cout << n << endl; //打印n的值
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//#include <atomic>
+//using namespace std;
+//void func(atomic_int& n, int times)
+//{
+//	for (int i = 0; i < times; i++)
+//	{
+//		n++;
+//	}
+//}
+//int main()
+//{
+//	atomic_int n = { 0 };
+//	int times = 100000; //每个线程对n++的次数
+//	thread t1(func, ref(n), times);
+//	thread t2(func, ref(n), times);
+//
+//	t1.join();
+//	t2.join();
+//	cout << n << endl; //打印n的值
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <thread>
+//#include <atomic>
+//using namespace std;
+//void func(atomic<int>& n, int times)
+//{
+//	for (int i = 0; i < times; i++)
+//	{
+//		n++;
+//	}
+//}
+//int main()
+//{
+//	atomic<int> n = 0;
+//	int times = 100000; //每个线程对n++的次数
+//	thread t1(func, ref(n), times);
+//	thread t2(func, ref(n), times);
+//
+//	t1.join();
+//	t2.join();
+//	cout << n << endl; //打印n的值
+//	return 0;
+//}
+
+
 #include <iostream>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 using namespace std;
-void func(int n)
-{
-	for (int i = 0; i <= n; i++)
-	{
-		cout << i << endl;
-	}
-}
-bool DoSomething()
-{
-	return false;
-}
 int main()
 {
-	if (!DoSomething())
-	{
-		thread t(func, 20);
-		//t.detach();
-		//t.join();
-	}
+	int n = 100;
+	mutex mtx;
+	condition_variable cv;
+	bool flag = true;
+	//奇数
+	thread t1([&]{
+		int i = 1;
+		while (i <= 100)
+		{
+			unique_lock<mutex> ul(mtx);
+			cv.wait(ul, [&flag]()->bool{return flag; }); //等待条件变量满足
+			cout << this_thread::get_id() << ":" << i << endl;
+			i += 2;
+			flag = false;
+			cv.notify_one(); //唤醒条件变量下等待的一个线程
+		}
+	});
+	//偶数
+	thread t2([&]{
+		int j = 2;
+		while (j <= 100)
+		{
+			unique_lock<mutex> ul(mtx);
+			cv.wait(ul, [&flag]()->bool{return !flag; }); //等待条件变量满足
+			cout << this_thread::get_id() << ":" << j << endl;
+			j += 2;
+			flag = true;
+			cv.notify_one(); //唤醒条件变量下等待的一个线程
+		}
+	});
 
+	t1.join();
+	t2.join();
 	return 0;
 }
