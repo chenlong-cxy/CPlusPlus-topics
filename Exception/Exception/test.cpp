@@ -23,4 +23,73 @@
 //void* operator new(std::size_t size, void* ptr) throw();
 
 
+//#include <iostream>
+//using namespace std;
+//int main()
+//{
+//	try{
+//		char* ptr = new char[0x7fffffff];
+//	}
+//	catch (const exception& e)
+//	{
+//		cout << e.what() << endl; //bad allocation
+//	}
+//	return 0;
+//}
 
+
+//#include <iostream>
+//using namespace std;
+//void f1()
+//{
+//	int i, j;
+//	cin >> i >> j;
+//	if (j == 0)
+//	{
+//		throw 1;
+//	}
+//	cout << i / j << endl;
+//}
+//int main()
+//{
+//	try
+//	{
+//		f1();
+//	}
+//	catch (int errid)
+//	{
+//		cout << "´íÎóÂë: " << errid << endl;
+//	}
+//	return 0;
+//}
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+void f1()
+{
+	int i, j;
+	cin >> i >> j;
+	if (j == 0)
+	{
+		throw string("³ýÁã´íÎó");
+	}
+	cout << i / j << endl;
+}
+int main()
+{
+	try
+	{
+		f1();
+	}
+	catch (int errid)
+	{
+		cout << "´íÎóÂë: " << errid << endl;
+	}
+	catch (const string& s)
+	{
+		cout << "´íÎóÃèÊö: " << s << endl;
+	}
+	return 0;
+}
