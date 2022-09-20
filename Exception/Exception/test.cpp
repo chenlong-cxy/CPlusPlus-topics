@@ -64,32 +64,378 @@
 //}
 
 
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//void f1()
+//{
+//	int i, j;
+//	cin >> i >> j;
+//	if (j == 0)
+//	{
+//		throw string("³ýÁã´íÎó");
+//	}
+//	cout << i / j << endl;
+//}
+//int main()
+//{
+//	try
+//	{
+//		f1();
+//	}
+//	catch (int errid)
+//	{
+//		cout << "´íÎóÂë: " << errid << endl;
+//	}
+//	catch (const string& s)
+//	{
+//		cout << "´íÎóÃèÊö: " << s << endl;
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//void f1()
+//{
+//	int i, j;
+//	cin >> i >> j;
+//	if (j == 0)
+//	{
+//		throw string("³ýÁã´íÎó");
+//	}
+//	cout << i / j << endl;
+//}
+//int* p2 = nullptr;
+//FILE* p3 = nullptr;
+//void f2()
+//{
+//	p2 = (int*)malloc(40);
+//	if (p2 == nullptr)
+//	{
+//		throw string("mallocÊ§°Ü");
+//	}
+//}
+//void f3()
+//{
+//	p3 = fopen("test.txt", "r");
+//	if (p3 == nullptr)
+//	{
+//		throw string("fopenÊ§°Ü");
+//	}
+//}
+//int main()
+//{
+//	try
+//	{
+//		f1();
+//		f2();
+//		f3();
+//		free(p2);
+//		fclose(p3);
+//	}
+//	catch (int errid)
+//	{
+//		cout << "´íÎóÂë: " << errid << endl;
+//	}
+//	catch (const string& s)
+//	{
+//		cout << "´íÎóÃèÊö: " << s << endl;
+//		if (s == "fopenÊ§°Ü")
+//		{
+//			free(p2);
+//		}
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//class MyException
+//{
+//public:
+//	MyException(int errid, const char* errmsg)
+//		:_errid(errid)
+//		, _errmsg(errmsg)
+//	{}
+//	int GetErrid() const
+//	{
+//		return _errid;
+//	}
+//	const string& what() const
+//	{
+//		return _errmsg;
+//	}
+//private:
+//	int _errid;
+//	string _errmsg;
+//};
+//void f2()
+//{
+//	throw MyException(1, "test");
+//}
+//void f1()
+//{
+//	try{
+//		f2();
+//	}
+//	catch (const MyException& e)
+//	{
+//		cout << "f1:" << endl;
+//		cout << "´íÎóÂë: " << e.GetErrid() << endl;
+//		cout << "´íÎóÃèÊö: " << e.what() << endl;
+//	}
+//}
+//int func()
+//{
+//	return 2;
+//}
+//int main()
+//{
+//	try
+//	{
+//		f1();
+//		char* ptr = new char[0x7fffffff];
+//	}
+//	catch (const MyException& e)
+//	{
+//		cout << "´íÎóÂë: " << e.GetErrid() << endl;
+//		cout << "´íÎóÃèÊö: " << e.what() << endl;
+//	}
+//	catch (...)
+//	{
+//		cout << "Î´ÖªÒì³£" << endl;
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//class MyException
+//{
+//public:
+//	MyException(int errid, const char* errmsg)
+//		:_errid(errid)
+//		, _errmsg(errmsg)
+//	{}
+//	int GetErrid() const
+//	{
+//		return _errid;
+//	}
+//	const string& what() const
+//	{
+//		return _errmsg;
+//	}
+////private:
+//protected:
+//	int _errid;
+//	string _errmsg;
+//	//...
+//};
+//class CacheException : public MyException
+//{
+//public:
+//	CacheException(int errid, const char* errmsg)
+//		:MyException(errid, errmsg)
+//	{}
+//protected:
+//	//...
+//};
+//class SqlException : public MyException
+//{
+//public:
+//	SqlException(int errid, const char* errmsg)
+//		:MyException(errid, errmsg)
+//	{}
+//protected:
+//	//...
+//};
+//class NetworkException : public MyException
+//{
+//public:
+//	NetworkException(int errid, const char* errmsg)
+//		:MyException(errid, errmsg)
+//	{}
+//protected:
+//	//...
+//};
+//void f1()
+//{
+//	int i = 0;
+//	cin >> i;
+//	if (i == 0)
+//	{
+//		throw CacheException(1, "Êý¾Ý²»´æÔÚ");
+//	}
+//}
+//void f2()
+//{
+//	throw SqlException(2, "Êý¾Ý¿âÁ´½ÓÊ§°Ü");
+//}
+//int main()
+//{
+//	try
+//	{
+//		f1();
+//		f2();
+//	}
+//	catch (const MyException& e)
+//	{
+//		cout << "´íÎóÂë: " << e.GetErrid() << endl;
+//		cout << "´íÎóÃèÊö: " << e.what() << endl;
+//	}
+//	catch (...)
+//	{
+//		cout << "Î´ÖªÒì³£" << endl;
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//class MyException
+//{
+//public:
+//	MyException(int errid, const char* errmsg)
+//		:_errid(errid)
+//		, _errmsg(errmsg)
+//	{}
+//	int GetErrid() const
+//	{
+//		return _errid;
+//	}
+//	virtual string what() const
+//	{
+//		return _errmsg;
+//	}
+//	//private:
+//protected:
+//	int _errid;
+//	string _errmsg;
+//	//...
+//};
+//class CacheException : public MyException
+//{
+//public:
+//	CacheException(int errid, const char* errmsg)
+//		:MyException(errid, errmsg)
+//	{}
+//	virtual string what() const
+//	{
+//		string msg = "CacheException: ";
+//		msg += _errmsg;
+//		return msg;
+//	}
+//protected:
+//	//...
+//};
+//class SqlException : public MyException
+//{
+//public:
+//	SqlException(int errid, const char* errmsg, const char* sql)
+//		:MyException(errid, errmsg)
+//		, _sql(sql)
+//	{}
+//	virtual string what() const
+//	{
+//		string msg = "CacheException: ";
+//		msg += _errmsg;
+//		msg += "sqlÓï¾ä: ";
+//		msg += _sql;
+//		return msg;
+//	}
+//protected:
+//	//...
+//	string _sql;
+//};
+//class NetworkException : public MyException
+//{
+//public:
+//	NetworkException(int errid, const char* errmsg)
+//		:MyException(errid, errmsg)
+//	{}
+//protected:
+//	//...
+//};
+//void f1()
+//{
+//	int i = 0;
+//	cin >> i;
+//	if (i == 0)
+//	{
+//		throw CacheException(1, "Êý¾Ý²»´æÔÚ");
+//	}
+//}
+//void f2()
+//{
+//	throw SqlException(2, "Êý¾Ý¿â²éÑ¯Ê§°Ü", "select * from t_student");
+//}
+//int main()
+//{
+//	try
+//	{
+//		f1();
+//		f2();
+//	}
+//	catch (const MyException& e)
+//	{
+//		cout << "´íÎóÂë: " << e.GetErrid() << endl;
+//		cout << "´íÎóÃèÊö: " << e.what() << endl;
+//	}
+//	catch (...)
+//	{
+//		cout << "Î´ÖªÒì³£" << endl;
+//	}
+//	return 0;
+//}
+
+
 #include <iostream>
-#include <string>
 using namespace std;
-void f1()
+double Division(int a, int b)
 {
-	int i, j;
-	cin >> i >> j;
-	if (j == 0)
+	if (b == 0)
 	{
-		throw string("³ýÁã´íÎó");
+		throw "Division by zero condition!";
 	}
-	cout << i / j << endl;
+	return (double)a / (double)b;
+}
+void Func()
+{
+	int* array = new int[10];
+	try
+	{
+		int len, time;
+		cin >> len >> time;
+		cout << Division(len, time) << endl;
+	}
+	catch (...)
+	{
+		cout << "delete []" << array << endl;
+		delete[] array;
+		throw; //½«²¶»ñµ½µÄÒì³£ÔÙ´ÎÖØÐÂÅ×³ö
+	}
+	//...
+	cout << "delete []" << array << endl;
+	delete[] array;
 }
 int main()
 {
 	try
 	{
-		f1();
+		Func();
 	}
-	catch (int errid)
+	catch (const char* errmsg)
 	{
-		cout << "´íÎóÂë: " << errid << endl;
-	}
-	catch (const string& s)
-	{
-		cout << "´íÎóÃèÊö: " << s << endl;
+		cout << errmsg << endl;
 	}
 	return 0;
 }
