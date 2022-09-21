@@ -398,44 +398,226 @@
 //}
 
 
+//#include <iostream>
+//using namespace std;
+//double Division(int a, int b)
+//{
+//	if (b == 0)
+//	{
+//		throw "Division by zero condition!";
+//	}
+//	return (double)a / (double)b;
+//}
+//void Func()
+//{
+//	int* array = new int[10];
+//	try
+//	{
+//		int len, time;
+//		cin >> len >> time;
+//		cout << Division(len, time) << endl;
+//	}
+//	catch (...)
+//	{
+//		cout << "delete []" << array << endl;
+//		delete[] array;
+//		throw; //将捕获到的异常再次重新抛出
+//	}
+//	//...
+//	cout << "delete []" << array << endl;
+//	delete[] array;
+//}
+//int main()
+//{
+//	try
+//	{
+//		Func();
+//	}
+//	catch (const char* errmsg)
+//	{
+//		cout << errmsg << endl;
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//void func1()
+//{
+//	throw string("这是一个异常");
+//}
+//void func2()
+//{
+//	func1();
+//}
+//void func3()
+//{
+//	func2();
+//}
+//int main()
+//{
+//	try
+//	{
+//		func3();
+//	}
+//	catch (const string& s)
+//	{
+//		cout << "错误描述：" << s << endl;
+//	}
+//	catch (...)
+//	{
+//		cout << "未知异常" << endl;
+//	}
+//	return 0;
+//}
+
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//void func1()
+//{
+//	throw string("这是一个异常");
+//}
+//void func2()
+//{
+//	int* array = new int[10];
+//	try
+//	{
+//		func1();
+//		//do something...
+//	}
+//	catch (...)
+//	{
+//		delete[] array;
+//		throw; //将捕获到的异常再次重新抛出
+//	}
+//	delete[] array;
+//}
+////void func2()
+////{
+////	int* array = new int[10];
+////	func1();
+////
+////	//do something...
+////
+////	delete[] array;
+////}
+//int main()
+//{
+//	try
+//	{
+//		func2();
+//	}
+//	catch (const string& s)
+//	{
+//		cout << s << endl;
+//	}
+//	catch (...)
+//	{
+//		cout << "未知异常" << endl;
+//	}
+//	return 0;
+//}
+
+
 #include <iostream>
+#include <string>
 using namespace std;
-double Division(int a, int b)
+class Exception
 {
-	if (b == 0)
+public:
+	Exception(int errid, const char* errmsg)
+		:_errid(errid)
+		, _errmsg(errmsg)
+	{}
+	int GetErrid() const
 	{
-		throw "Division by zero condition!";
+		return _errid;
 	}
-	return (double)a / (double)b;
-}
-void Func()
-{
-	int* array = new int[10];
-	try
+	virtual string what() const
 	{
-		int len, time;
-		cin >> len >> time;
-		cout << Division(len, time) << endl;
+		return _errmsg;
 	}
-	catch (...)
-	{
-		cout << "delete []" << array << endl;
-		delete[] array;
-		throw; //将捕获到的异常再次重新抛出
-	}
+	//private:
+protected:
+	int _errid;     //错误编号
+	string _errmsg; //错误描述
 	//...
-	cout << "delete []" << array << endl;
-	delete[] array;
+};
+class CacheException : public Exception
+{
+public:
+	CacheException(int errid, const char* errmsg)
+		:Exception(errid, errmsg)
+	{}
+	virtual string what() const
+	{
+		string msg = "CacheException: ";
+		msg += _errmsg;
+		return msg;
+	}
+protected:
+	//...
+};
+class SqlException : public Exception
+{
+public:
+	SqlException(int errid, const char* errmsg, const char* sql)
+		:Exception(errid, errmsg)
+		, _sql(sql)
+	{}
+	virtual string what() const
+	{
+		string msg = "CacheException: ";
+		msg += _errmsg;
+		msg += "sql语句: ";
+		msg += _sql;
+		return msg;
+	}
+protected:
+	//...
+	string _sql; //导致异常的SQL语句
+};
+class NetworkException : public Exception
+{
+public:
+	NetworkException(int errid, const char* errmsg)
+		:Exception(errid, errmsg)
+	{}
+protected:
+	//...
+};
+void f1()
+{
+	int i = 0;
+	cin >> i;
+	if (i == 0)
+	{
+		throw CacheException(1, "数据不存在");
+	}
+}
+void f2()
+{
+	throw SqlException(2, "数据库查询失败", "select * from t_student");
 }
 int main()
 {
 	try
 	{
-		Func();
+		f1();
+		f2();
 	}
-	catch (const char* errmsg)
+	catch (const Exception& e)
 	{
-		cout << errmsg << endl;
+		cout << "错误码: " << e.GetErrid() << endl;
+		cout << "错误描述: " << e.what() << endl;
+	}
+	catch (...)
+	{
+		cout << "未知异常" << endl;
 	}
 	return 0;
 }
