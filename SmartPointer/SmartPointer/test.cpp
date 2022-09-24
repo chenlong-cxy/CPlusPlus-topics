@@ -672,9 +672,9 @@ namespace cl
 //}
 struct Date
 {
-	int _year;
-	int _month;
-	int _day;
+	int _year = 0;
+	int _month = 0;
+	int _day = 0;
 };
 void func(cl::shared_ptr<Date>& sp, size_t n)
 {
@@ -700,9 +700,9 @@ int main()
 
 	cout << p.use_count() << endl;
 
-	//cout << p->_year << endl;
-	//cout << p->_month << endl;
-	//cout << p->_day << endl;
+	cout << p->_year << endl;
+	cout << p->_month << endl;
+	cout << p->_day << endl;
 	
 	return 0;
 }
