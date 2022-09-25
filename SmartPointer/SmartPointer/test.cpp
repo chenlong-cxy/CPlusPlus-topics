@@ -491,8 +491,16 @@ namespace cl
 	private:
 		T* _ptr;
 	};
-	//C++11 -- 引用计数
 	template<class T>
+	class Delete
+	{
+		void operator()(const T* ptr)
+		{
+			delete ptr;
+		}
+	};
+	//C++11 -- 引用计数
+	template<class T, class D = Delete<T>>
 	class shared_ptr
 	{
 	private:
@@ -511,12 +519,13 @@ namespace cl
 				if (_ptr != nullptr)
 				{
 					cout << "delete: " << _ptr << endl;
-					delete _ptr;
-					delete _pcount;
+					//delete _ptr;
+					_del(_ptr);
 					_ptr = nullptr;
-					_pcount = nullptr;
-					flag = true;
 				}
+				delete _pcount;
+				_pcount = nullptr;
+				flag = true;
 			}
 			_pmutex->unlock();
 			if (flag == true)
@@ -526,10 +535,16 @@ namespace cl
 		}
 	public:
 		//RAII
-		shared_ptr(T* ptr)
+		shared_ptr(T* ptr = nullptr)
 			:_ptr(ptr)
 			, _pcount(new int(1))
 			, _pmutex(new mutex)
+		{}
+		shared_ptr(T* ptr, D del)
+			: _ptr(ptr)
+			, _pcount(new int(1))
+			, _pmutex(new mutex)
+			, _del(del)
 		{}
 		~shared_ptr()
 		{
@@ -567,10 +582,136 @@ namespace cl
 		{
 			return _ptr;
 		}
+		T* get() const
+		{
+			return _ptr;
+		}
 	private:
 		T* _ptr;
 		int* _pcount;
 		mutex* _pmutex;
+		D _del;
+	};
+	////C++11 -- 引用计数
+	//template<class T>
+	//class shared_ptr
+	//{
+	//private:
+	//	void AddRef()
+	//	{
+	//		_pmutex->lock();
+	//		(*_pcount)++;
+	//		_pmutex->unlock();
+	//	}
+	//	void ReleaseRef()
+	//	{
+	//		_pmutex->lock();
+	//		bool flag = false;
+	//		if (--(*_pcount) == 0)
+	//		{
+	//			if (_ptr != nullptr)
+	//			{
+	//				cout << "delete: " << _ptr << endl;
+	//				delete _ptr;
+	//				delete _pcount;
+	//				_ptr = nullptr;
+	//				_pcount = nullptr;
+	//				flag = true;
+	//			}
+	//		}
+	//		_pmutex->unlock();
+	//		if (flag == true)
+	//		{
+	//			delete _pmutex;
+	//		}
+	//	}
+	//public:
+	//	//RAII
+	//	shared_ptr(T* ptr = nullptr)
+	//		:_ptr(ptr)
+	//		, _pcount(new int(1))
+	//		, _pmutex(new mutex)
+	//	{}
+	//	//template<class D>
+	//	//shared_ptr(T* ptr, D del)
+	//	//	: _ptr(ptr)
+	//	//	, _pcount(new int(1))
+	//	//	, _pmutex(new mutex)
+	//	//	, _del(del)
+	//	//{}
+	//	~shared_ptr()
+	//	{
+	//		ReleaseRef();
+	//	}
+	//	shared_ptr(shared_ptr<T>& sp)
+	//		:_ptr(sp._ptr)
+	//		, _pcount(sp._pcount)
+	//		, _pmutex(sp._pmutex)
+	//	{
+	//		AddRef();
+	//	}
+	//	shared_ptr& operator=(shared_ptr<T>& sp)
+	//	{
+	//		if (_ptr != sp._ptr) //管理同一块空间的对象之间无需进行赋值操作
+	//		{
+	//			ReleaseRef();
+	//			_ptr = sp._ptr;
+	//			_pcount = sp._pcount;
+	//			_pmutex = sp._pmutex;
+	//			AddRef();
+	//		}
+	//		return *this;
+	//	}
+	//	int use_count()
+	//	{
+	//		return *_pcount;
+	//	}
+	//	//可以像指针一样使用
+	//	T& operator*()
+	//	{
+	//		return *_ptr;
+	//	}
+	//	T* operator->()
+	//	{
+	//		return _ptr;
+	//	}
+	//	T* get() const
+	//	{
+	//		return _ptr;
+	//	}
+	//private:
+	//	T* _ptr;
+	//	int* _pcount;
+	//	mutex* _pmutex;
+	//	//D _del;
+	//};
+	//C++11 -- 弱指针
+	template<class T>
+	class weak_ptr
+	{
+	public:
+		weak_ptr()
+			:_ptr(nullptr)
+		{}
+		weak_ptr(const shared_ptr<T>& sp)
+			:_ptr(sp.get())
+		{}
+		weak_ptr& operator=(const shared_ptr<T>& sp)
+		{
+			_ptr = sp.get();
+			return *this;
+		}
+		//可以像指针一样使用
+		T& operator*()
+		{
+			return *_ptr;
+		}
+		T* operator->()
+		{
+			return _ptr;
+		}
+	private:
+		T* _ptr;
 	};
 	//template<class T>
 	//class shared_ptr
@@ -630,6 +771,7 @@ namespace cl
 	//	int* _pcount;
 	//};
 }
+//资源转移
 //int main()
 //{
 //	//cl::auto_ptr<int> ap1(new int(1));
@@ -642,12 +784,14 @@ namespace cl
 //	ap1 = ap2;
 //	return 0;
 //}
+//防拷贝
 //int main()
 //{
 //	cl::unique_ptr<int> up1(new int(0));
 //	//cl::unique_ptr<int> up2(up1);
 //	return 0;
 //}
+//资源共享
 //int main()
 //{
 //	//cl::shared_ptr<int> sp1(new int(0));
@@ -670,39 +814,166 @@ namespace cl
 //	sp1 = sp3;
 //	return 0;
 //}
-struct Date
+//线程安全
+//struct Date
+//{
+//	int _year = 0;
+//	int _month = 0;
+//	int _day = 0;
+//};
+//void func(cl::shared_ptr<Date>& sp, size_t n)
+//{
+//	for (size_t i = 0; i < n; i++)
+//	{
+//		cl::shared_ptr<Date> copy(sp);
+//
+//		copy->_year++;
+//		copy->_month++;
+//		copy->_day++;
+//	}
+//}
+//int main()
+//{
+//	cl::shared_ptr<Date> p(new Date);
+//
+//	const size_t n = 10000;
+//	thread t1(func, p, n);
+//	thread t2(func, p, n);
+//
+//	t1.join();
+//	t2.join();
+//
+//	cout << p.use_count() << endl;
+//
+//	cout << p->_year << endl;
+//	cout << p->_month << endl;
+//	cout << p->_day << endl;
+//	
+//	return 0;
+//}
+//循环引用
+//struct ListNode
+//{
+//	ListNode* _next;
+//	ListNode* _prev;
+//	int _val;
+//	~ListNode()
+//	{
+//		cout << "~ListNode()" << endl;
+//	}
+//};
+//int main()
+//{
+//	ListNode* node1 = new ListNode;
+//	ListNode* node2 = new ListNode;
+//
+//	node1->_next = node2;
+//	node2->_prev = node1;
+//	//...
+//	delete node1;
+//	delete node2;
+//	return 0;
+//}
+//struct ListNode
+//{
+//	cl::shared_ptr<ListNode> _next;
+//	cl::shared_ptr<ListNode> _prev;
+//	int _val;
+//	~ListNode()
+//	{
+//		cout << "~ListNode()" << endl;
+//	}
+//};
+//int main()
+//{
+//	cl::shared_ptr<ListNode> node1(new ListNode);
+//	cl::shared_ptr<ListNode> node2(new ListNode);
+//
+//	node1->_next = node2;
+//	node2->_prev = node1;
+//	//...
+//
+//	return 0;
+//}
+struct ListNode
 {
-	int _year = 0;
-	int _month = 0;
-	int _day = 0;
-};
-void func(cl::shared_ptr<Date>& sp, size_t n)
-{
-	for (size_t i = 0; i < n; i++)
+	cl::weak_ptr<ListNode> _next;
+	cl::weak_ptr<ListNode> _prev;
+	int _val;
+	~ListNode()
 	{
-		cl::shared_ptr<Date> copy(sp);
-
-		copy->_year++;
-		copy->_month++;
-		copy->_day++;
+		cout << "~ListNode()" << endl;
 	}
-}
+};
+//int main()
+//{
+//	cl::shared_ptr<ListNode> node1(new ListNode);
+//	cl::shared_ptr<ListNode> node2(new ListNode);
+//
+//	cout << node1.use_count() << endl;
+//	cout << node2.use_count() << endl;
+//	node1->_next = node2;
+//	node2->_prev = node1;
+//	//...
+//	cout << node1.use_count() << endl;
+//	cout << node2.use_count() << endl;
+//	return 0;
+//}
+//定制删除器
+//int main()
+//{
+//	int a = 10;
+//	int* pa = &a;
+//	std::unique_ptr<int> up(pa);
+//	return 0;
+//}
+//int main()
+//{
+//	//std::shared_ptr<ListNode> sp1(new ListNode[10]);
+//	std::shared_ptr<FILE> sp2(fopen("test.cpp", "r"));
+//
+//	return 0;
+//}
+//template<class T>
+//struct DelArr
+//{
+//	void operator()(const T* ptr)
+//	{
+//		cout << "delete[]: " << ptr << endl;
+//		delete[] ptr;
+//	}
+//};
+//int main()
+//{
+//	std::shared_ptr<ListNode> sp1(new ListNode[10], DelArr<ListNode>());
+//	std::shared_ptr<FILE> sp2(fopen("test.cpp", "r"), [](FILE* ptr){
+//		cout << "fclose: " << ptr << endl;
+//		fclose(ptr);
+//	});
+//
+//	return 0;
+//}
+template<class T>
+struct DelArr
+{
+	void operator()(const T* ptr)
+	{
+		cout << "delete[]: " << ptr << endl;
+		delete[] ptr;
+	}
+};
 int main()
 {
-	cl::shared_ptr<Date> p(new Date);
+	cl::shared_ptr<ListNode, DelArr<ListNode>> sp1(new ListNode[10], DelArr<ListNode>());
+	//cl::shared_ptr<FILE, function<void(FILE*)>> sp2(fopen("test.cpp", "r"), [](FILE* ptr){
+	//	cout << "fclose: " << ptr << endl;
+	//	fclose(ptr);
+	//});
+	auto f = [](FILE* ptr){
+		cout << "fclose: " << ptr << endl;
+		fclose(ptr);
+	};
+	cl::shared_ptr<FILE, decltype(f)> sp2(fopen("test.cpp", "r"), f);
 
-	const size_t n = 10000;
-	thread t1(func, p, n);
-	thread t2(func, p, n);
-
-	t1.join();
-	t2.join();
-
-	cout << p.use_count() << endl;
-
-	cout << p->_year << endl;
-	cout << p->_month << endl;
-	cout << p->_day << endl;
-	
 	return 0;
 }
