@@ -395,12 +395,18 @@
 //};
 //int main()
 //{
-//	SmartPtr<int> sp1(new int(1));
-//	*sp1 = 10;
-//	SmartPtr<pair<int, int>> sp2(new pair<int, int>(1, 2));
-//	sp2->first = 3;
-//	sp2->second = 4;
+//	//SmartPtr<int> sp1(new int(1));
+//	//*sp1 = 10;
+//	//SmartPtr<pair<int, int>> sp2(new pair<int, int>(1, 2));
+//	//sp2->first = 3;
+//	//sp2->second = 4;
 //
+//	SmartPtr<int> sp1(new int);
+//	SmartPtr<int> sp2(sp1); //拷贝构造
+//
+//	SmartPtr<int> sp3(new int);
+//	SmartPtr<int> sp4(new int);
+//	sp3 = sp4; //拷贝赋值
 //	return 0;
 //}
 
@@ -419,7 +425,7 @@ namespace cl
 	{
 	public:
 		//RAII
-		auto_ptr(T* ptr)
+		auto_ptr(T* ptr = nullptr)
 			:_ptr(ptr)
 		{}
 		~auto_ptr()
@@ -434,15 +440,15 @@ namespace cl
 		auto_ptr(auto_ptr<T>& ap)
 			:_ptr(ap._ptr)
 		{
-			ap._ptr = nullptr;
+			ap._ptr = nullptr; //管理权转移后ap被置空
 		}
 		auto_ptr& operator=(auto_ptr<T>& ap)
 		{
 			if (this != &ap)
 			{
-				delete _ptr; //释放自己的
-				_ptr = ap._ptr; //接管别人的
-				ap._ptr = nullptr; //把别人的置空（管理权转移）
+				delete _ptr;       //释放自己管理的资源
+				_ptr = ap._ptr;    //接管ap对象的资源
+				ap._ptr = nullptr; //管理权转移后ap被置空
 			}
 			return *this;
 		}
@@ -456,7 +462,7 @@ namespace cl
 			return _ptr;
 		}
 	private:
-		T* _ptr;
+		T* _ptr; //管理的资源
 	};
 	//C++11 -- 防拷贝
 	template<class T>
@@ -464,7 +470,7 @@ namespace cl
 	{
 	public:
 		//RAII
-		unique_ptr(T* ptr)
+		unique_ptr(T* ptr = nullptr)
 			:_ptr(ptr)
 		{}
 		~unique_ptr()
@@ -489,7 +495,7 @@ namespace cl
 		unique_ptr(unique_ptr<T>& up) = delete;
 		unique_ptr& operator=(unique_ptr<T>& up) = delete;
 	private:
-		T* _ptr;
+		T* _ptr; //管理的资源
 	};
 	template<class T>
 	class Delete
@@ -774,23 +780,23 @@ namespace cl
 //资源转移
 //int main()
 //{
-//	//cl::auto_ptr<int> ap1(new int(1));
-//	//cl::auto_ptr<int> ap2(sp1);
-//	//*ap2 = 10;
-//	////*ap1 = 20; //error
+//	std::auto_ptr<int> ap1(new int(1));
+//	std::auto_ptr<int> ap2(ap1);
+//	*ap2 = 10;
+//	//*ap1 = 20; //error
 //
-//	cl::auto_ptr<int> ap1(new int(1));
-//	cl::auto_ptr<int> ap2(new int(2));
-//	ap1 = ap2;
+//	std::auto_ptr<int> ap3(new int(1));
+//	std::auto_ptr<int> ap4(new int(2));
+//	ap3 = ap4;
 //	return 0;
 //}
 //防拷贝
-//int main()
-//{
-//	cl::unique_ptr<int> up1(new int(0));
-//	//cl::unique_ptr<int> up2(up1);
-//	return 0;
-//}
+int main()
+{
+	std::unique_ptr<int> up1(new int(0));
+	//std::unique_ptr<int> up2(up1); //error
+	return 0;
+}
 //资源共享
 //int main()
 //{
@@ -953,27 +959,49 @@ struct ListNode
 //
 //	return 0;
 //}
-template<class T>
-struct DelArr
-{
-	void operator()(const T* ptr)
-	{
-		cout << "delete[]: " << ptr << endl;
-		delete[] ptr;
-	}
-};
-int main()
-{
-	cl::shared_ptr<ListNode, DelArr<ListNode>> sp1(new ListNode[10], DelArr<ListNode>());
-	//cl::shared_ptr<FILE, function<void(FILE*)>> sp2(fopen("test.cpp", "r"), [](FILE* ptr){
-	//	cout << "fclose: " << ptr << endl;
-	//	fclose(ptr);
-	//});
-	auto f = [](FILE* ptr){
-		cout << "fclose: " << ptr << endl;
-		fclose(ptr);
-	};
-	cl::shared_ptr<FILE, decltype(f)> sp2(fopen("test.cpp", "r"), f);
+//template<class T>
+//struct DelArr
+//{
+//	void operator()(const T* ptr)
+//	{
+//		cout << "delete[]: " << ptr << endl;
+//		delete[] ptr;
+//	}
+//};
+//int main()
+//{
+//	cl::shared_ptr<ListNode, DelArr<ListNode>> sp1(new ListNode[10], DelArr<ListNode>());
+//	//cl::shared_ptr<FILE, function<void(FILE*)>> sp2(fopen("test.cpp", "r"), [](FILE* ptr){
+//	//	cout << "fclose: " << ptr << endl;
+//	//	fclose(ptr);
+//	//});
+//	auto f = [](FILE* ptr){
+//		cout << "fclose: " << ptr << endl;
+//		fclose(ptr);
+//	};
+//	cl::shared_ptr<FILE, decltype(f)> sp2(fopen("test.cpp", "r"), f);
+//
+//	return 0;
+//}
 
-	return 0;
-}
+
+//#include <iostream>
+//using namespace std;
+//struct A{
+//	A(){ //cout << typeid(this).name() << endl; 
+//		foo(); }
+//	virtual ~A(){ //cout << typeid(this).name() << endl; 
+//		foo(); }
+//	virtual void foo(){ //cout << typeid(this).name() << endl; 
+//		cout << "A"; }
+//	void bar(){ foo(); }
+//};
+//struct B :public A{
+//	virtual void foo(){ cout << "B"; }
+//};
+//int main()
+//{
+//	B b;
+//	b.bar();
+//	return 0;
+//} //ABA
