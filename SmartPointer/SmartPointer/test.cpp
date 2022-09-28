@@ -415,6 +415,7 @@
 #include <exception>
 #include <thread>
 #include <memory>
+#include <atomic>
 #include <mutex>
 using namespace std;
 namespace cl
@@ -497,8 +498,9 @@ namespace cl
 	private:
 		T* _ptr; //管理的资源
 	};
+	//默认的删除器
 	template<class T>
-	class Delete
+	struct Delete
 	{
 		void operator()(const T* ptr)
 		{
@@ -520,13 +522,13 @@ namespace cl
 		{
 			_pmutex->lock();
 			bool flag = false;
-			if (--(*_pcount) == 0)
+			if (--(*_pcount) == 0) //将管理的资源对应的引用计数--
 			{
 				if (_ptr != nullptr)
 				{
 					cout << "delete: " << _ptr << endl;
 					//delete _ptr;
-					_del(_ptr);
+					_del(_ptr); //使用定制删除器释放资源
 					_ptr = nullptr;
 				}
 				delete _pcount;
@@ -567,14 +569,15 @@ namespace cl
 		{
 			if (_ptr != sp._ptr) //管理同一块空间的对象之间无需进行赋值操作
 			{
-				ReleaseRef();
-				_ptr = sp._ptr;
-				_pcount = sp._pcount;
-				_pmutex = sp._pmutex;
-				AddRef();
+				ReleaseRef();         //将管理的资源对应的引用计数--
+				_ptr = sp._ptr;       //与sp对象一同管理它的资源
+				_pcount = sp._pcount; //获取sp对象管理的资源对应的引用计数
+				_pmutex = sp._pmutex; //获取sp对象管理的资源对应的互斥锁
+				AddRef();             //新增一个对象来管理该资源，引用计数++
 			}
 			return *this;
 		}
+		//获取引用计数
 		int use_count()
 		{
 			return *_pcount;
@@ -593,37 +596,121 @@ namespace cl
 			return _ptr;
 		}
 	private:
-		T* _ptr;
-		int* _pcount;
-		mutex* _pmutex;
-		D _del;
+		T* _ptr;        //管理的资源
+		int* _pcount;   //管理的资源对应的引用计数
+		mutex* _pmutex; //管理的资源对应的互斥锁
+		D _del;         //管理的资源对应的删除器
 	};
-	////C++11 -- 引用计数
+	////shared_ptr原子类
 	//template<class T>
 	//class shared_ptr
 	//{
 	//private:
+	//	//++引用计数
+	//	void AddRef()
+	//	{
+	//		(*_pcount)++;
+	//	}
+	//	//--引用计数
+	//	void ReleaseRef()
+	//	{
+	//		if (--(*_pcount) == 0) //将管理的资源对应的引用计数--
+	//		{
+	//			if (_ptr != nullptr)
+	//			{
+	//				cout << "delete: " << _ptr << endl;
+	//				delete _ptr;
+	//				_ptr = nullptr;
+	//			}
+	//			delete _pcount;
+	//			_pcount = nullptr;
+	//		}
+	//	}
+	//public:
+	//	//RAII
+	//	shared_ptr(T* ptr = nullptr)
+	//		:_ptr(ptr)
+	//		, _pcount(new atomic<int>(1))
+	//	{}
+	//	//template<class D>
+	//	//shared_ptr(T* ptr, D del)
+	//	//	: _ptr(ptr)
+	//	//	, _pcount(new int(1))
+	//	//	, _pmutex(new mutex)
+	//	//	, _del(del)
+	//	//{}
+	//	~shared_ptr()
+	//	{
+	//		ReleaseRef();
+	//	}
+	//	shared_ptr(shared_ptr<T>& sp)
+	//		:_ptr(sp._ptr)
+	//		, _pcount(sp._pcount)
+	//	{
+	//		AddRef();
+	//	}
+	//	shared_ptr& operator=(shared_ptr<T>& sp)
+	//	{
+	//		if (_ptr != sp._ptr) //管理同一块空间的对象之间无需进行赋值操作
+	//		{
+	//			ReleaseRef();         //将管理的资源对应的引用计数--
+	//			_ptr = sp._ptr;       //与sp对象一同管理它的资源
+	//			_pcount = sp._pcount; //获取sp对象管理的资源对应的引用计数
+	//			AddRef();             //新增一个对象来管理该资源，引用计数++
+	//		}
+	//		return *this;
+	//	}
+	//	//获取引用计数
+	//	int use_count()
+	//	{
+	//		return *_pcount;
+	//	}
+	//	//可以像指针一样使用
+	//	T& operator*()
+	//	{
+	//		return *_ptr;
+	//	}
+	//	T* operator->()
+	//	{
+	//		return _ptr;
+	//	}
+	//	//T* get() const
+	//	//{
+	//	//	return _ptr;
+	//	//}
+	//private:
+	//	T* _ptr;        //管理的资源
+	//	atomic<int>* _pcount;   //管理的资源对应的引用计数
+	//	//D _del;
+	//};
+	//shared_ptr加锁
+	//template<class T>
+	//class shared_ptr
+	//{
+	//private:
+	//	//++引用计数
 	//	void AddRef()
 	//	{
 	//		_pmutex->lock();
 	//		(*_pcount)++;
 	//		_pmutex->unlock();
 	//	}
+	//	//--引用计数
 	//	void ReleaseRef()
 	//	{
 	//		_pmutex->lock();
 	//		bool flag = false;
-	//		if (--(*_pcount) == 0)
+	//		if (--(*_pcount) == 0) //将管理的资源对应的引用计数--
 	//		{
 	//			if (_ptr != nullptr)
 	//			{
 	//				cout << "delete: " << _ptr << endl;
 	//				delete _ptr;
-	//				delete _pcount;
 	//				_ptr = nullptr;
-	//				_pcount = nullptr;
-	//				flag = true;
 	//			}
+	//			delete _pcount;
+	//			_pcount = nullptr;
+	//			flag = true;
 	//		}
 	//		_pmutex->unlock();
 	//		if (flag == true)
@@ -660,14 +747,15 @@ namespace cl
 	//	{
 	//		if (_ptr != sp._ptr) //管理同一块空间的对象之间无需进行赋值操作
 	//		{
-	//			ReleaseRef();
-	//			_ptr = sp._ptr;
-	//			_pcount = sp._pcount;
-	//			_pmutex = sp._pmutex;
-	//			AddRef();
+	//			ReleaseRef();         //将管理的资源对应的引用计数--
+	//			_ptr = sp._ptr;       //与sp对象一同管理它的资源
+	//			_pcount = sp._pcount; //获取sp对象管理的资源对应的引用计数
+	//			_pmutex = sp._pmutex; //获取sp对象管理的资源对应的互斥锁
+	//			AddRef();             //新增一个对象来管理该资源，引用计数++
 	//		}
 	//		return *this;
 	//	}
+	//	//获取引用计数
 	//	int use_count()
 	//	{
 	//		return *_pcount;
@@ -681,14 +769,14 @@ namespace cl
 	//	{
 	//		return _ptr;
 	//	}
-	//	T* get() const
-	//	{
-	//		return _ptr;
-	//	}
+	//	//T* get() const
+	//	//{
+	//	//	return _ptr;
+	//	//}
 	//private:
-	//	T* _ptr;
-	//	int* _pcount;
-	//	mutex* _pmutex;
+	//	T* _ptr;        //管理的资源
+	//	int* _pcount;   //管理的资源对应的引用计数
+	//	mutex* _pmutex; //管理的资源对应的互斥锁
 	//	//D _del;
 	//};
 	//C++11 -- 弱指针
@@ -717,14 +805,15 @@ namespace cl
 			return _ptr;
 		}
 	private:
-		T* _ptr;
+		T* _ptr; //管理的资源
 	};
+	////shared_ptr未加锁
 	//template<class T>
 	//class shared_ptr
 	//{
 	//public:
 	//	//RAII
-	//	shared_ptr(T* ptr)
+	//	shared_ptr(T* ptr = nullptr)
 	//		:_ptr(ptr)
 	//		, _pcount(new int(1))
 	//	{}
@@ -736,10 +825,10 @@ namespace cl
 	//			{
 	//				cout << "delete: " << _ptr << endl;
 	//				delete _ptr;
-	//				delete _pcount;
 	//				_ptr = nullptr;
-	//				_pcount = nullptr;
 	//			}
+	//			delete _pcount;
+	//			_pcount = nullptr;
 	//		}
 	//	}
 	//	shared_ptr(shared_ptr<T>& sp)
@@ -752,16 +841,22 @@ namespace cl
 	//	{
 	//		if (_ptr != sp._ptr) //管理同一块空间的对象之间无需进行赋值操作
 	//		{
-	//			if (--(*_pcount) == 0)
+	//			if (--(*_pcount) == 0) //将管理的资源对应的引用计数--
 	//			{
+	//				cout << "delete: " << _ptr << endl;
 	//				delete _ptr;
 	//				delete _pcount;
 	//			}
-	//			_ptr = sp._ptr;
-	//			_pcount = sp._pcount;
-	//			(*_pcount)++;
+	//			_ptr = sp._ptr;       //与sp对象一同管理它的资源
+	//			_pcount = sp._pcount; //获取sp对象管理的资源对应的引用计数
+	//			(*_pcount)++;         //新增一个对象来管理该资源，引用计数++
 	//		}
 	//		return *this;
+	//	}
+	//	//获取引用计数
+	//	int use_count()
+	//	{
+	//		return *_pcount;
 	//	}
 	//	//可以像指针一样使用
 	//	T& operator*()
@@ -773,8 +868,8 @@ namespace cl
 	//		return _ptr;
 	//	}
 	//private:
-	//	T* _ptr;
-	//	int* _pcount;
+	//	T* _ptr;      //管理的资源
+	//	int* _pcount; //管理的资源对应的引用计数
 	//};
 }
 //资源转移
@@ -791,33 +886,37 @@ namespace cl
 //	return 0;
 //}
 //防拷贝
-int main()
-{
-	std::unique_ptr<int> up1(new int(0));
-	//std::unique_ptr<int> up2(up1); //error
-	return 0;
-}
+//int main()
+//{
+//	std::unique_ptr<int> up1(new int(0));
+//	//std::unique_ptr<int> up2(up1); //error
+//	return 0;
+//}
 //资源共享
 //int main()
 //{
+//	cl::shared_ptr<int> sp1(new int(1));
+//	cl::shared_ptr<int> sp2(sp1);
+//	cout << *sp1 << endl;
+//	*sp1 = 10;
+//	cout << *sp1 << endl;
+//	*sp2 = 20;
+//	cout << *sp1 << endl;
+//	cout << sp1.use_count() << endl; //2
+//
+//	cl::shared_ptr<int> sp3(new int(1));
+//	cl::shared_ptr<int> sp4(new int(2));
+//	sp3 = sp4;
+//	cout << sp3.use_count() << endl; //2
 //	//cl::shared_ptr<int> sp1(new int(0));
 //	//cl::shared_ptr<int> sp2(sp1);
-//	//cout << *sp1 << endl;
-//	//*sp1 = 10;
-//	//cout << *sp1 << endl;
-//	//*sp2 = 20;
-//	//cout << *sp1 << endl;
-//	//cout << sp1.use_count() << endl;
 //
-//	cl::shared_ptr<int> sp1(new int(0));
-//	cl::shared_ptr<int> sp2(sp1);
-//
-//	cl::shared_ptr<int> sp3(new int(0));
-//	cl::shared_ptr<int> sp4(sp3);
-//	cl::shared_ptr<int> sp5(sp3);
-//	sp1 = sp1;
-//	sp1 = sp2;
-//	sp1 = sp3;
+//	//cl::shared_ptr<int> sp3(new int(0));
+//	//cl::shared_ptr<int> sp4(sp3);
+//	//cl::shared_ptr<int> sp5(sp3);
+//	//sp1 = sp1;
+//	//sp1 = sp2;
+//	//sp1 = sp3;
 //	return 0;
 //}
 //线程安全
@@ -857,6 +956,53 @@ int main()
 //	
 //	return 0;
 //}
+//void func(cl::shared_ptr<int>& sp, size_t n)
+//{
+//	for (size_t i = 0; i < n; i++)
+//	{
+//		cl::shared_ptr<int> copy(sp);
+//	}
+//}
+//int main()
+//{
+//	cl::shared_ptr<int> p(new int(0));
+//
+//	const size_t n = 1000;
+//	thread t1(func, p, n);
+//	thread t2(func, p, n);
+//
+//	t1.join();
+//	t2.join();
+//
+//	cout << p.use_count() << endl; //预期：1
+//
+//	return 0;
+//}
+//void func(cl::shared_ptr<int>& sp, size_t n)
+//{
+//	for (size_t i = 0; i < n; i++)
+//	{
+//		cl::shared_ptr<int> copy(sp);
+//
+//		(*copy)++;
+//	}
+//}
+//int main()
+//{
+//	cl::shared_ptr<int> p(new int(0));
+//
+//	const size_t n = 1000;
+//	thread t1(func, p, n);
+//	thread t2(func, p, n);
+//
+//	t1.join();
+//	t2.join();
+//
+//	cout << p.use_count() << endl; //预期：1
+//	cout << *p << endl;            //预期：2000
+//
+//	return 0;
+//}
 //循环引用
 //struct ListNode
 //{
@@ -882,8 +1028,8 @@ int main()
 //}
 //struct ListNode
 //{
-//	cl::shared_ptr<ListNode> _next;
-//	cl::shared_ptr<ListNode> _prev;
+//	std::shared_ptr<ListNode> _next;
+//	std::shared_ptr<ListNode> _prev;
 //	int _val;
 //	~ListNode()
 //	{
@@ -892,8 +1038,8 @@ int main()
 //};
 //int main()
 //{
-//	cl::shared_ptr<ListNode> node1(new ListNode);
-//	cl::shared_ptr<ListNode> node2(new ListNode);
+//	std::shared_ptr<ListNode> node1(new ListNode);
+//	std::shared_ptr<ListNode> node2(new ListNode);
 //
 //	node1->_next = node2;
 //	node2->_prev = node1;
@@ -903,28 +1049,28 @@ int main()
 //}
 struct ListNode
 {
-	cl::weak_ptr<ListNode> _next;
-	cl::weak_ptr<ListNode> _prev;
+	std::weak_ptr<ListNode> _next;
+	std::weak_ptr<ListNode> _prev;
 	int _val;
 	~ListNode()
 	{
 		cout << "~ListNode()" << endl;
 	}
 };
-//int main()
-//{
-//	cl::shared_ptr<ListNode> node1(new ListNode);
-//	cl::shared_ptr<ListNode> node2(new ListNode);
-//
-//	cout << node1.use_count() << endl;
-//	cout << node2.use_count() << endl;
-//	node1->_next = node2;
-//	node2->_prev = node1;
-//	//...
-//	cout << node1.use_count() << endl;
-//	cout << node2.use_count() << endl;
-//	return 0;
-//}
+int main()
+{
+	std::shared_ptr<ListNode> node1(new ListNode);
+	std::shared_ptr<ListNode> node2(new ListNode);
+
+	cout << node1.use_count() << endl;
+	cout << node2.use_count() << endl;
+	node1->_next = node2;
+	node2->_prev = node1;
+	//...
+	cout << node1.use_count() << endl;
+	cout << node2.use_count() << endl;
+	return 0;
+}
 //定制删除器
 //int main()
 //{
@@ -935,8 +1081,8 @@ struct ListNode
 //}
 //int main()
 //{
-//	//std::shared_ptr<ListNode> sp1(new ListNode[10]);
-//	std::shared_ptr<FILE> sp2(fopen("test.cpp", "r"));
+//	std::shared_ptr<ListNode> sp1(new ListNode[10]);   //error
+//	std::shared_ptr<FILE> sp2(fopen("test.cpp", "r")); //error
 //
 //	return 0;
 //}
@@ -970,16 +1116,21 @@ struct ListNode
 //};
 //int main()
 //{
+//	//仿函数示例
 //	cl::shared_ptr<ListNode, DelArr<ListNode>> sp1(new ListNode[10], DelArr<ListNode>());
-//	//cl::shared_ptr<FILE, function<void(FILE*)>> sp2(fopen("test.cpp", "r"), [](FILE* ptr){
-//	//	cout << "fclose: " << ptr << endl;
-//	//	fclose(ptr);
-//	//});
+//
+//	//lambda示例1
+//	cl::shared_ptr<FILE, function<void(FILE*)>> sp2(fopen("test.cpp", "r"), [](FILE* ptr){
+//		cout << "fclose: " << ptr << endl;
+//		fclose(ptr);
+//	});
+//
+//	//lambda示例2
 //	auto f = [](FILE* ptr){
 //		cout << "fclose: " << ptr << endl;
 //		fclose(ptr);
 //	};
-//	cl::shared_ptr<FILE, decltype(f)> sp2(fopen("test.cpp", "r"), f);
+//	cl::shared_ptr<FILE, decltype(f)> sp3(fopen("test.cpp", "r"), f);
 //
 //	return 0;
 //}
