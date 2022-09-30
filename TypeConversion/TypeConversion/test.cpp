@@ -64,29 +64,51 @@ using namespace std;
 //}
 
 //dynamic_cast
+//class A
+//{
+//public:
+//	virtual void f()
+//	{}
+//};
+//class B : public A
+//{};
+//void func(A* pa)
+//{
+//	//B* pb1 = static_cast<B*>(pa);
+//	B* pb1 = (B*)pa;               //不安全
+//	B* pb2 = dynamic_cast<B*>(pa); //安全
+//
+//	cout << "pb1: " << pb1 << endl;
+//	cout << "pb2: " << pb2 << endl;
+//}
+//int main()
+//{
+//	A a;
+//	B b;
+//	func(&a);
+//	func(&b);
+//	return 0;
+//}
+
+//explicit
 class A
 {
 public:
-	virtual void f()
-	{}
+	explicit A(int a)
+	{
+		cout << "A(int a)" << endl;
+	}
+	A(const A& a)
+	{
+		cout << "A(const A& a)" << endl;
+	}
+private:
+	int _a;
 };
-class B : public A
-{};
-void func(A* pa)
-{
-	//B* pb1 = static_cast<B*>(pa);
-	B* pb1 = (B*)pa;               //不安全
-	B* pb2 = dynamic_cast<B*>(pa); //安全
-
-	cout << "pb1: " << pb1 << endl;
-	cout << "pb2: " << pb2 << endl;
-}
 int main()
 {
-	A a;
-	B b;
-	func(&a);
-	func(&b);
+	A a1(1);
+	//A a2 = 1; //error
 	return 0;
 }
 
