@@ -1,7 +1,7 @@
-#include <iostream>
-#include <string>
-#include <thread>
-using namespace std;
+//#include <iostream>
+//#include <string>
+//#include <thread>
+//using namespace std;
 //class Person
 //{
 //public:
@@ -93,16 +93,43 @@ using namespace std;
 //	cout << a << endl;
 //	return 0;
 //}
-void func(int* num)
-{
-	(*num)++;
-}
+//void func(int* num)
+//{
+//	(*num)++;
+//}
+//int main()
+//{
+//	int a = 10;
+//	cout << a << endl;
+//	thread t1(func, &a);
+//	t1.join();
+//	cout << a << endl;
+//	return 0;
+//}
+
+
+#include <iostream>
+#include <vector>
+#include <list>
+#include <algorithm>
+#include <numeric>
+using namespace std;
+//int main()
+//{
+//	vector<int> v = { 10, 20, 30 };
+//	cout << accumulate(v.begin(), v.end(), 0) << endl;
+//	return 0;
+//}
 int main()
 {
-	int a = 10;
-	cout << a << endl;
-	thread t1(func, &a);
-	t1.join();
-	cout << a << endl;
+	vector<int> v{ 1, 2, 3, 4 };
+	list<int> l{ 3, 4, 5, 6 };
+	vector<int> ret(v.size() + l.size());
+	merge(v.begin(), v.end(), l.begin(), l.end(), ret.begin());
+	for (auto e : ret)
+	{
+		cout << e << " ";
+	}
+	cout << endl;
 	return 0;
 }
