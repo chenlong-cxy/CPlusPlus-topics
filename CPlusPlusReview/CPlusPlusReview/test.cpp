@@ -119,13 +119,24 @@ using namespace std;
 //	cout << accumulate(v.begin(), v.end(), 0) << endl;
 //	return 0;
 //}
+//int main()
+//{
+//	vector<int> v{ 1, 2, 3, 4 };
+//	list<int> l{ 3, 4, 5, 6 };
+//	vector<int> ret(v.size() + l.size());
+//	merge(v.begin(), v.end(), l.begin(), l.end(), ret.begin());
+//	for (auto e : ret)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//	return 0;
+//}
 int main()
 {
 	vector<int> v{ 1, 2, 3, 4 };
-	list<int> l{ 3, 4, 5, 6 };
-	vector<int> ret(v.size() + l.size());
-	merge(v.begin(), v.end(), l.begin(), l.end(), ret.begin());
-	for (auto e : ret)
+	reverse(v.begin(), v.end());
+	for (auto e : v)
 	{
 		cout << e << " ";
 	}
