@@ -132,14 +132,27 @@ using namespace std;
 //	cout << endl;
 //	return 0;
 //}
+//int main()
+//{
+//	vector<int> v{ 1, 2, 3, 4 };
+//	reverse(v.begin(), v.end());
+//	for (auto e : v)
+//	{
+//		cout << e << " ";
+//	}
+//	cout << endl;
+//	return 0;
+//}
 int main()
 {
-	vector<int> v{ 1, 2, 3, 4 };
-	reverse(v.begin(), v.end());
-	for (auto e : v)
+	list<int> lt{ 1, 2, 3, 4 };
+	do
 	{
-		cout << e << " ";
-	}
-	cout << endl;
+		for (auto e : lt)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+	} while (next_permutation(lt.begin(), lt.end()));
 	return 0;
 }
