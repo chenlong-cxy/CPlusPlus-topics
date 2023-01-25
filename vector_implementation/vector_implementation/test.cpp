@@ -89,6 +89,19 @@ int main()
 	//cout << endl;
 	//cout << v2.size() << endl;
 	//cout << v2.capacity() << endl;
-	cl::testcpp11();
+	//cl::testcpp11();
+	cl::vector<int> v;
+	v.push_back(1);
+	v.push_back(2);
+	v.push_back(3);
+	v.push_back(4);
+	v.push_back(5);
+	for (int i = 0; i < v.size(); i++)
+		cout << v[i] << " ";
+	cout << endl;
+	v.insert(v.begin() + 2, 9);
+	for (int i = 0; i < v.size(); i++)
+		cout << v[i] << " ";
+	cout << endl;
 	return 0;
 }

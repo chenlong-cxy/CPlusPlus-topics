@@ -236,7 +236,7 @@ namespace cl
 			}
 			//将pos位置及其之后的数据统一向后挪动一位，以留出pos位置进行插入
 			iterator end = _finish;
-			while (end > pos + 1)
+			while (end >= pos + 1)
 			{
 				*end = *(end - 1);
 				end--;
